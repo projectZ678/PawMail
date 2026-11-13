@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>mail.pawsocks.lat</title>
+<title>PawMail</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { height: 100%; overflow: hidden; }
@@ -1562,13 +1562,40 @@ body.wall .settings-modal{
 .folder-modal .modal-footer{
   padding: 14px 22px; border-top: 1px solid var(--line); gap: 8px;
 }
+
+/* ---- confirm modal ---- */
+.confirm-modal{
+  width: 380px; max-width: calc(100vw - 28px);
+  display: flex; flex-direction: column;
+}
+.confirm-body{
+  padding: 18px 22px 6px;
+  color: var(--text-2);
+  font-size: 12.5px;
+  line-height: 1.65;
+}
+.confirm-body strong{ color: var(--text); font-weight: 600; }
+.confirm-modal .modal-footer{
+  padding: 16px 22px; border-top: 1px solid var(--line); gap: 8px;
+  justify-content: flex-end;
+}
+.confirm-modal .btn-danger{
+  background: #3a1515 !important;
+  border-color: #5a2a2a !important;
+  color: #ffb0b0 !important;
+}
+.confirm-modal .btn-danger:hover{
+  background: #4a1c1c !important;
+  border-color: #7a3a3a !important;
+  color: #ffd0d0 !important;
+}
 </style>
 </head>
 <body class="auth-mode">
 <div class="paw-field" aria-hidden="true"><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span></div>
 
 <div id="landing-screen" class="landing-screen">
-  <div class="landing-logo">mail.pawsocks.lat</div>
+  <div class="landing-logo">PawMail</div>
   <div class="landing-btns">
     <button class="btn" onclick="showAuth('login')">sign in</button>
     <button class="btn" onclick="showAuth('register')">create account</button>
@@ -1620,7 +1647,7 @@ body.wall .settings-modal{
 
 <div id="app">
   <div class="topbar">
-    <div class="topbar-brand">mail.pawsocks.lat</div>
+    <div class="topbar-brand">PawMail</div>
     <div id="topbar-addr" class="topbar-addr"></div>
     <div class="topbar-right">
       <button class="btn-icon" onclick="openSettings()" title="Settings">⚙</button>
@@ -1771,6 +1798,21 @@ body.wall .settings-modal{
   </div>
 </div>
 
+<!-- ================= CONFIRM MODAL ================= -->
+<div id="confirm-modal" class="modal-overlay" onclick="if(event.target===this)closeConfirm()">
+  <div class="modal confirm-modal">
+    <div class="modal-header">
+      <span id="confirm-title">confirm</span>
+      <button class="btn-icon" onclick="closeConfirm()">✕</button>
+    </div>
+    <div class="confirm-body" id="confirm-message"></div>
+    <div class="modal-footer">
+      <button class="btn btn-sm" onclick="closeConfirm()">cancel</button>
+      <button class="btn btn-sm btn-danger" id="confirm-ok-btn" onclick="runConfirm()">delete</button>
+    </div>
+  </div>
+</div>
+
 <!-- ================= SETTINGS ================= -->
 <div id="settings-modal" class="modal-overlay" onclick="if(event.target===this)closeSettings()">
   <div class="modal settings-modal">
@@ -1908,7 +1950,7 @@ body.wall .settings-modal{
 
         <div class="settings-panel" data-panel="about">
           <div class="settings-about">
-            <div class="about-row"><span>app</span><span>mail.pawsocks.lat</span></div>
+            <div class="about-row"><span>app</span><span>PawMail</span></div>
             <div class="about-row"><span>version</span><span>3.0</span></div>
             <div class="about-row"><span>domain</span><span>@pawsocks.lat</span></div>
             <div class="about-row"><span>storage</span><span>Supabase</span></div>
@@ -2462,7 +2504,7 @@ function buildFolderMap() {
   for (const email of allEmails) {
     if (email.folder === 'sent') continue;
     if (email.is_deleted) continue;
-    if (email.folder && customFolders.includes(email.folder)) continue;
+    if (email.folder && email.folder !== 'inbox' && customFolders.includes(email.folder)) continue;
     const provider = getProvider(email.from_address, email.from_name);
     if (!map.has(provider)) map.set(provider, { name: provider, total: 0, unread: 0 });
     const f = map.get(provider);
@@ -2516,7 +2558,8 @@ function getFilteredEmails() {
     list = list.filter(e => {
       if (e.is_deleted) return false;
       if (e.folder === 'sent') return false;
-      if (e.folder && customFolders.includes(e.folder)) return false;
+      if (e.folder && e.folder !== 'inbox' && customFolders.includes(e.folder)) return false;
+      // Treat null, undefined, 'inbox', or any non-custom non-sent as inbox
       return true;
     });
   } else if (isCustom) {
@@ -2525,7 +2568,7 @@ function getFilteredEmails() {
     list = list.filter(e => {
       if (e.is_deleted) return false;
       if (e.folder === 'sent') return false;
-      if (e.folder && customFolders.includes(e.folder)) return false;
+      if (e.folder && e.folder !== 'inbox' && customFolders.includes(e.folder)) return false;
       return getProvider(e.from_address, e.from_name) === currentFolder;
     });
   }
@@ -2662,7 +2705,7 @@ function updateUnreadCount() {
   const count = allEmails.filter(e => {
     if (e.is_deleted) return false;
     if (e.folder === 'sent') return false;
-    if (e.folder && customFolders.includes(e.folder)) return false;
+    if (e.folder && e.folder !== 'inbox' && customFolders.includes(e.folder)) return false;
     return !e.is_read;
   }).length;
   $('unread-count').textContent = count > 0 ? count : '';
@@ -2750,32 +2793,64 @@ function submitFolderModal() {
   }
 }
 
+let pendingConfirmAction = null;
+
+function openConfirm({ title = 'confirm', message = '', okText = 'confirm', danger = false, onConfirm }) {
+  $('confirm-title').textContent = title;
+  $('confirm-message').innerHTML = message;
+  const okBtn = $('confirm-ok-btn');
+  okBtn.textContent = okText;
+  okBtn.className = 'btn btn-sm' + (danger ? ' btn-danger' : ' btn-primary');
+  pendingConfirmAction = onConfirm;
+  $('confirm-modal').classList.add('open');
+}
+function closeConfirm() {
+  $('confirm-modal').classList.remove('open');
+  pendingConfirmAction = null;
+}
+async function runConfirm() {
+  const action = pendingConfirmAction;
+  closeConfirm();
+  if (typeof action === 'function') await action();
+}
+
 async function deleteFolder(name) {
-  if (!window.confirm(`Delete folder "${name}"?\n\nAny emails inside will be moved back to the inbox.`)) return;
-  const idx = customFolders.indexOf(name);
-  if (idx < 0) return;
-  customFolders.splice(idx, 1);
-  saveCustomFolders();
-  // Move emails back to inbox
-  allEmails.forEach(e => { if (e.folder === name) e.folder = null; });
-  try {
-    await sbFetch(`/rest/v1/emails?user_id=eq.${currentUser.id}&folder=eq.${encodeURIComponent(name)}`, {
-      method: 'PATCH',
-      body: JSON.stringify({ folder: null })
-    });
-  } catch (e) {
-    showToast('Could not move emails: ' + e.message);
-  }
-  if (currentFolder === name) setFolder('inbox', null);
-  renderCustomFolders();
-  refreshAfterChange();
-  showToast('folder deleted');
+  const count = allEmails.filter(e => e.folder === name && !e.is_deleted).length;
+  const msg = count > 0
+    ? `Delete folder <strong>${escapeHtml(name)}</strong>?<br><br>The ${count} message${count === 1 ? '' : 's'} inside will be moved back to the inbox.`
+    : `Delete folder <strong>${escapeHtml(name)}</strong>?<br><br>This folder is empty.`;
+  openConfirm({
+    title: 'delete folder',
+    message: msg,
+    okText: 'delete',
+    danger: true,
+    onConfirm: async () => {
+      const idx = customFolders.indexOf(name);
+      if (idx < 0) return;
+      customFolders.splice(idx, 1);
+      saveCustomFolders();
+      // Move emails back to inbox
+      allEmails.forEach(e => { if (e.folder === name) e.folder = 'inbox'; });
+      try {
+        await sbFetch(`/rest/v1/emails?user_id=eq.${currentUser.id}&folder=eq.${encodeURIComponent(name)}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ folder: 'inbox' })
+        });
+      } catch (e) {
+        showToast('Could not move emails: ' + e.message);
+      }
+      if (currentFolder === name) setFolder('inbox', null);
+      renderCustomFolders();
+      refreshAfterChange();
+      showToast('folder deleted');
+    }
+  });
 }
 
 async function moveEmailTo(id, folder) {
   const email = allEmails.find(e => e.id === id);
   if (!email) return;
-  const patch = { folder: folder === 'inbox' ? null : folder };
+  const patch = { folder: folder === 'inbox' ? 'inbox' : folder };
   const ok = await patchEmail(id, patch);
   if (!ok) return;
   if (selectedId === id) {
@@ -3346,6 +3421,7 @@ document.addEventListener('keydown', e => {
     if ($('settings-modal').classList.contains('open')) closeSettings();
     if ($('add-account-modal').classList.contains('open')) closeAddAccount();
     if ($('folder-modal').classList.contains('open')) closeFolderModal();
+    if ($('confirm-modal').classList.contains('open')) closeConfirm();
     hideCtx();
   }
 });
@@ -3356,6 +3432,7 @@ document.addEventListener('keydown', event => {
   if ($('settings-modal').classList.contains('open')) return;
   if ($('compose-modal').classList.contains('open')) return;
   if ($('folder-modal').classList.contains('open')) return;
+  if ($('confirm-modal').classList.contains('open')) return;
   if ($('login-screen').style.display !== 'none') doLogin();
   else if ($('register-screen').style.display !== 'none') doRegister();
 });
