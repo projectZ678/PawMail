@@ -1040,74 +1040,353 @@ body.reduce-motion .paw-field{ display:none!important; }
 .ctx-item.danger:hover{ background:#3a1515!important; color:#ffbcbc!important; }
 .ctx-sep{ height:1px; background:var(--line); margin:5px 8px; }
 
-/* ---- settings modal ---- */
+/* =========================================================================
+   SETTINGS MODAL v2 — tabbed, blurred, profile-pic first
+   ========================================================================= */
+#settings-modal{
+  background: rgba(0,0,0,.5) !important;
+  backdrop-filter: blur(22px) saturate(1.35) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(1.35) !important;
+}
 .settings-modal{
-  width:540px; max-width:calc(100vw - 24px);
-  max-height:88vh; display:flex; flex-direction:column;
+  width: 780px;
+  max-width: calc(100vw - 32px);
+  height: 590px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  background: rgba(12,12,14,.82) !important;
+  border: 1px solid var(--line-2) !important;
+  border-radius: 18px;
+  box-shadow: 0 40px 120px #000e, 0 0 0 1px #ffffff0a inset;
+  overflow: hidden;
+  backdrop-filter: blur(42px) saturate(1.4);
+  -webkit-backdrop-filter: blur(42px) saturate(1.4);
 }
-.settings-body{ flex:1; overflow-y:auto; padding:4px 0 6px; }
-.settings-group{ padding:6px 0 10px; border-bottom:1px solid var(--line); }
-.settings-group:last-child{ border-bottom:0; }
-.settings-group-title{
-  font-size:9px; letter-spacing:2px; text-transform:uppercase;
-  color:var(--text-3); padding:10px 22px 6px;
+html[data-theme="paper"] .settings-modal{
+  background: rgba(250,250,247,.9) !important;
 }
+.settings-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.settings-title{
+  font-size: 12px;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: var(--text);
+  font-weight: 500;
+}
+.settings-layout{
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.settings-nav{
+  width: 184px;
+  flex-shrink: 0;
+  padding: 12px 10px;
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: rgba(0,0,0,.18);
+}
+html[data-theme="paper"] .settings-nav{
+  background: rgba(0,0,0,.02);
+}
+.settings-tab{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  font-family: inherit;
+  font-size: 11.5px;
+  letter-spacing: .3px;
+  text-align: left;
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--text-2) !important;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background .16s ease, color .16s ease;
+}
+.settings-tab:hover{
+  background: var(--surface-2) !important;
+  color: var(--text) !important;
+}
+.settings-tab.active{
+  background: var(--surface-2) !important;
+  color: var(--text) !important;
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+.settings-tab .tab-dot{
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--text-3);
+  transition: background .16s ease;
+}
+.settings-tab.active .tab-dot{ background: var(--accent); }
+
+.settings-content{
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 0;
+  min-width: 0;
+}
+.settings-panel{ display: none; padding: 8px 26px 22px; }
+.settings-panel.active{ display: block; animation: fadeIn .18s ease; }
+
+.settings-section-label{
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-3);
+  padding: 18px 0 8px;
+}
+.settings-section-label:first-child{ padding-top: 6px; }
+
 .settings-row{
-  display:flex; align-items:center; gap:12px;
-  padding:7px 22px; min-height:38px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 9px 0;
+  min-height: 42px;
+  border-bottom: 1px solid var(--line);
 }
+.settings-row:last-child{ border-bottom: 0; }
 .settings-row > label{
-  width:104px; flex:0 0 104px; font-size:11px; color:var(--text-2);
+  width: 130px;
+  flex: 0 0 130px;
+  font-size: 11.5px;
+  color: var(--text-2);
 }
 .settings-row input[type="text"],
 .settings-row input[type="url"],
 .settings-row select{
-  flex:1; min-width:0;
-  background-color:var(--surface)!important;
-  border:1px solid var(--line)!important;
-  color:var(--text)!important;
-  border-radius:7px; padding:7px 10px;
-  font-family:inherit; font-size:11px; outline:none;
-  transition:border-color .18s ease;
+  flex: 1;
+  min-width: 0;
+  background-color: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  color: var(--text) !important;
+  border-radius: 8px;
+  padding: 8px 11px;
+  font-family: inherit;
+  font-size: 11.5px;
+  outline: none;
+  transition: border-color .18s ease, background .18s ease;
 }
-.settings-row select{ appearance:none; -webkit-appearance:none; cursor:pointer; }
-.settings-row input:focus,.settings-row select:focus{ border-color:var(--accent)!important; }
+.settings-row input[type="text"]:focus,
+.settings-row input[type="url"]:focus,
+.settings-row select:focus{
+  border-color: var(--accent) !important;
+}
 .settings-row input[type="color"]{
-  width:46px; height:26px; padding:0; cursor:pointer;
-  background-color:transparent!important;
-  border:1px solid var(--line)!important; border-radius:7px;
+  width: 48px; height: 30px; padding: 2px; cursor: pointer;
+  background-color: var(--surface) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 8px;
 }
-.seg{ display:flex; gap:5px; flex:1; flex-wrap:wrap; }
+.settings-row .settings-value{
+  flex: 1;
+  font-size: 11.5px;
+  color: var(--text);
+}
+.seg{
+  display: flex;
+  gap: 4px;
+  flex: 1;
+  padding: 3px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+}
 .seg button{
-  flex:1; min-width:64px; padding:7px 8px;
-  font-size:10px; letter-spacing:.4px; text-transform:lowercase;
-  border:1px solid var(--line)!important;
-  background-color:var(--surface)!important;
-  color:var(--text-2)!important;
-  border-radius:7px; cursor:pointer;
-  transition:background .16s ease,color .16s ease,border-color .16s ease;
+  flex: 1;
+  padding: 6px 10px;
+  font-family: inherit;
+  font-size: 10.5px;
+  letter-spacing: .3px;
+  text-transform: lowercase;
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--text-2) !important;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background .16s ease, color .16s ease;
 }
-.seg button:hover{ border-color:var(--line-2)!important; color:var(--text)!important; }
+.seg button:hover{ color: var(--text) !important; }
 .seg button.on{
-  background-color:var(--accent)!important;
-  border-color:var(--accent)!important;
-  color:var(--accent-ink)!important;
+  background: var(--accent) !important;
+  color: var(--accent-ink) !important;
 }
 .chk{
-  appearance:none; -webkit-appearance:none;
-  width:36px; height:20px; border-radius:11px;
-  background-color:var(--surface-2); border:1px solid var(--line-2);
-  position:relative; cursor:pointer; flex:0 0 36px;
-  transition:background .18s ease,border-color .18s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 38px; height: 22px;
+  border-radius: 11px;
+  background-color: var(--surface-2);
+  border: 1px solid var(--line-2);
+  position: relative;
+  cursor: pointer;
+  flex: 0 0 38px;
+  transition: background .18s ease, border-color .18s ease;
 }
-.chk:checked{ background-color:var(--accent); border-color:var(--accent); }
+.chk:checked{
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
 .chk::after{
-  content:""; position:absolute; top:2px; left:2px;
-  width:14px; height:14px; border-radius:50%;
-  background:#fff; transition:transform .18s ease,background .18s ease;
+  content: "";
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px #0005;
+  transition: transform .18s ease, background .18s ease;
 }
-.chk:checked::after{ transform:translateX(16px); background:var(--accent-ink); }
-.settings-muted{ color:var(--text-3); font-size:11px; flex:1; }
+.chk:checked::after{
+  transform: translateX(16px);
+  background: var(--accent-ink);
+}
+
+/* profile card */
+.profile-card{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  margin: 8px 0 4px;
+}
+.profile-pic-wrap{
+  position: relative;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  cursor: pointer;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 2px solid var(--line-2);
+  transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+  background: var(--surface-2);
+}
+.profile-pic-wrap:hover{
+  border-color: var(--accent);
+  transform: scale(1.03);
+  box-shadow: 0 8px 28px #0007;
+}
+.profile-pic{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.profile-pic-overlay{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.42);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  opacity: 0;
+  transition: opacity .2s ease;
+  color: #fff;
+}
+.profile-pic-wrap:hover .profile-pic-overlay{ opacity: 1; }
+.profile-pic-overlay svg{
+  width: 30px; height: 30px;
+  filter: drop-shadow(0 2px 8px #0009);
+}
+.profile-meta{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+.profile-meta strong{
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.profile-meta span{
+  font-size: 11px;
+  color: var(--text-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.profile-hint{
+  font-size: 9.5px;
+  color: var(--text-3);
+  letter-spacing: .2px;
+  margin-top: 2px;
+  opacity: .8;
+}
+
+.settings-about{
+  padding: 4px 0;
+  color: var(--text-2);
+  font-size: 11.5px;
+  line-height: 1.8;
+}
+.settings-about .about-row{
+  display: flex;
+  justify-content: space-between;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+}
+.settings-about .about-row:last-child{ border-bottom: 0; }
+.settings-about .about-row span:first-child{ color: var(--text-3); }
+.settings-about .about-row span:last-child{ color: var(--text); }
+
+.settings-footer{
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 14px 22px;
+  border-top: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.settings-footer .modal-status{
+  margin-left: auto;
+  font-size: 9px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+@media(max-width: 680px){
+  .settings-modal{ height: 90vh; }
+  .settings-layout{ flex-direction: column; }
+  .settings-nav{
+    width: 100%;
+    flex-direction: row;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+    padding: 8px;
+  }
+  .settings-tab{ white-space: nowrap; padding: 8px 12px; }
+  .settings-tab .tab-dot{ display: none; }
+  .settings-panel{ padding: 6px 16px 18px; }
+  .settings-row{ flex-wrap: wrap; gap: 6px 14px; }
+  .settings-row > label{ width: 100%; flex-basis: 100%; font-size: 10.5px; }
+  .profile-card{ padding: 16px; gap: 16px; }
+  .profile-pic-wrap{ width: 72px; height: 72px; }
+}
 
 /* ---- add account (sign up) modal ---- */
 .add-account-modal{
@@ -1251,7 +1530,6 @@ body.reduce-motion .paw-field{ display:none!important; }
           <div class="account-menu-heading">ACCOUNTS <span id="account-count">1 / 5</span></div>
           <div id="account-list"></div>
           <button class="account-menu-action" onclick="openSettings()">Settings</button>
-          <button class="account-menu-action" onclick="triggerAvatarUpload()">Change profile picture</button>
           <button class="account-menu-action" id="add-account-btn" onclick="addAccount()">+ Add another account</button>
           <button class="account-menu-action account-signout" onclick="doLogout()">Sign out this account</button>
         </div>
@@ -1338,101 +1616,144 @@ body.reduce-motion .paw-field{ display:none!important; }
 <!-- ================= SETTINGS ================= -->
 <div id="settings-modal" class="modal-overlay" onclick="if(event.target===this)closeSettings()">
   <div class="modal settings-modal">
-    <div class="modal-header"><span>settings</span><button class="btn-icon" onclick="closeSettings()">✕</button></div>
-    <div class="settings-body">
-
-      <div class="settings-group">
-        <div class="settings-group-title">appearance</div>
-        <div class="settings-row">
-          <label>theme</label>
-          <div class="seg" id="seg-theme">
-            <button data-value="midnight">midnight</button>
-            <button data-value="slate">slate</button>
-            <button data-value="paper">paper</button>
-          </div>
-        </div>
-        <div class="settings-row">
-          <label>accent</label>
-          <input type="color" id="set-accent">
-          <span class="settings-muted" id="accent-label">used for highlights and buttons</span>
-        </div>
-        <div class="settings-row">
-          <label>gradient</label>
-          <select id="set-gradient">
-            <option value="">none</option>
-            <option value="aurora">aurora</option>
-            <option value="sunset">sunset</option>
-            <option value="mono">mono</option>
-            <option value="ocean">ocean</option>
-            <option value="ember">ember</option>
-          </select>
-        </div>
-        <div class="settings-row">
-          <label>wallpaper</label>
-          <input type="url" id="set-wallpaper" placeholder="https://image-url.jpg" autocomplete="off">
-        </div>
-        <div class="settings-row">
-          <label>font size</label>
-          <div class="seg" id="seg-size">
-            <button data-value="sm">small</button>
-            <button data-value="md">normal</button>
-            <button data-value="lg">large</button>
-          </div>
-        </div>
-        <div class="settings-row">
-          <label>density</label>
-          <div class="seg" id="seg-density">
-            <button data-value="compact">compact</button>
-            <button data-value="normal">normal</button>
-            <button data-value="comfortable">relaxed</button>
-          </div>
-        </div>
-        <div class="settings-row">
-          <label>reduce motion</label>
-          <input type="checkbox" class="chk" id="set-motion">
-        </div>
-      </div>
-
-      <div class="settings-group">
-        <div class="settings-group-title">account</div>
-        <div class="settings-row">
-          <label>display name</label>
-          <input type="text" id="set-display-name" placeholder="your name" autocomplete="off">
-        </div>
-        <div class="settings-row">
-          <label>address</label>
-          <span class="settings-muted" id="set-email">—</span>
-        </div>
-        <div class="settings-row">
-          <label>picture</label>
-          <button class="btn btn-sm" onclick="triggerAvatarUpload()">change picture</button>
-        </div>
-      </div>
-
-      <div class="settings-group">
-        <div class="settings-group-title">mailbox</div>
-        <div class="settings-row">
-          <label>auto refresh</label>
-          <select id="set-refresh">
-            <option value="10000">every 10 seconds</option>
-            <option value="15000">every 15 seconds</option>
-            <option value="30000">every 30 seconds</option>
-            <option value="60000">every minute</option>
-            <option value="0">off</option>
-          </select>
-        </div>
-        <div class="settings-row">
-          <label>preview text</label>
-          <input type="checkbox" class="chk" id="set-preview">
-        </div>
-        <div class="settings-row">
-          <label>confirm delete</label>
-          <input type="checkbox" class="chk" id="set-confirm">
-        </div>
-      </div>
-
+    <div class="settings-header">
+      <span class="settings-title">settings</span>
+      <button class="btn-icon" onclick="closeSettings()">✕</button>
     </div>
-    <div class="modal-footer">
+    <div class="settings-layout">
+      <nav class="settings-nav">
+        <button class="settings-tab active" data-tab="appearance"><span class="tab-dot"></span>Appearance</button>
+        <button class="settings-tab" data-tab="account"><span class="tab-dot"></span>Account</button>
+        <button class="settings-tab" data-tab="mailbox"><span class="tab-dot"></span>Mailbox</button>
+        <button class="settings-tab" data-tab="about"><span class="tab-dot"></span>About</button>
+      </nav>
+      <div class="settings-content">
+
+        <div class="settings-panel active" data-panel="appearance">
+          <div class="settings-section-label">theme</div>
+          <div class="settings-row">
+            <label>color theme</label>
+            <div class="seg" id="seg-theme">
+              <button data-value="midnight">midnight</button>
+              <button data-value="slate">slate</button>
+              <button data-value="paper">paper</button>
+            </div>
+          </div>
+          <div class="settings-row">
+            <label>accent color</label>
+            <input type="color" id="set-accent">
+            <span style="flex:0;color:var(--text-3);font-size:10.5px;">buttons &amp; highlights</span>
+          </div>
+
+          <div class="settings-section-label">background</div>
+          <div class="settings-row">
+            <label>gradient</label>
+            <select id="set-gradient">
+              <option value="">none</option>
+              <option value="aurora">aurora</option>
+              <option value="sunset">sunset</option>
+              <option value="mono">mono</option>
+              <option value="ocean">ocean</option>
+              <option value="ember">ember</option>
+            </select>
+          </div>
+          <div class="settings-row">
+            <label>wallpaper url</label>
+            <input type="url" id="set-wallpaper" placeholder="https://image-url.jpg" autocomplete="off">
+          </div>
+
+          <div class="settings-section-label">typography &amp; layout</div>
+          <div class="settings-row">
+            <label>font size</label>
+            <div class="seg" id="seg-size">
+              <button data-value="sm">small</button>
+              <button data-value="md">normal</button>
+              <button data-value="lg">large</button>
+            </div>
+          </div>
+          <div class="settings-row">
+            <label>density</label>
+            <div class="seg" id="seg-density">
+              <button data-value="compact">compact</button>
+              <button data-value="normal">normal</button>
+              <button data-value="comfortable">relaxed</button>
+            </div>
+          </div>
+          <div class="settings-row">
+            <label>reduce motion</label>
+            <input type="checkbox" class="chk" id="set-motion">
+          </div>
+        </div>
+
+        <div class="settings-panel" data-panel="account">
+          <div class="profile-card">
+            <div class="profile-pic-wrap" onclick="triggerAvatarUpload()" title="Change profile picture">
+              <img id="settings-avatar" class="profile-pic" alt="">
+              <div class="profile-pic-overlay">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                  <circle cx="12" cy="13" r="4"/>
+                </svg>
+              </div>
+            </div>
+            <div class="profile-meta">
+              <strong id="settings-preview-name">Display Name</strong>
+              <span id="settings-email">—</span>
+              <span class="profile-hint">click photo to change</span>
+            </div>
+          </div>
+
+          <div class="settings-section-label">profile</div>
+          <div class="settings-row">
+            <label>display name</label>
+            <input type="text" id="set-display-name" placeholder="your name" autocomplete="off">
+          </div>
+          <div class="settings-row">
+            <label>email address</label>
+            <span class="settings-value" id="set-email">—</span>
+          </div>
+        </div>
+
+        <div class="settings-panel" data-panel="mailbox">
+          <div class="settings-section-label">refresh</div>
+          <div class="settings-row">
+            <label>auto refresh</label>
+            <select id="set-refresh">
+              <option value="10000">every 10 seconds</option>
+              <option value="15000">every 15 seconds</option>
+              <option value="30000">every 30 seconds</option>
+              <option value="60000">every minute</option>
+              <option value="0">off</option>
+            </select>
+          </div>
+
+          <div class="settings-section-label">list &amp; actions</div>
+          <div class="settings-row">
+            <label>preview text</label>
+            <input type="checkbox" class="chk" id="set-preview">
+          </div>
+          <div class="settings-row">
+            <label>confirm delete</label>
+            <input type="checkbox" class="chk" id="set-confirm">
+          </div>
+        </div>
+
+        <div class="settings-panel" data-panel="about">
+          <div class="settings-about">
+            <div class="about-row"><span>app</span><span>mail.pawsocks.lat</span></div>
+            <div class="about-row"><span>version</span><span>2.0</span></div>
+            <div class="about-row"><span>domain</span><span>@pawsocks.lat</span></div>
+            <div class="about-row"><span>storage</span><span>Supabase</span></div>
+          </div>
+          <p style="color:var(--text-3);font-size:10.5px;line-height:1.7;margin-top:16px;">
+            A monochrome, keyboard-friendly inbox with per-account themes, signatures, and trash.
+            Right-click any message for quick actions.
+          </p>
+        </div>
+
+      </div>
+    </div>
+    <div class="settings-footer">
       <button class="btn btn-sm btn-primary" onclick="closeSettings()">done</button>
       <button class="btn btn-sm" onclick="resetSettings()">reset defaults</button>
       <span class="modal-status" id="settings-status"></span>
@@ -1529,7 +1850,6 @@ function loadSettings() {
     const raw = storage.getItem('settings');
     if (raw) settings = { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
   } catch { /* keep defaults */ }
-  // migrate older saved values
   if (settings.size !== 'sm' && settings.size !== 'md' && settings.size !== 'lg') settings.size = 'md';
   if (!/^#[0-9a-f]{6}$/i.test(settings.accent || '')) settings.accent = THEME_ACCENTS[settings.theme] || '#d0d0d0';
 }
@@ -1819,6 +2139,8 @@ async function uploadAvatar(event){
     const a=accounts.find(x=>x.userId===activeAccountId);
     a.avatarUrl=url; a.session.user=currentUser;
     persistAccounts(); renderAccountDock();
+    // refresh the settings avatar if the modal is open
+    if ($('settings-modal').classList.contains('open')) syncSettingsUI();
     showToast('Profile picture updated');
   }catch(e){
     showToast(e.message.includes('Bucket not found')?'Create the avatars storage bucket using the SQL below.':`Avatar upload failed: ${e.message}`);
@@ -2456,6 +2778,8 @@ function segSet(id, value) {
 
 function syncSettingsUI() {
   if (!settings) return;
+
+  // appearance
   $('set-accent').value = /^#[0-9a-f]{6}$/i.test(settings.accent) ? settings.accent : '#d0d0d0';
   $('set-wallpaper').value = settings.wallpaper || '';
   $('set-gradient').value = settings.gradient || '';
@@ -2463,18 +2787,32 @@ function syncSettingsUI() {
   segSet('seg-size', settings.size);
   segSet('seg-density', settings.density);
   $('set-motion').checked = !!settings.reduceMotion;
+
+  // mailbox
   $('set-preview').checked = !!settings.showPreview;
   $('set-confirm').checked = !!settings.confirmDelete;
   $('set-refresh').value = String(settings.refreshMs);
+
+  // account
+  const active = accounts.find(a => a.userId === activeAccountId);
   const meta = currentUser?.user_metadata || {};
   $('set-display-name').value = meta.display_name || meta.username || '';
   $('set-email').textContent = myEmail || '—';
+  const avatarImg = $('settings-avatar');
+  if (avatarImg) avatarImg.src = active?.avatarUrl || avatarFallback();
+  const previewName = $('settings-preview-name');
+  if (previewName) previewName.textContent = active?.displayName || active?.username || 'Account';
+  const previewEmail = $('settings-email');
+  if (previewEmail) previewEmail.textContent = myEmail || '—';
 }
 
 function openSettings() {
   $('account-menu').style.display = 'none';
   syncSettingsUI();
   $('settings-status').textContent = '';
+  // reset to first tab each time it opens
+  document.querySelectorAll('.settings-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === 'appearance'));
+  document.querySelectorAll('.settings-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === 'appearance'));
   $('settings-modal').classList.add('open');
 }
 
@@ -2516,6 +2854,7 @@ async function saveDisplayName() {
       a.session.user = currentUser;
       persistAccounts();
       renderAccountDock();
+      syncSettingsUI();
     }
     $('settings-status').textContent = 'saved';
     setTimeout(() => { if ($('settings-status').textContent === 'saved') $('settings-status').textContent = ''; }, 1600);
@@ -2525,7 +2864,19 @@ async function saveDisplayName() {
   }
 }
 
+function initSettingsTabs() {
+  document.querySelectorAll('.settings-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const name = tab.dataset.tab;
+      document.querySelectorAll('.settings-tab').forEach(t => t.classList.toggle('active', t === tab));
+      document.querySelectorAll('.settings-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === name));
+    });
+  });
+}
+
 function initSettingsUI() {
+  initSettingsTabs();
+
   $('seg-theme').addEventListener('click', e => {
     const b = e.target.closest('button');
     if (!b) return;
