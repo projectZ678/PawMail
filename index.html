@@ -33,30 +33,11 @@ body {
   border-radius: 2px;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes itemIn {
-  from { opacity: 0; transform: translateX(-4px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.45; }
-}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes itemIn { from { opacity: 0; transform: translateX(-4px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
 
 .auth-screen, .landing-screen {
   height: 100vh;
@@ -225,7 +206,7 @@ body {
 }
 .topbar-brand { font-size: 10px; letter-spacing: 4px; opacity: 0.2; }
 .topbar-addr { font-size: 10px; color: rgba(255,255,255,0.35); }
-.topbar-right { margin-left: auto; }
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 2px; }
 
 .main { display: flex; flex: 1; overflow: hidden; }
 
@@ -657,7 +638,7 @@ body {
   transition:
     opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1),
     transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 200;
+  z-index: 400;
   box-shadow: 0 12px 32px rgba(0,0,0,0.5);
 }
 .toast.show { opacity: 1; transform: translateY(0); }
@@ -893,6 +874,289 @@ button:hover,.btn:hover,.btn-icon:hover{background:#171717!important;border-colo
 .account-option{transition:background .14s ease,transform .14s ease}
 .account-option:active{transform:scale(.985)}
 
+
+/* =========================================================================
+   THEME ENGINE / SETTINGS / CONTEXT MENU / TRASH
+   ========================================================================= */
+:root{
+  --bg:#000;
+  --panel-rgb:6,6,6;
+  --panel:#060606;
+  --surface:#0c0c0c;
+  --surface-2:#171717;
+  --line:#232323;
+  --line-2:#3a3a3a;
+  --text:#ededed;
+  --text-2:#9a9a9a;
+  --text-3:#686868;
+  --accent:#d0d0d0;
+  --accent-ink:#0a0a0a;
+  --fs:13px;
+  --pad-y:13px;
+  --wall:none;
+}
+html[data-theme="slate"]{
+  --bg:#0a0d12;
+  --panel-rgb:13,17,24;
+  --panel:#0d1118;
+  --surface:#121822;
+  --surface-2:#1c2431;
+  --line:#232c3a;
+  --line-2:#3a4757;
+  --text:#e6ecf5;
+  --text-2:#9aa8bd;
+  --text-3:#6b7a90;
+}
+html[data-theme="paper"]{
+  --bg:#f2f2ee;
+  --panel-rgb:250,250,247;
+  --panel:#fafaf7;
+  --surface:#ffffff;
+  --surface-2:#ededE7;
+  --line:#e2e2da;
+  --line-2:#cfcfc6;
+  --text:#17171a;
+  --text-2:#5b5b62;
+  --text-3:#8d8d95;
+}
+body[data-size="sm"]{ --fs:12px; }
+body[data-size="lg"]{ --fs:15px; }
+body[data-density="compact"]{ --pad-y:9px; }
+body[data-density="comfortable"]{ --pad-y:18px; }
+
+body{ background-color:var(--bg)!important; color:var(--text)!important; font-size:var(--fs)!important; }
+body.wall{
+  background-image:var(--wall)!important;
+  background-size:cover!important;
+  background-position:center!important;
+  background-attachment:fixed!important;
+  background-repeat:no-repeat!important;
+}
+body.wall.auth-mode{ background-image:var(--wall)!important; }
+
+#app{ background-color:var(--panel)!important; color:var(--text)!important; }
+.topbar,.sidebar,.email-list-pane{ background-color:var(--panel)!important; border-color:var(--line)!important; }
+.detail-pane{ background-color:var(--panel)!important; }
+.pane-header,.detail-header,.reply-area,.sidebar-divider,.topbar{ border-color:var(--line)!important; }
+body.wall #app{ background-color:transparent!important; }
+body.wall .topbar,body.wall .sidebar,body.wall .email-list-pane,body.wall .detail-pane{
+  background-color:rgba(var(--panel-rgb),.82)!important;
+  backdrop-filter:blur(18px) saturate(1.25);
+  -webkit-backdrop-filter:blur(18px) saturate(1.25);
+}
+body.wall .pane-header,body.wall .detail-header,body.wall .reply-area{ background-color:transparent!important; }
+
+.topbar-brand{ color:var(--text)!important; opacity:.6!important; }
+.topbar-addr{ color:var(--text-2)!important; }
+.pane-title{ color:var(--text)!important; }
+.section-label{ color:var(--text-3)!important; }
+.nav-item,.folder-item{ color:var(--text-2)!important; }
+.nav-item:hover,.folder-item:hover{ color:var(--text)!important; background-color:var(--surface-2)!important; }
+.nav-item.active,.folder-item.active{ color:var(--text)!important; background-color:var(--surface-2)!important; border-left-color:var(--accent)!important; }
+.folder-badge{ background:var(--accent)!important; color:var(--accent-ink)!important; }
+
+.compose-btn{ background-color:var(--surface)!important; border-color:var(--line-2)!important; color:var(--text)!important; }
+.compose-btn:hover{ background-color:var(--surface-2)!important; border-color:var(--accent)!important; }
+
+.search-bar{ border-color:var(--line)!important; }
+.search-bar input,.reply-area textarea,.modal-field input,.modal-body textarea{
+  background-color:var(--surface)!important; border-color:var(--line)!important; color:var(--text)!important;
+}
+.search-bar input:focus,.reply-area textarea:focus{ border-color:var(--accent)!important; }
+
+.email-item{ border-bottom-color:var(--line)!important; padding-top:var(--pad-y)!important; padding-bottom:var(--pad-y)!important; }
+.email-item:hover,.email-item.active{ background-color:var(--surface-2)!important; }
+.email-from{ color:var(--text-2)!important; }
+.email-subject{ color:var(--text-2)!important; }
+.email-preview,.email-time{ color:var(--text-3)!important; }
+.email-item.unread .email-from,.email-item.unread .email-subject{ color:var(--text)!important; }
+.email-avatar,.email-item.unread .email-avatar{ background-color:var(--surface-2)!important; border-color:var(--line-2)!important; color:var(--text)!important; }
+.email-dot{ background:var(--accent)!important; }
+
+.detail-subject{ color:var(--text)!important; }
+.detail-meta{ color:var(--text-2)!important; }
+.detail-date{ color:var(--text-3)!important; }
+.detail-body{ color:var(--text)!important; }
+
+.btn,.btn-icon{ background-color:var(--surface)!important; color:var(--text)!important; border-color:var(--line-2)!important; }
+.btn:hover,.btn-icon:hover{ background-color:var(--surface-2)!important; border-color:var(--accent)!important; color:var(--text)!important; }
+.btn-primary{ background-color:var(--accent)!important; color:var(--accent-ink)!important; border-color:var(--accent)!important; }
+.btn-primary:hover{ filter:brightness(1.08); background-color:var(--accent)!important; }
+
+.modal{ background-color:var(--panel)!important; border-color:var(--line-2)!important; color:var(--text)!important; }
+.modal-header,.modal-field,.modal-footer{ border-color:var(--line)!important; }
+.modal-header span{ color:var(--text-2)!important; }
+.modal-field label{ color:var(--text-3)!important; }
+.modal-status{ color:var(--text-3)!important; }
+
+.toast{ background-color:var(--surface)!important; border-color:var(--line-2)!important; color:var(--text)!important; }
+
+.account-dock{ background-color:var(--panel)!important; border-color:var(--line)!important; }
+.account-current{ background-color:var(--surface)!important; border-color:var(--line)!important; }
+.account-current:hover{ background-color:var(--surface-2)!important; border-color:var(--line-2)!important; }
+.account-current-meta strong{ color:var(--text)!important; }
+.account-current-meta span{ color:var(--text-3)!important; }
+.account-chevron{ color:var(--text-3)!important; }
+.account-menu{ background-color:var(--surface)!important; border-color:var(--line-2)!important; }
+.account-menu-heading{ color:var(--text-3)!important; }
+.account-option:hover,.account-option.active{ background-color:var(--surface-2)!important; }
+.account-option span{ color:var(--text)!important; }
+.account-option small{ color:var(--text-3)!important; }
+.account-menu-action{ color:var(--text-2)!important; border-top-color:var(--line)!important; }
+.account-menu-action:hover{ background-color:var(--surface-2)!important; color:var(--text)!important; }
+
+.empty-state,.detail-empty{ color:var(--text-3)!important; }
+.err{ color:#ff9292!important; }
+html[data-theme="paper"] .err{ color:#c0392b!important; }
+
+.email-from,.email-subject{ font-size:calc(var(--fs) - 2px)!important; }
+.email-preview,.email-time{ font-size:calc(var(--fs) - 3px)!important; }
+.detail-body,.reply-area textarea,.search-bar input,.pane-title{ font-size:calc(var(--fs) - 1px)!important; }
+.nav-item,.folder-item{ font-size:calc(var(--fs) - 3px)!important; }
+
+body.no-preview .email-preview{ display:none!important; }
+body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{
+  animation-duration:.001ms!important; transition-duration:.001ms!important;
+}
+body.reduce-motion .paw-field{ display:none!important; }
+
+/* ---- context menu ---- */
+.ctx-menu{
+  position:fixed; z-index:350; min-width:186px; padding:5px;
+  background-color:var(--surface); border:1px solid var(--line-2);
+  border-radius:9px; box-shadow:0 20px 55px #000b;
+  opacity:0; visibility:hidden; transform:scale(.97);
+  transform-origin:top left;
+  transition:opacity .12s ease,transform .12s ease,visibility .12s ease;
+}
+.ctx-menu.open{ opacity:1; visibility:visible; transform:scale(1); }
+.ctx-item{
+  display:block; width:100%; text-align:left; padding:8px 11px;
+  border:0!important; background:transparent!important; color:var(--text)!important;
+  font-family:inherit; font-size:11px; border-radius:5px; cursor:pointer; letter-spacing:.2px;
+}
+.ctx-item:hover{ background:var(--surface-2)!important; }
+.ctx-item.danger{ color:#ff9a9a!important; }
+.ctx-item.danger:hover{ background:#3a1515!important; color:#ffbcbc!important; }
+.ctx-sep{ height:1px; background:var(--line); margin:5px 8px; }
+
+/* ---- settings modal ---- */
+.settings-modal{
+  width:540px; max-width:calc(100vw - 24px);
+  max-height:88vh; display:flex; flex-direction:column;
+}
+.settings-body{ flex:1; overflow-y:auto; padding:4px 0 6px; }
+.settings-group{ padding:6px 0 10px; border-bottom:1px solid var(--line); }
+.settings-group:last-child{ border-bottom:0; }
+.settings-group-title{
+  font-size:9px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--text-3); padding:10px 22px 6px;
+}
+.settings-row{
+  display:flex; align-items:center; gap:12px;
+  padding:7px 22px; min-height:38px;
+}
+.settings-row > label{
+  width:104px; flex:0 0 104px; font-size:11px; color:var(--text-2);
+}
+.settings-row input[type="text"],
+.settings-row input[type="url"],
+.settings-row select{
+  flex:1; min-width:0;
+  background-color:var(--surface)!important;
+  border:1px solid var(--line)!important;
+  color:var(--text)!important;
+  border-radius:7px; padding:7px 10px;
+  font-family:inherit; font-size:11px; outline:none;
+  transition:border-color .18s ease;
+}
+.settings-row select{ appearance:none; -webkit-appearance:none; cursor:pointer; }
+.settings-row input:focus,.settings-row select:focus{ border-color:var(--accent)!important; }
+.settings-row input[type="color"]{
+  width:46px; height:26px; padding:0; cursor:pointer;
+  background-color:transparent!important;
+  border:1px solid var(--line)!important; border-radius:7px;
+}
+.seg{ display:flex; gap:5px; flex:1; flex-wrap:wrap; }
+.seg button{
+  flex:1; min-width:64px; padding:7px 8px;
+  font-size:10px; letter-spacing:.4px; text-transform:lowercase;
+  border:1px solid var(--line)!important;
+  background-color:var(--surface)!important;
+  color:var(--text-2)!important;
+  border-radius:7px; cursor:pointer;
+  transition:background .16s ease,color .16s ease,border-color .16s ease;
+}
+.seg button:hover{ border-color:var(--line-2)!important; color:var(--text)!important; }
+.seg button.on{
+  background-color:var(--accent)!important;
+  border-color:var(--accent)!important;
+  color:var(--accent-ink)!important;
+}
+.chk{
+  appearance:none; -webkit-appearance:none;
+  width:36px; height:20px; border-radius:11px;
+  background-color:var(--surface-2); border:1px solid var(--line-2);
+  position:relative; cursor:pointer; flex:0 0 36px;
+  transition:background .18s ease,border-color .18s ease;
+}
+.chk:checked{ background-color:var(--accent); border-color:var(--accent); }
+.chk::after{
+  content:""; position:absolute; top:2px; left:2px;
+  width:14px; height:14px; border-radius:50%;
+  background:#fff; transition:transform .18s ease,background .18s ease;
+}
+.chk:checked::after{ transform:translateX(16px); background:var(--accent-ink); }
+.settings-muted{ color:var(--text-3); font-size:11px; flex:1; }
+
+/* ---- add account (sign up) modal ---- */
+.add-account-modal{
+  width:420px; max-width:calc(100vw - 24px);
+  display:flex; flex-direction:column;
+}
+.add-account-copy{
+  padding:16px 22px 6px; color:var(--text-2); font-size:11px; line-height:1.65;
+}
+.add-account-modal .modal-field{
+  padding:11px 22px; border-bottom:1px solid var(--line);
+  gap:14px;
+}
+.add-account-modal .modal-field label{
+  width:74px; flex:0 0 74px; font-size:9px; letter-spacing:1.2px;
+  text-transform:uppercase; color:var(--text-3);
+}
+.add-account-modal .modal-field input{
+  background-color:transparent!important;
+  border:0!important;
+  padding:5px 0;
+  font-size:12px;
+  color:var(--text)!important;
+}
+.add-account-modal .username-wrap{
+  flex:1; width:auto; border:0; border-bottom:1px solid transparent; padding:0;
+}
+.add-account-modal .username-wrap input{
+  text-align:left; padding:5px 0;
+}
+.add-account-modal .username-suffix{ font-size:12px; color:var(--text-3); }
+.add-account-modal .err{
+  padding:10px 22px 0; min-height:20px; text-align:left; font-size:10px;
+}
+.add-account-modal .modal-footer{
+  padding:14px 22px; border-top:1px solid var(--line); gap:8px;
+}
+.add-account-modal .field-hint{
+  padding:0 22px 10px; color:var(--text-3); font-size:9.5px; letter-spacing:.3px;
+}
+
+@media(max-width:560px){
+  .settings-row{ padding-left:14px; padding-right:14px; }
+  .settings-row > label{ width:86px; flex:0 0 86px; font-size:10px; }
+  .settings-group-title{ padding-left:14px; }
+  .add-account-modal .modal-field{ padding-left:14px; padding-right:14px; }
+  .add-account-modal .modal-field label{ width:64px; flex:0 0 64px; }
+  .add-account-copy,.add-account-modal .err,.add-account-modal .modal-footer{ padding-left:14px; padding-right:14px; }
+}
 </style>
 </head>
 <body class="auth-mode">
@@ -954,6 +1218,7 @@ button:hover,.btn:hover,.btn-icon:hover{background:#171717!important;border-colo
     <div class="topbar-brand">mail.pawsocks.lat</div>
     <div id="topbar-addr" class="topbar-addr"></div>
     <div class="topbar-right">
+      <button class="btn-icon" onclick="openSettings()" title="Settings">⚙</button>
       <button class="btn-icon" onclick="doLogout()">sign out</button>
     </div>
   </div>
@@ -966,6 +1231,10 @@ button:hover,.btn:hover,.btn-icon:hover{background:#171717!important;border-colo
       </div>
       <div class="nav-item" data-folder="sent" onclick="setFolder('sent', this)">
         <span class="folder-name">sent</span>
+      </div>
+      <div class="nav-item" data-folder="trash" onclick="setFolder('trash', this)">
+        <span class="folder-name">trash</span>
+        <span id="trash-count"></span>
       </div>
       <div class="sidebar-divider"></div>
       <div class="sidebar-scroll">
@@ -981,6 +1250,7 @@ button:hover,.btn:hover,.btn-icon:hover{background:#171717!important;border-colo
         <div class="account-menu" id="account-menu" style="display:none">
           <div class="account-menu-heading">ACCOUNTS <span id="account-count">1 / 5</span></div>
           <div id="account-list"></div>
+          <button class="account-menu-action" onclick="openSettings()">Settings</button>
           <button class="account-menu-action" onclick="triggerAvatarUpload()">Change profile picture</button>
           <button class="account-menu-action" id="add-account-btn" onclick="addAccount()">+ Add another account</button>
           <button class="account-menu-action account-signout" onclick="doLogout()">Sign out this account</button>
@@ -991,7 +1261,10 @@ button:hover,.btn:hover,.btn-icon:hover{background:#171717!important;border-colo
     <div class="email-list-pane">
       <div class="pane-header">
         <span class="pane-title" id="pane-title">inbox</span>
-        <button class="btn-icon" onclick="refreshEmails()" title="Refresh">↻</button>
+        <div style="display:flex;align-items:center;gap:2px;">
+          <button class="btn-icon" id="empty-trash-btn" onclick="emptyTrash()" title="Empty trash" style="display:none;font-size:9px;letter-spacing:1px;text-transform:uppercase;">empty</button>
+          <button class="btn-icon" onclick="refreshEmails()" title="Refresh">↻</button>
+        </div>
       </div>
       <div class="search-bar">
         <input type="text" id="search-input" placeholder="search..." oninput="renderEmailList()">
@@ -1011,8 +1284,9 @@ button:hover,.btn:hover,.btn-icon:hover{background:#171717!important;border-colo
         <div class="detail-body" id="detail-body"></div>
         <div class="reply-area">
           <textarea id="reply-text" placeholder="reply..."></textarea>
-          <div style="margin-top:8px;">
+          <div style="margin-top:8px;display:flex;gap:8px;align-items:center;">
             <button class="btn btn-sm btn-primary" onclick="sendReply()">send reply</button>
+            <button class="btn btn-sm" id="detail-trash-btn" onclick="trashSelected()">delete</button>
           </div>
         </div>
       </div>
@@ -1020,6 +1294,7 @@ button:hover,.btn:hover,.btn-icon:hover{background:#171717!important;border-colo
   </div>
 </div>
 
+<!-- ================= COMPOSE ================= -->
 <div id="compose-modal" class="modal-overlay">
   <div class="modal">
     <div class="modal-header">
@@ -1037,17 +1312,135 @@ button:hover,.btn:hover,.btn-icon:hover{background:#171717!important;border-colo
   </div>
 </div>
 
+<!-- ================= ADD ACCOUNT (CREATE) ================= -->
 <div id="add-account-modal" class="modal-overlay" onclick="if(event.target===this)closeAddAccount()">
   <div class="modal add-account-modal">
-    <div class="modal-header"><span>add account</span><button class="btn-icon" onclick="closeAddAccount()">✕</button></div>
-    <div class="add-account-copy">Sign in to another Pawsocks account. Your current inbox stays open and saved.</div>
-    <div class="modal-field"><label>username</label><div class="username-wrap"><input id="add-account-username" type="text" placeholder="username" autocomplete="username"><span class="username-suffix">@pawsocks.lat</span></div></div>
-    <div class="modal-field"><label>password</label><input id="add-account-password" type="password" placeholder="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAddAccountLogin()"></div>
+    <div class="modal-header"><span>create a new account</span><button class="btn-icon" onclick="closeAddAccount()">✕</button></div>
+    <div class="add-account-copy">Pick a username and password. A brand new @pawsocks.lat address will be created and added to your account switcher — your current inbox stays open.</div>
+    <div class="modal-field">
+      <label>username</label>
+      <div class="username-wrap">
+        <input id="add-account-username" type="text" placeholder="username" autocomplete="username">
+        <span class="username-suffix">@pawsocks.lat</span>
+      </div>
+    </div>
+    <div class="modal-field"><label>name</label><input id="add-account-name" type="text" placeholder="display name (optional)" autocomplete="off"></div>
+    <div class="modal-field"><label>password</label><input id="add-account-password" type="password" placeholder="min 6 characters" autocomplete="new-password"></div>
+    <div class="modal-field"><label>confirm</label><input id="add-account-password2" type="password" placeholder="repeat password" autocomplete="new-password" onkeydown="if(event.key==='Enter')doAddAccountSignup()"></div>
     <div class="err" id="add-account-err"></div>
-    <div class="modal-footer"><button class="btn btn-sm btn-primary" id="add-account-submit" onclick="doAddAccountLogin()">sign in</button><button class="btn btn-sm" onclick="closeAddAccount()">cancel</button></div>
+    <div class="modal-footer">
+      <button class="btn btn-sm btn-primary" id="add-account-submit" onclick="doAddAccountSignup()">create account</button>
+      <button class="btn btn-sm" onclick="closeAddAccount()">cancel</button>
+    </div>
   </div>
 </div>
 
+<!-- ================= SETTINGS ================= -->
+<div id="settings-modal" class="modal-overlay" onclick="if(event.target===this)closeSettings()">
+  <div class="modal settings-modal">
+    <div class="modal-header"><span>settings</span><button class="btn-icon" onclick="closeSettings()">✕</button></div>
+    <div class="settings-body">
+
+      <div class="settings-group">
+        <div class="settings-group-title">appearance</div>
+        <div class="settings-row">
+          <label>theme</label>
+          <div class="seg" id="seg-theme">
+            <button data-value="midnight">midnight</button>
+            <button data-value="slate">slate</button>
+            <button data-value="paper">paper</button>
+          </div>
+        </div>
+        <div class="settings-row">
+          <label>accent</label>
+          <input type="color" id="set-accent">
+          <span class="settings-muted" id="accent-label">used for highlights and buttons</span>
+        </div>
+        <div class="settings-row">
+          <label>gradient</label>
+          <select id="set-gradient">
+            <option value="">none</option>
+            <option value="aurora">aurora</option>
+            <option value="sunset">sunset</option>
+            <option value="mono">mono</option>
+            <option value="ocean">ocean</option>
+            <option value="ember">ember</option>
+          </select>
+        </div>
+        <div class="settings-row">
+          <label>wallpaper</label>
+          <input type="url" id="set-wallpaper" placeholder="https://image-url.jpg" autocomplete="off">
+        </div>
+        <div class="settings-row">
+          <label>font size</label>
+          <div class="seg" id="seg-size">
+            <button data-value="sm">small</button>
+            <button data-value="md">normal</button>
+            <button data-value="lg">large</button>
+          </div>
+        </div>
+        <div class="settings-row">
+          <label>density</label>
+          <div class="seg" id="seg-density">
+            <button data-value="compact">compact</button>
+            <button data-value="normal">normal</button>
+            <button data-value="comfortable">relaxed</button>
+          </div>
+        </div>
+        <div class="settings-row">
+          <label>reduce motion</label>
+          <input type="checkbox" class="chk" id="set-motion">
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-title">account</div>
+        <div class="settings-row">
+          <label>display name</label>
+          <input type="text" id="set-display-name" placeholder="your name" autocomplete="off">
+        </div>
+        <div class="settings-row">
+          <label>address</label>
+          <span class="settings-muted" id="set-email">—</span>
+        </div>
+        <div class="settings-row">
+          <label>picture</label>
+          <button class="btn btn-sm" onclick="triggerAvatarUpload()">change picture</button>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-title">mailbox</div>
+        <div class="settings-row">
+          <label>auto refresh</label>
+          <select id="set-refresh">
+            <option value="10000">every 10 seconds</option>
+            <option value="15000">every 15 seconds</option>
+            <option value="30000">every 30 seconds</option>
+            <option value="60000">every minute</option>
+            <option value="0">off</option>
+          </select>
+        </div>
+        <div class="settings-row">
+          <label>preview text</label>
+          <input type="checkbox" class="chk" id="set-preview">
+        </div>
+        <div class="settings-row">
+          <label>confirm delete</label>
+          <input type="checkbox" class="chk" id="set-confirm">
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-sm btn-primary" onclick="closeSettings()">done</button>
+      <button class="btn btn-sm" onclick="resetSettings()">reset defaults</button>
+      <span class="modal-status" id="settings-status"></span>
+    </div>
+  </div>
+</div>
+
+<div class="ctx-menu" id="ctx-menu"></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1108,6 +1501,94 @@ const storage = (() => {
   }
 })();
 
+/* ------------------------- settings ------------------------- */
+const THEME_ACCENTS = { midnight: '#d0d0d0', slate: '#8fb3ff', paper: '#2a2a2e' };
+const GRADIENTS = {
+  aurora: 'linear-gradient(140deg,#0b1a1f 0%,#1b3b34 40%,#101a2c 100%)',
+  sunset: 'linear-gradient(140deg,#1b0f14 0%,#3a1b28 45%,#201225 100%)',
+  mono:   'linear-gradient(140deg,#000 0%,#1a1a1a 55%,#000 100%)',
+  ocean:  'linear-gradient(140deg,#04121f 0%,#0d2b45 45%,#061a2a 100%)',
+  ember:  'linear-gradient(140deg,#170b05 0%,#3a1c0b 50%,#1a0d06 100%)'
+};
+const DEFAULT_SETTINGS = {
+  theme: 'midnight',
+  accent: '#d0d0d0',
+  gradient: '',
+  wallpaper: '',
+  size: 'md',
+  density: 'normal',
+  showPreview: true,
+  confirmDelete: false,
+  reduceMotion: false,
+  refreshMs: 15000
+};
+let settings = { ...DEFAULT_SETTINGS };
+
+function loadSettings() {
+  try {
+    const raw = storage.getItem('settings');
+    if (raw) settings = { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+  } catch { /* keep defaults */ }
+  // migrate older saved values
+  if (settings.size !== 'sm' && settings.size !== 'md' && settings.size !== 'lg') settings.size = 'md';
+  if (!/^#[0-9a-f]{6}$/i.test(settings.accent || '')) settings.accent = THEME_ACCENTS[settings.theme] || '#d0d0d0';
+}
+
+function saveSettings() {
+  try { storage.setItem('settings', JSON.stringify(settings)); } catch {}
+}
+
+function hexToRgb(hex) {
+  const h = (hex || '').replace('#', '');
+  if (h.length !== 6) return { r: 208, g: 208, b: 208 };
+  return { r: parseInt(h.slice(0,2),16), g: parseInt(h.slice(2,4),16), b: parseInt(h.slice(4,6),16) };
+}
+function isLightColor(hex) {
+  const { r, g, b } = hexToRgb(hex);
+  return (0.2126*r + 0.7152*g + 0.0722*b) > 150;
+}
+
+function applySettings() {
+  const root = document.documentElement;
+  const body = document.body;
+
+  root.dataset.theme = settings.theme;
+  body.dataset.size = settings.size;
+  body.dataset.density = settings.density;
+
+  const accent = settings.accent || THEME_ACCENTS[settings.theme] || '#d0d0d0';
+  root.style.setProperty('--accent', accent);
+  root.style.setProperty('--accent-ink', isLightColor(accent) ? '#0a0a0a' : '#ffffff');
+
+  body.classList.toggle('no-preview', !settings.showPreview);
+  body.classList.toggle('reduce-motion', !!settings.reduceMotion);
+
+  let wall = '';
+  if (settings.wallpaper) {
+    wall = `url("${settings.wallpaper.replace(/"/g, '%22')}")`;
+  } else if (settings.gradient && GRADIENTS[settings.gradient]) {
+    wall = GRADIENTS[settings.gradient];
+  }
+  if (wall) {
+    root.style.setProperty('--wall', wall);
+    body.classList.add('wall');
+  } else {
+    root.style.removeProperty('--wall');
+    body.classList.remove('wall');
+  }
+
+  applyRefreshTimer();
+  saveSettings();
+}
+
+function applyRefreshTimer() {
+  if (refreshTimer) clearInterval(refreshTimer);
+  refreshTimer = null;
+  if (!settings.refreshMs || !currentSession) return;
+  refreshTimer = setInterval(loadEmails, settings.refreshMs);
+}
+
+/* ------------------------- globals ------------------------- */
 let currentUser = null;
 let currentSession = null;
 let accounts = [];
@@ -1164,7 +1645,14 @@ function saveSession(session, email) {
   const id = session.user.id;
   const existing = accounts.findIndex(a => a.userId === id);
   const profile = session.user.user_metadata || {};
-  const record = { userId:id, session, email:myEmail, username:profile.username || myEmail.split('@')[0], avatarUrl:profile.avatar_url || '' };
+  const record = {
+    userId: id,
+    session,
+    email: myEmail,
+    username: profile.username || myEmail.split('@')[0],
+    displayName: profile.display_name || profile.username || myEmail.split('@')[0],
+    avatarUrl: profile.avatar_url || ''
+  };
   if (existing >= 0) accounts[existing] = record;
   else {
     if (accounts.length >= MAX_ACCOUNTS) throw new Error('You can keep up to 5 accounts signed in. Remove one before adding another.');
@@ -1178,72 +1666,163 @@ function saveSession(session, email) {
 function persistAccounts(){
   storage.setItem('accounts', JSON.stringify({accounts,activeAccountId}));
 }
-function accountInitial(a){return (a?.username || a?.email || '?').trim().charAt(0).toUpperCase() || '?';}
-function avatarFallback(){return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect width="80" height="80" rx="40" fill="#242424"/><text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" fill="#eee" font-family="Arial" font-size="32">${accountInitial(accounts.find(a=>a.userId===activeAccountId))}</text></svg>`);}
+function accountInitial(a){
+  const s = (a?.displayName || a?.username || a?.email || '?').trim();
+  return s.charAt(0).toUpperCase() || '?';
+}
+function avatarFallback(){ return avatarFallbackFor(accounts.find(a=>a.userId===activeAccountId)); }
+function avatarFallbackFor(a){
+  return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect width="80" height="80" rx="40" fill="#242424"/><text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" fill="#eee" font-family="Arial" font-size="32">${accountInitial(a)}</text></svg>`
+  );
+}
 function renderAccountDock(){
   const active=accounts.find(a=>a.userId===activeAccountId);
   if(!active)return;
-  $('account-name').textContent=active.username || active.email.split('@')[0];
-  $('account-email').textContent=active.email;
-  $('account-avatar').src=active.avatarUrl || avatarFallback();
-  $('topbar-addr').textContent=active.email;
-  $('account-count').textContent=`${accounts.length} / ${MAX_ACCOUNTS}`;
-  $('add-account-btn').style.display=accounts.length>=MAX_ACCOUNTS?'none':'block';
-  $('account-list').innerHTML=accounts.map(a=>`<button class="account-option ${a.userId===activeAccountId?'active':''}" onclick="switchAccount('${a.userId}')"><img src="${escapeHtml(a.avatarUrl || avatarFallbackFor(a))}" alt=""><span>${escapeHtml(a.username || a.email.split('@')[0])}<small>${escapeHtml(a.email)}</small></span></button>`).join('');
+  $('account-name').textContent = active.displayName || active.username || active.email.split('@')[0];
+  $('account-email').textContent = active.email;
+  $('account-avatar').src = active.avatarUrl || avatarFallback();
+  $('topbar-addr').textContent = active.email;
+  $('account-count').textContent = `${accounts.length} / ${MAX_ACCOUNTS}`;
+  $('add-account-btn').style.display = accounts.length >= MAX_ACCOUNTS ? 'none' : 'block';
+  $('account-list').innerHTML = accounts.map(a => `
+    <button class="account-option ${a.userId===activeAccountId?'active':''}" onclick="switchAccount('${a.userId}')">
+      <img src="${escapeHtml(a.avatarUrl || avatarFallbackFor(a))}" alt="">
+      <span>${escapeHtml(a.displayName || a.username || a.email.split('@')[0])}<small>${escapeHtml(a.email)}</small></span>
+    </button>`).join('');
 }
-function avatarFallbackFor(a){return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect width="80" height="80" rx="40" fill="#242424"/><text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" fill="#eee" font-family="Arial" font-size="32">${accountInitial(a)}</text></svg>`);}
-function toggleAccountMenu(){const m=$('account-menu');m.style.display=m.style.display==='none'?'block':'none';}
+function toggleAccountMenu(){
+  const m=$('account-menu');
+  m.style.display = m.style.display==='none' ? 'block' : 'none';
+}
+
+/* ------------------------- add account (sign up) ------------------------- */
 function addAccount(){
-  if(accounts.length>=MAX_ACCOUNTS)return showToast('Maximum of 5 accounts reached');
-  $('account-menu').style.display='none';$('add-account-err').textContent='';$('add-account-username').value='';$('add-account-password').value='';
-  $('add-account-modal').classList.add('open');setTimeout(()=>$('add-account-username').focus(),80);
+  if(accounts.length>=MAX_ACCOUNTS) return showToast('Maximum of 5 accounts reached');
+  $('account-menu').style.display='none';
+  $('add-account-err').textContent='';
+  $('add-account-username').value='';
+  $('add-account-name').value='';
+  $('add-account-password').value='';
+  $('add-account-password2').value='';
+  $('add-account-modal').classList.add('open');
+  setTimeout(()=>$('add-account-username').focus(),80);
 }
-function closeAddAccount(){$('add-account-modal').classList.remove('open');}
-async function doAddAccountLogin(){
-  const username=$('add-account-username').value.trim().toLowerCase();
-  const password=$('add-account-password').value;
-  const err=$('add-account-err');const btn=$('add-account-submit');err.textContent='';
-  if(!username)return err.textContent='Enter a username';
-  if(!password)return err.textContent='Enter a password';
-  if(accounts.length>=MAX_ACCOUNTS)return err.textContent='You already have 5 accounts signed in.';
-  btn.disabled=true;btn.textContent='signing in...';
-  try{
-    const email=`${username}@pawsocks.lat`;
-    const session=await authRequest('/auth/v1/token?grant_type=password',{email,password});
-    saveSession(session,email);$('add-account-password').value='';closeAddAccount();
-    await enterApp();showToast('Account added');
-  }catch(e){err.textContent=e.message||'Could not sign in to this account.';}
-  finally{btn.disabled=false;btn.textContent='sign in';}
+function closeAddAccount(){ $('add-account-modal').classList.remove('open'); }
+
+async function doAddAccountSignup(){
+  const username = $('add-account-username').value.trim().toLowerCase();
+  const displayName = $('add-account-name').value.trim();
+  const password = $('add-account-password').value;
+  const password2 = $('add-account-password2').value;
+  const err = $('add-account-err');
+  const btn = $('add-account-submit');
+  err.textContent = '';
+
+  if (!/^[a-z0-9._-]{2,30}$/.test(username)) return (err.textContent = '2–30 letters, numbers, dots, underscores or hyphens');
+  if (password.length < 6) return (err.textContent = 'password must be at least 6 characters');
+  if (password !== password2) return (err.textContent = 'passwords do not match');
+  if (accounts.length >= MAX_ACCOUNTS) return (err.textContent = 'You already have 5 accounts signed in.');
+
+  btn.disabled = true; btn.textContent = 'creating...';
+  try {
+    const email = `${username}@pawsocks.lat`;
+    const meta = { username };
+    if (displayName) meta.display_name = displayName;
+
+    const data = await authRequest('/auth/v1/signup', { email, password, data: meta });
+
+    let session = data;
+    if (!session?.access_token) {
+      try {
+        session = await authRequest('/auth/v1/token?grant_type=password', { email, password });
+      } catch {
+        throw new Error('Account created, but Supabase requires email confirmation before login. Turn OFF "Confirm email" in Supabase → Authentication → Sign In / Providers → Email, then try again.');
+      }
+    }
+
+    saveSession(session, email);
+    $('add-account-password').value = '';
+    $('add-account-password2').value = '';
+    closeAddAccount();
+    await enterApp();
+    showToast('Account created and added');
+  } catch (e) {
+    err.textContent = e.message || 'Could not create this account.';
+  } finally {
+    btn.disabled = false; btn.textContent = 'create account';
+  }
 }
+
 async function switchAccount(userId){
-  const a=accounts.find(x=>x.userId===userId);if(!a||userId===activeAccountId)return;
-  if(refreshTimer)clearInterval(refreshTimer);refreshTimer=null;
-  $('app').classList.add('account-switching');$('account-menu').style.display='none';
-  activeAccountId=userId;currentSession=a.session;currentUser=a.session.user;myEmail=a.email;allEmails=[];selectedId=null;
+  const a=accounts.find(x=>x.userId===userId);
+  if(!a||userId===activeAccountId) return;
+  if(refreshTimer) clearInterval(refreshTimer);
+  refreshTimer=null;
+  $('app').classList.add('account-switching');
+  $('account-menu').style.display='none';
+  activeAccountId=userId; currentSession=a.session; currentUser=a.session.user; myEmail=a.email;
+  allEmails=[]; selectedId=null;
   try{
     const res=await fetch(`${SUPABASE_URL}/auth/v1/user`,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${currentSession.access_token}`}});
-    if(res.status===401&&currentSession.refresh_token)await refreshSession();
-    else if(res.ok){currentUser=await res.json();a.session.user=currentUser;}
+    if(res.status===401&&currentSession.refresh_token) await refreshSession();
+    else if(res.ok){ currentUser=await res.json(); a.session.user=currentUser; }
     else throw new Error('This account session expired. Sign in again.');
-    a.session=currentSession;persistAccounts();renderAccountDock();await enterApp();
-  }catch(e){showToast(e.message);renderAccountDock();}
-  finally{$('app').classList.remove('account-switching');}
+    a.session=currentSession;
+    persistAccounts();
+    renderAccountDock();
+    await enterApp();
+  }catch(e){
+    showToast(e.message);
+    renderAccountDock();
+  }finally{
+    $('app').classList.remove('account-switching');
+  }
 }
-async function triggerAvatarUpload(){ $('account-menu').style.display='none';$('avatar-upload').click(); }
+
+async function triggerAvatarUpload(){
+  $('account-menu').style.display='none';
+  $('avatar-upload').click();
+}
 async function uploadAvatar(event){
-  const file=event.target.files?.[0];event.target.value='';if(!file)return;
-  if(file.size>3*1024*1024)return showToast('Choose an image under 3 MB');
-  if(!/^image\/(png|jpeg|webp|gif)$/.test(file.type))return showToast('Use PNG, JPG, WEBP or GIF');
+  const file=event.target.files?.[0];
+  event.target.value='';
+  if(!file) return;
+  if(file.size>3*1024*1024) return showToast('Choose an image under 3 MB');
+  if(!/^image\/(png|jpeg|webp|gif)$/.test(file.type)) return showToast('Use PNG, JPG, WEBP or GIF');
   try{
     const ext=({ 'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/gif':'gif'})[file.type]||'png';
     const path=`${currentUser.id}/avatar.${ext}`;
-    const res=await fetch(`${SUPABASE_URL}/storage/v1/object/avatars/${path}`,{method:'POST',headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${currentSession.access_token}`,'x-upsert':'true','Content-Type':file.type},body:file});
-    if(!res.ok){let detail='';try{const j=await res.json();detail=j.message||j.error||j.msg||'';}catch{detail=await res.text();}if(res.status===403)throw new Error('Storage returned 403. Run the avatars bucket and Storage policies SQL provided with this update, then try again.');throw new Error(detail||`Storage upload failed (${res.status})`);}
+    const res=await fetch(`${SUPABASE_URL}/storage/v1/object/avatars/${path}`,{
+      method:'POST',
+      headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${currentSession.access_token}`,'x-upsert':'true','Content-Type':file.type},
+      body:file
+    });
+    if(!res.ok){
+      let detail='';
+      try{const j=await res.json();detail=j.message||j.error||j.msg||'';}catch{detail=await res.text();}
+      if(res.status===403) throw new Error('Storage returned 403. Run the avatars bucket and Storage policies SQL provided with this update, then try again.');
+      throw new Error(detail||`Storage upload failed (${res.status})`);
+    }
     const url=`${SUPABASE_URL}/storage/v1/object/public/avatars/${path}?v=${Date.now()}`;
-    const update=await fetch(`${SUPABASE_URL}/auth/v1/user`,{method:'PUT',headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${currentSession.access_token}`,'Content-Type':'application/json'},body:JSON.stringify({data:{...currentUser.user_metadata,avatar_url:url}})});
-    if(!update.ok){let detail='';try{const j=await update.json();detail=j.message||j.msg||j.error_description||'';}catch{detail=await update.text();}throw new Error(detail||`Could not save profile picture (${update.status})`);}
-    currentUser=await update.json();const a=accounts.find(x=>x.userId===activeAccountId);a.avatarUrl=url;a.session.user=currentUser;persistAccounts();renderAccountDock();showToast('Profile picture updated');
-  }catch(e){showToast(e.message.includes('Bucket not found')?'Create the avatars storage bucket using the SQL below.':`Avatar upload failed: ${e.message}`);}
+    const update=await fetch(`${SUPABASE_URL}/auth/v1/user`,{
+      method:'PUT',
+      headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${currentSession.access_token}`,'Content-Type':'application/json'},
+      body:JSON.stringify({data:{...currentUser.user_metadata,avatar_url:url}})
+    });
+    if(!update.ok){
+      let detail='';
+      try{const j=await update.json();detail=j.message||j.msg||j.error_description||'';}catch{detail=await update.text();}
+      throw new Error(detail||`Could not save profile picture (${update.status})`);
+    }
+    currentUser=await update.json();
+    const a=accounts.find(x=>x.userId===activeAccountId);
+    a.avatarUrl=url; a.session.user=currentUser;
+    persistAccounts(); renderAccountDock();
+    showToast('Profile picture updated');
+  }catch(e){
+    showToast(e.message.includes('Bucket not found')?'Create the avatars storage bucket using the SQL below.':`Avatar upload failed: ${e.message}`);
+  }
 }
 
 async function refreshSession() {
@@ -1262,6 +1841,7 @@ async function sbFetch(path, options = {}) {
       apikey: SUPABASE_KEY,
       'Content-Type': 'application/json',
       Authorization: `Bearer ${currentSession.access_token}`,
+      Prefer: options.method === 'DELETE' ? 'return=minimal' : 'return=representation',
       ...(options.headers || {})
     }
   });
@@ -1275,7 +1855,9 @@ async function sbFetch(path, options = {}) {
     throw new Error(detail || `Request failed (${res.status})`);
   }
   if (res.status === 204) return null;
-  return res.json();
+  const txt = await res.text();
+  if (!txt) return null;
+  try { return JSON.parse(txt); } catch { return null; }
 }
 
 function clearSession() {
@@ -1301,9 +1883,11 @@ async function enterApp() {
   $('detail-view').style.display = 'none';
   $('detail-empty').style.display = 'block';
   currentFolder = 'inbox';
+  $('pane-title').textContent = 'inbox';
+  $('empty-trash-btn').style.display = 'none';
+  document.querySelectorAll('[data-folder]').forEach(n => n.classList.toggle('active', n.dataset.folder === 'inbox'));
   await loadEmails();
-  if (refreshTimer) clearInterval(refreshTimer);
-  refreshTimer = setInterval(loadEmails, 15000);
+  applyRefreshTimer();
 }
 
 async function doLogin() {
@@ -1343,9 +1927,6 @@ async function doRegister() {
     const email = `${username}@pawsocks.lat`;
     const data = await authRequest('/auth/v1/signup', { email, password, data: { username } });
 
-    // Supabase returns a session immediately only when email confirmation is disabled
-    // (or the project otherwise permits immediate sessions). If it does not, try password
-    // sign-in so the user is still taken directly into the inbox when allowed.
     let session = data;
     if (!session?.access_token) {
       try {
@@ -1365,6 +1946,7 @@ async function doRegister() {
   }
 }
 
+/* ------------------------- email loading ------------------------- */
 async function loadEmails() {
   if (!currentSession) return;
   try {
@@ -1428,8 +2010,10 @@ function renderFolders() {
 
 function getFilteredEmails() {
   let list = allEmails;
-  if (currentFolder === 'sent') {
-    list = list.filter(e => e.folder === 'sent');
+  if (currentFolder === 'trash') {
+    list = list.filter(e => e.is_deleted);
+  } else if (currentFolder === 'sent') {
+    list = list.filter(e => e.folder === 'sent' && !e.is_deleted);
   } else if (currentFolder === 'inbox') {
     list = list.filter(e => e.folder !== 'sent' && !e.is_deleted);
   } else {
@@ -1450,7 +2034,7 @@ function renderEmailList() {
   const container = $('email-list');
   const filtered = getFilteredEmails();
   if (!filtered.length) {
-    container.innerHTML = `<div class="empty-state">${$('search-input')?.value ? 'no results' : 'no messages'}</div>`;
+    container.innerHTML = `<div class="empty-state">${$('search-input')?.value ? 'no results' : (currentFolder === 'trash' ? 'trash is empty' : 'no messages')}</div>`;
     return;
   }
   container.innerHTML = filtered.map((email, i) => {
@@ -1485,8 +2069,6 @@ function renderEmailContent(email) {
   const html = email.body_html || email.html_body || email.content_html || '';
   const text = email.body_text || email.text_body || email.content_text || '';
 
-  // Render HTML email layouts (tables, inline styles, images and other email embeds)
-  // inside an isolated iframe. Scripts and top-level navigation remain disabled.
   if (typeof html === 'string' && html.trim()) {
     const frame = document.createElement('iframe');
     frame.className = 'email-html-frame';
@@ -1500,55 +2082,6 @@ function renderEmailContent(email) {
 body{padding:20px;font:14px/1.6 Arial,Helvetica,sans-serif;color:#202124;background:#fff}
 img{max-width:100%;height:auto}table{max-width:100%}pre{white-space:pre-wrap;overflow-wrap:anywhere}
 a{overflow-wrap:anywhere}iframe,video{max-width:100%}
-
-/* Login / signup falling paw-print animation */
-.paw-field{
-  position:fixed!important; inset:0!important; z-index:0!important;
-  overflow:hidden!important; pointer-events:none!important;
-  opacity:0!important; visibility:hidden!important;
-  background:transparent!important;
-}
-body.auth-mode .paw-field{opacity:1!important;visibility:visible!important}
-.paw-field span{
-  position:absolute!important; top:-12vh!important; left:var(--paw-x,50%)!important;
-  display:block!important; width:max-content; height:max-content;
-  color:#a6a6a6!important; font-size:var(--paw-size,25px)!important;
-  line-height:1; opacity:0!important; filter:grayscale(1)!important;
-  text-shadow:0 2px 16px #fff2!important;
-  animation:pawfall var(--paw-duration,19s) linear var(--paw-delay,0s) infinite!important;
-  will-change:transform,opacity;
-}
-.paw-field span:nth-child(1){--paw-x:4%;--paw-size:21px;--paw-duration:19s;--paw-delay:-13s}
-.paw-field span:nth-child(2){--paw-x:10%;--paw-size:30px;--paw-duration:24s;--paw-delay:-4s}
-.paw-field span:nth-child(3){--paw-x:16%;--paw-size:17px;--paw-duration:17s;--paw-delay:-9s}
-.paw-field span:nth-child(4){--paw-x:23%;--paw-size:27px;--paw-duration:22s;--paw-delay:-17s}
-.paw-field span:nth-child(5){--paw-x:29%;--paw-size:19px;--paw-duration:18s;--paw-delay:-2s}
-.paw-field span:nth-child(6){--paw-x:35%;--paw-size:32px;--paw-duration:26s;--paw-delay:-15s}
-.paw-field span:nth-child(7){--paw-x:41%;--paw-size:20px;--paw-duration:20s;--paw-delay:-7s}
-.paw-field span:nth-child(8){--paw-x:47%;--paw-size:25px;--paw-duration:23s;--paw-delay:-19s}
-.paw-field span:nth-child(9){--paw-x:53%;--paw-size:18px;--paw-duration:18s;--paw-delay:-11s}
-.paw-field span:nth-child(10){--paw-x:59%;--paw-size:29px;--paw-duration:25s;--paw-delay:-5s}
-.paw-field span:nth-child(11){--paw-x:65%;--paw-size:20px;--paw-duration:19s;--paw-delay:-16s}
-.paw-field span:nth-child(12){--paw-x:71%;--paw-size:31px;--paw-duration:27s;--paw-delay:-8s}
-.paw-field span:nth-child(13){--paw-x:77%;--paw-size:18px;--paw-duration:18s;--paw-delay:-3s}
-.paw-field span:nth-child(14){--paw-x:83%;--paw-size:26px;--paw-duration:22s;--paw-delay:-14s}
-.paw-field span:nth-child(15){--paw-x:89%;--paw-size:20px;--paw-duration:20s;--paw-delay:-6s}
-.paw-field span:nth-child(16){--paw-x:95%;--paw-size:30px;--paw-duration:25s;--paw-delay:-18s}
-.paw-field span:nth-child(17){--paw-x:7%;--paw-size:16px;--paw-duration:21s;--paw-delay:-20s}
-.paw-field span:nth-child(18){--paw-x:38%;--paw-size:17px;--paw-duration:24s;--paw-delay:-12s}
-.paw-field span:nth-child(19){--paw-x:68%;--paw-size:16px;--paw-duration:20s;--paw-delay:-10s}
-.paw-field span:nth-child(20){--paw-x:92%;--paw-size:18px;--paw-duration:23s;--paw-delay:-22s}
-@keyframes pawfall{
-  0%{transform:translate3d(-12px,-12vh,0) rotate(-28deg);opacity:0}
-  12%{opacity:.20}
-  50%{transform:translate3d(22px,48vh,0) rotate(12deg);opacity:.15}
-  88%{opacity:.12}
-  100%{transform:translate3d(-18px,112vh,0) rotate(42deg);opacity:0}
-}
-.landing-screen,.auth-screen{position:relative!important;z-index:2!important}
-.auth-box{position:relative;z-index:2}
-@media(prefers-reduced-motion:reduce){.paw-field span{animation:none!important;display:none!important}}
-
 </style></head><body>${html}</body></html>`;
     frame.srcdoc = safeDocument;
     container.replaceChildren(frame);
@@ -1573,10 +2106,21 @@ async function viewEmail(id) {
   $('detail-date').textContent = formatDateTime(email.received_at);
   renderEmailContent(email);
   $('reply-text').placeholder = `Reply to ${email.from_address || ''}`;
+
+  const trashBtn = $('detail-trash-btn');
+  if (email.is_deleted) {
+    trashBtn.textContent = 'restore';
+    trashBtn.onclick = () => restoreEmail(id);
+  } else {
+    trashBtn.textContent = 'delete';
+    trashBtn.onclick = () => trashEmail(id);
+  }
+
   document.querySelectorAll('.email-item').forEach(el => {
     el.classList.toggle('active', el.dataset.id === id);
   });
-  if (!email.is_read) {
+
+  if (!email.is_read && !email.is_deleted) {
     email.is_read = true;
     renderEmailList();
     renderFolders();
@@ -1587,20 +2131,35 @@ async function viewEmail(id) {
   }
 }
 
+function closeDetail() {
+  selectedId = null;
+  $('detail-view').style.display = 'none';
+  $('detail-empty').style.display = 'block';
+}
+
 function setFolder(folder, el) {
   currentFolder = folder;
   selectedId = null;
   document.querySelectorAll('[data-folder]').forEach(n => n.classList.remove('active'));
   if (el) el.classList.add('active');
+  else document.querySelectorAll(`[data-folder="${CSS.escape(folder)}"]`).forEach(n => n.classList.add('active'));
   $('pane-title').textContent = folder;
-  $('detail-view').style.display = 'none';
-  $('detail-empty').style.display = 'block';
+  $('empty-trash-btn').style.display = folder === 'trash' ? 'inline-block' : 'none';
+  closeDetail();
   renderEmailList();
 }
 
 function updateUnreadCount() {
   const count = allEmails.filter(e => e.folder !== 'sent' && !e.is_read && !e.is_deleted).length;
   $('unread-count').textContent = count > 0 ? count : '';
+  const trashed = allEmails.filter(e => e.is_deleted).length;
+  $('trash-count').textContent = trashed > 0 ? trashed : '';
+}
+
+function refreshAfterChange() {
+  renderFolders();
+  renderEmailList();
+  updateUnreadCount();
 }
 
 function refreshEmails() {
@@ -1616,9 +2175,179 @@ async function doLogout() {
     await switchAccount(nextId);
     return;
   }
-  $('app').style.display='none';showAuth('landing');
+  $('app').style.display='none';
+  showAuth('landing');
 }
 
+/* ------------------------- trash / delete ------------------------- */
+async function patchEmail(id, patch) {
+  const email = allEmails.find(e => e.id === id);
+  const prev = email ? { ...email } : null;
+  if (email) Object.assign(email, patch);
+  refreshAfterChange();
+  try {
+    await sbFetch(`/rest/v1/emails?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify(patch) });
+    return true;
+  } catch (err) {
+    if (email && prev) Object.assign(email, prev);
+    refreshAfterChange();
+    showToast('Update failed: ' + err.message);
+    return false;
+  }
+}
+
+async function trashEmail(id) {
+  const email = allEmails.find(e => e.id === id);
+  if (!email) return;
+  if (settings.confirmDelete && !window.confirm('Move this message to trash?')) return;
+  const wasSelected = selectedId === id;
+  const ok = await patchEmail(id, { is_deleted: true });
+  if (!ok) return;
+  if (wasSelected) closeDetail();
+  refreshAfterChange();
+  showToast('Moved to trash');
+}
+
+async function trashSelected() {
+  if (selectedId) await trashEmail(selectedId);
+}
+
+async function restoreEmail(id) {
+  const ok = await patchEmail(id, { is_deleted: false });
+  if (!ok) return;
+  if (selectedId === id) closeDetail();
+  refreshAfterChange();
+  showToast('Restored to inbox');
+}
+
+async function purgeEmail(id) {
+  if (!window.confirm('Permanently delete this message? This cannot be undone.')) return;
+  const email = allEmails.find(e => e.id === id);
+  const idx = allEmails.findIndex(e => e.id === id);
+  if (idx >= 0) allEmails.splice(idx, 1);
+  if (selectedId === id) closeDetail();
+  refreshAfterChange();
+  try {
+    await sbFetch(`/rest/v1/emails?id=eq.${id}`, { method: 'DELETE' });
+    showToast('Deleted permanently');
+  } catch (err) {
+    if (email) allEmails.splice(idx, 0, email);
+    refreshAfterChange();
+    showToast('Delete failed: ' + err.message);
+  }
+}
+
+async function toggleRead(id) {
+  const email = allEmails.find(e => e.id === id);
+  if (!email) return;
+  await patchEmail(id, { is_read: !email.is_read });
+}
+
+async function emptyTrash() {
+  const ids = allEmails.filter(e => e.is_deleted).map(e => e.id);
+  if (!ids.length) return showToast('trash is already empty');
+  if (!window.confirm(`Permanently delete ${ids.length} message${ids.length > 1 ? 's' : ''}?`)) return;
+  const backup = allEmails.slice();
+  allEmails = allEmails.filter(e => !e.is_deleted);
+  closeDetail();
+  refreshAfterChange();
+  try {
+    await sbFetch(`/rest/v1/emails?id=in.(${ids.join(',')})`, { method: 'DELETE' });
+    showToast('trash emptied');
+  } catch (err) {
+    allEmails = backup;
+    refreshAfterChange();
+    showToast('Failed: ' + err.message);
+  }
+}
+
+/* ------------------------- context menu ------------------------- */
+let ctxEmailId = null;
+
+function hideCtx() {
+  $('ctx-menu').classList.remove('open');
+  ctxEmailId = null;
+}
+
+function showCtx(x, y, id) {
+  const email = allEmails.find(e => e.id === id);
+  if (!email) return;
+  ctxEmailId = id;
+  const menu = $('ctx-menu');
+  const inTrash = !!email.is_deleted;
+  const items = [];
+
+  if (inTrash) {
+    items.push({ label: 'Restore to inbox', action: 'restore' });
+    items.push({ sep: true });
+    items.push({ label: 'Delete permanently', action: 'purge', danger: true });
+  } else {
+    items.push({ label: email.is_read ? 'Mark as unread' : 'Mark as read', action: 'toggle-read' });
+    items.push({ label: 'Open', action: 'open' });
+    items.push({ sep: true });
+    items.push({ label: 'Move to trash', action: 'trash', danger: true });
+  }
+  items.push({ sep: true });
+  items.push({ label: 'Copy sender address', action: 'copy-sender' });
+
+  menu.innerHTML = items.map(it => it.sep
+    ? '<div class="ctx-sep"></div>'
+    : `<button class="ctx-item ${it.danger ? 'danger' : ''}" data-action="${it.action}">${escapeHtml(it.label)}</button>`
+  ).join('');
+
+  menu.style.left = '0px';
+  menu.style.top = '0px';
+  menu.classList.add('open');
+  const rect = menu.getBoundingClientRect();
+  const px = Math.max(6, Math.min(x, window.innerWidth - rect.width - 8));
+  const py = Math.max(6, Math.min(y, window.innerHeight - rect.height - 8));
+  menu.style.left = px + 'px';
+  menu.style.top = py + 'px';
+}
+
+document.addEventListener('contextmenu', e => {
+  e.preventDefault();
+  const item = e.target.closest('.email-item');
+  if (!item) { hideCtx(); return; }
+  showCtx(e.clientX, e.clientY, item.dataset.id);
+});
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('#ctx-menu')) hideCtx();
+});
+document.addEventListener('scroll', hideCtx, true);
+window.addEventListener('resize', hideCtx);
+
+$('ctx-menu').addEventListener('click', async e => {
+  const btn = e.target.closest('.ctx-item');
+  if (!btn) return;
+  const action = btn.dataset.action;
+  const id = ctxEmailId;
+  hideCtx();
+  if (!id) return;
+  const email = allEmails.find(x => x.id === id);
+  if (!email) return;
+
+  switch (action) {
+    case 'open': viewEmail(id); break;
+    case 'toggle-read': await toggleRead(id); break;
+    case 'trash': await trashEmail(id); break;
+    case 'restore': await restoreEmail(id); break;
+    case 'purge': await purgeEmail(id); break;
+    case 'copy-sender': {
+      const addr = email.from_address || '';
+      try {
+        await navigator.clipboard.writeText(addr);
+        showToast('Copied ' + addr);
+      } catch {
+        showToast('Could not copy');
+      }
+      break;
+    }
+  }
+});
+
+/* ------------------------- compose / reply ------------------------- */
 function openCompose() {
   $('compose-modal').classList.add('open');
   $('compose-to').value = '';
@@ -1646,7 +2375,6 @@ async function sendViaEdge(to, subject, text) {
   if (!res.ok) throw new Error(data.error || 'Send failed');
   return data;
 }
-
 
 async function sendCompose() {
   const to = $('compose-to').value.trim();
@@ -1686,6 +2414,7 @@ async function sendReply() {
   }
 }
 
+/* ------------------------- helpers ------------------------- */
 function escapeHtml(str) {
   if (!str) return '';
   return String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -1718,34 +2447,238 @@ function formatDateTime(ts) {
   return ts ? new Date(ts).toLocaleString() : '';
 }
 
+/* ------------------------- settings UI ------------------------- */
+function segSet(id, value) {
+  const el = $(id);
+  if (!el) return;
+  [...el.querySelectorAll('button')].forEach(b => b.classList.toggle('on', b.dataset.value === value));
+}
+
+function syncSettingsUI() {
+  if (!settings) return;
+  $('set-accent').value = /^#[0-9a-f]{6}$/i.test(settings.accent) ? settings.accent : '#d0d0d0';
+  $('set-wallpaper').value = settings.wallpaper || '';
+  $('set-gradient').value = settings.gradient || '';
+  segSet('seg-theme', settings.theme);
+  segSet('seg-size', settings.size);
+  segSet('seg-density', settings.density);
+  $('set-motion').checked = !!settings.reduceMotion;
+  $('set-preview').checked = !!settings.showPreview;
+  $('set-confirm').checked = !!settings.confirmDelete;
+  $('set-refresh').value = String(settings.refreshMs);
+  const meta = currentUser?.user_metadata || {};
+  $('set-display-name').value = meta.display_name || meta.username || '';
+  $('set-email').textContent = myEmail || '—';
+}
+
+function openSettings() {
+  $('account-menu').style.display = 'none';
+  syncSettingsUI();
+  $('settings-status').textContent = '';
+  $('settings-modal').classList.add('open');
+}
+
+function closeSettings() {
+  $('settings-modal').classList.remove('open');
+}
+
+function resetSettings() {
+  settings = { ...DEFAULT_SETTINGS };
+  applySettings();
+  syncSettingsUI();
+  $('settings-status').textContent = 'reset';
+  setTimeout(() => { $('settings-status').textContent = ''; }, 1500);
+}
+
+async function saveDisplayName() {
+  const name = $('set-display-name').value.trim();
+  if (!currentSession) return;
+  $('settings-status').textContent = 'saving...';
+  try {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      method: 'PUT',
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${currentSession.access_token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ data: { ...(currentUser.user_metadata || {}), display_name: name || null } })
+    });
+    if (!res.ok) {
+      let detail = '';
+      try { const j = await res.json(); detail = j.message || j.msg || j.error_description || ''; } catch { detail = await res.text(); }
+      throw new Error(detail || `Could not save display name (${res.status})`);
+    }
+    currentUser = await res.json();
+    const a = accounts.find(x => x.userId === activeAccountId);
+    if (a) {
+      a.displayName = name || (currentUser.user_metadata?.username) || a.username;
+      a.session.user = currentUser;
+      persistAccounts();
+      renderAccountDock();
+    }
+    $('settings-status').textContent = 'saved';
+    setTimeout(() => { if ($('settings-status').textContent === 'saved') $('settings-status').textContent = ''; }, 1600);
+  } catch (err) {
+    $('settings-status').textContent = 'failed';
+    showToast(err.message);
+  }
+}
+
+function initSettingsUI() {
+  $('seg-theme').addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    settings.theme = b.dataset.value;
+    settings.accent = THEME_ACCENTS[settings.theme] || settings.accent;
+    applySettings();
+    syncSettingsUI();
+  });
+
+  $('seg-size').addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    settings.size = b.dataset.value;
+    applySettings();
+    syncSettingsUI();
+  });
+
+  $('seg-density').addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    settings.density = b.dataset.value;
+    applySettings();
+    syncSettingsUI();
+  });
+
+  $('set-accent').addEventListener('input', e => {
+    settings.accent = e.target.value;
+    applySettings();
+  });
+
+  $('set-gradient').addEventListener('change', e => {
+    settings.gradient = e.target.value;
+    if (settings.gradient) {
+      settings.wallpaper = '';
+      $('set-wallpaper').value = '';
+    }
+    applySettings();
+  });
+
+  let wallTimer = null;
+  $('set-wallpaper').addEventListener('input', e => {
+    clearTimeout(wallTimer);
+    wallTimer = setTimeout(() => {
+      settings.wallpaper = e.target.value.trim();
+      if (settings.wallpaper) {
+        settings.gradient = '';
+        $('set-gradient').value = '';
+      }
+      applySettings();
+    }, 420);
+  });
+
+  $('set-motion').addEventListener('change', e => {
+    settings.reduceMotion = e.target.checked;
+    applySettings();
+  });
+
+  $('set-preview').addEventListener('change', e => {
+    settings.showPreview = e.target.checked;
+    applySettings();
+  });
+
+  $('set-confirm').addEventListener('change', e => {
+    settings.confirmDelete = e.target.checked;
+    applySettings();
+  });
+
+  $('set-refresh').addEventListener('change', e => {
+    settings.refreshMs = Number(e.target.value) || 0;
+    applySettings();
+  });
+
+  $('set-display-name').addEventListener('change', saveDisplayName);
+}
+
+/* ------------------------- keyboard ------------------------- */
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && $('compose-modal').classList.contains('open')) {
-    closeCompose();
+  if (e.key === 'Escape') {
+    if ($('compose-modal').classList.contains('open')) closeCompose();
+    if ($('settings-modal').classList.contains('open')) closeSettings();
+    if ($('add-account-modal').classList.contains('open')) closeAddAccount();
+    hideCtx();
   }
 });
 
-async function restoreSession() {
-  try {
-    const saved=storage.getItem('accounts');
-    if(saved){const parsed=JSON.parse(saved);accounts=Array.isArray(parsed.accounts)?parsed.accounts.slice(0,MAX_ACCOUNTS):[];activeAccountId=parsed.activeAccountId||accounts[0]?.userId||null;}
-    // Migrate the previous single-account storage format.
-    if(!accounts.length){const legacy=storage.getItem('session');if(legacy){const old=JSON.parse(legacy);if(old.session?.user?.id)accounts=[{userId:old.session.user.id,session:old.session,email:old.email||old.session.user.email,username:old.session.user.user_metadata?.username||old.session.user.email?.split('@')[0],avatarUrl:old.session.user.user_metadata?.avatar_url||''}];activeAccountId=accounts[0]?.userId||null;persistAccounts();storage.removeItem('session');}}
-    if(!activeAccountId||!accounts.length)return showAuth('landing');
-    const active=accounts.find(a=>a.userId===activeAccountId)||accounts[0];activeAccountId=active.userId;currentSession=active.session;myEmail=active.email;
-    let res=await fetch(`${SUPABASE_URL}/auth/v1/user`,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${currentSession.access_token}`}});
-    if(res.status===401&&currentSession.refresh_token){await refreshSession();res=await fetch(`${SUPABASE_URL}/auth/v1/user`,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${currentSession.access_token}`}});}
-    if(!res.ok)throw new Error('Could not restore account session');
-    currentUser=await res.json();active.session=currentSession;active.email=currentUser.email||active.email;active.username=currentUser.user_metadata?.username||active.username;active.avatarUrl=currentUser.user_metadata?.avatar_url||active.avatarUrl;persistAccounts();renderAccountDock();await enterApp();
-  }catch(err){console.warn('Session restore failed:',err);showAuth('landing');}
-}
-restoreSession();
-
-// Keyboard-friendly authentication forms.
 document.addEventListener('keydown', event => {
   if (event.key !== 'Enter') return;
+  if ($('add-account-modal').classList.contains('open')) return;
+  if ($('settings-modal').classList.contains('open')) return;
+  if ($('compose-modal').classList.contains('open')) return;
   if ($('login-screen').style.display !== 'none') doLogin();
   else if ($('register-screen').style.display !== 'none') doRegister();
 });
+
+/* ------------------------- session restore ------------------------- */
+async function restoreSession() {
+  try {
+    const saved=storage.getItem('accounts');
+    if(saved){
+      const parsed=JSON.parse(saved);
+      accounts=Array.isArray(parsed.accounts)?parsed.accounts.slice(0,MAX_ACCOUNTS):[];
+      activeAccountId=parsed.activeAccountId||accounts[0]?.userId||null;
+    }
+    if(!accounts.length){
+      const legacy=storage.getItem('session');
+      if(legacy){
+        const old=JSON.parse(legacy);
+        if(old.session?.user?.id){
+          accounts=[{
+            userId:old.session.user.id,
+            session:old.session,
+            email:old.email||old.session.user.email,
+            username:old.session.user.user_metadata?.username||old.session.user.email?.split('@')[0],
+            displayName:old.session.user.user_metadata?.display_name||old.session.user.user_metadata?.username||old.session.user.email?.split('@')[0],
+            avatarUrl:old.session.user.user_metadata?.avatar_url||''
+          }];
+          activeAccountId=accounts[0]?.userId||null;
+          persistAccounts();
+          storage.removeItem('session');
+        }
+      }
+    }
+    if(!activeAccountId||!accounts.length) return showAuth('landing');
+    const active=accounts.find(a=>a.userId===activeAccountId)||accounts[0];
+    activeAccountId=active.userId;
+    currentSession=active.session;
+    myEmail=active.email;
+    let res=await fetch(`${SUPABASE_URL}/auth/v1/user`,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${currentSession.access_token}`}});
+    if(res.status===401&&currentSession.refresh_token){
+      await refreshSession();
+      res=await fetch(`${SUPABASE_URL}/auth/v1/user`,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${currentSession.access_token}`}});
+    }
+    if(!res.ok) throw new Error('Could not restore account session');
+    currentUser=await res.json();
+    active.session=currentSession;
+    active.email=currentUser.email||active.email;
+    active.username=currentUser.user_metadata?.username||active.username;
+    active.displayName=currentUser.user_metadata?.display_name||active.displayName;
+    active.avatarUrl=currentUser.user_metadata?.avatar_url||active.avatarUrl;
+    persistAccounts();
+    renderAccountDock();
+    await enterApp();
+  }catch(err){
+    console.warn('Session restore failed:',err);
+    showAuth('landing');
+  }
+}
+
+/* ------------------------- boot ------------------------- */
+loadSettings();
+applySettings();
+initSettingsUI();
+restoreSession();
 </script>
 </body>
 </html>
