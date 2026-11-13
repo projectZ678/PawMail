@@ -625,27 +625,6 @@ body {
   letter-spacing: 1px;
 }
 
-.toast {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  background: #0e0e0e;
-  border: 1px solid rgba(255,255,255,0.09);
-  padding: 12px 20px;
-  font-size: 10px;
-  letter-spacing: 0.5px;
-  border-radius: 3px;
-  opacity: 0;
-  transform: translateY(10px);
-  pointer-events: none;
-  transition:
-    opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 400;
-  box-shadow: 0 12px 32px rgba(0,0,0,0.5);
-}
-.toast.show { opacity: 1; transform: translateY(0); }
-
 .err {
   font-size: 10px;
   color: rgba(255,90,90,0.75);
@@ -705,7 +684,7 @@ body{color:#f7f5ff}
 .email-item.unread .email-avatar{background:rgba(157,126,255,.23);border-color:#b9a3ff66}
 .detail-pane{background:#07070a}
 .detail-header{padding:20px 28px}.detail-body{padding:28px}.reply-area{padding:18px 28px}
-.modal{border-radius:14px;background:#101015}.toast{border-radius:10px}
+.modal{border-radius:14px;background:#101015}
 @media(max-width:760px){.sidebar{width:150px}.email-list-pane{width:42vw}.detail-header,.detail-body,.reply-area{padding-left:16px;padding-right:16px}}
 @media(max-width:560px){.sidebar{width:62px}.sidebar .folder-name,.sidebar .section-label,.sidebar .folder-badge{display:none}.compose-btn{font-size:0;padding:12px 4px}.compose-btn:after{content:"+";font-size:18px}.nav-item{justify-content:center;padding:12px 4px;font-size:0}.nav-item:before{content:"✉";font-size:15px}.email-list-pane{width:calc(100vw - 62px)}.detail-pane{display:none}}
 @media(prefers-reduced-motion:reduce){.paw-field span{animation:none;display:none}}
@@ -747,7 +726,6 @@ body.auth-mode .paw-field { opacity:.42; visibility:visible; }
 .search-bar input:focus,.reply-area textarea:focus,.modal-field input:focus,.modal-body textarea:focus { border-color:#aaa; }
 .modal { color:#eee; background:#111; border:1px solid #ffffff1a; }
 .modal-overlay { background:rgba(0,0,0,0.55); }
-.toast { color:#eee; background:#171717; border:1px solid #ffffff20; }
 .pane-header,.detail-header,.reply-area,.sidebar-divider { border-color:#ffffff12; }
 .email-item { border-color:#ffffff0d; }
 .email-item:hover { background:#ffffff08; }
@@ -805,7 +783,6 @@ body { background:#030303; color:#e7e7e7; }
 .email-dot { background:#ddd; }
 .modal { background:#111; border:1px solid #333; border-radius:12px; }
 .modal-overlay { background:rgba(0,0,0,0.55); }
-.toast { color:#eee; background:#171717; border:1px solid #383838; }
 .err { color:#ff9292; }
 .paw-field span { color:#aaa; }
 .detail-body { padding:22px 28px; }
@@ -1010,8 +987,6 @@ body.wall .pane-header,body.wall .detail-header,body.wall .reply-area{ backgroun
 .modal-field label{ color:var(--text-3)!important; }
 .modal-status{ color:var(--text-3)!important; }
 
-.toast{ background-color:var(--surface)!important; border-color:var(--line-2)!important; color:var(--text)!important; }
-
 .account-dock{ background-color:var(--panel)!important; border-color:var(--line)!important; }
 .account-current{ background-color:var(--surface)!important; border-color:var(--line)!important; }
 .account-current:hover{ background-color:var(--surface-2)!important; border-color:var(--line-2)!important; }
@@ -1065,11 +1040,11 @@ body.reduce-motion.wall::before{ filter:none; }
   border-color:var(--accent)!important;
 }
 
-/* ---- context menu ---- */
+/* ---- context menu (compact) ---- */
 .ctx-menu{
-  position:fixed; z-index:350; min-width:200px; padding:5px;
+  position:fixed; z-index:350; min-width:170px; padding:4px;
   background-color:var(--surface); border:1px solid var(--line-2);
-  border-radius:9px; box-shadow:0 20px 55px #000b;
+  border-radius:8px; box-shadow:0 18px 45px #000b;
   opacity:0; visibility:hidden; transform:scale(.97);
   transform-origin:top left;
   transition:opacity .12s ease,transform .12s ease,visibility .12s ease;
@@ -1077,23 +1052,23 @@ body.reduce-motion.wall::before{ filter:none; }
 }
 .ctx-menu.open{ opacity:1; visibility:visible; transform:scale(1); }
 .ctx-item{
-  display:block; width:100%; text-align:left; padding:8px 11px;
+  display:block; width:100%; text-align:left; padding:5px 8px;
   border:0!important; background:transparent!important; color:var(--text)!important;
-  font-family:inherit; font-size:11px; border-radius:5px; cursor:pointer; letter-spacing:.2px;
+  font-family:inherit; font-size:10.5px; border-radius:4px; cursor:pointer; letter-spacing:.2px;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .ctx-item:hover{ background:var(--surface-2)!important; }
 .ctx-item.danger{ color:#ff9a9a!important; }
 .ctx-item.danger:hover{ background:#3a1515!important; color:#ffbcbc!important; }
-.ctx-item.ctx-sub{ padding-left: 22px; color: var(--text-2)!important; font-size:10.5px; }
+.ctx-item.ctx-sub{ padding-left: 18px; color: var(--text-2)!important; font-size:10px; }
 .ctx-item.ctx-sub:hover{ color: var(--text)!important; }
-.ctx-item.ctx-sub.current::before{ content:"•"; margin-right:6px; color:var(--accent); }
+.ctx-item.ctx-sub.current::before{ content:"•"; margin-right:5px; color:var(--accent); }
 .ctx-heading{
-  padding:8px 11px 4px;
-  font-size:9px; letter-spacing:1.5px; text-transform:uppercase;
+  padding:6px 8px 3px;
+  font-size:8.5px; letter-spacing:1.3px; text-transform:uppercase;
   color:var(--text-3); cursor:default;
 }
-.ctx-sep{ height:1px; background:var(--line); margin:5px 8px; }
+.ctx-sep{ height:1px; background:var(--line); margin:4px 6px; }
 
 /* =========================================================================
    SETTINGS — v3: clean, tabbed, minimal blur
@@ -1894,6 +1869,13 @@ input, textarea, select, [contenteditable="true"] {
           <span>sent</span>
         </span>
       </div>
+      <div class="nav-item" data-folder="spam" onclick="setFolder('spam', this)">
+        <span class="folder-name">
+          <svg class="folder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span>spam</span>
+        </span>
+        <span id="spam-count"></span>
+      </div>
       <div class="nav-item" data-folder="trash" onclick="setFolder('trash', this)">
         <span class="folder-name">
           <svg class="folder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
@@ -2188,7 +2170,6 @@ input, textarea, select, [contenteditable="true"] {
 </div>
 
 <div class="ctx-menu" id="ctx-menu"></div>
-<div class="toast" id="toast"></div>
 
 <script>
 const SUPABASE_URL = 'https://ikjddbndbwnisxtlraru.supabase.co';
@@ -2330,13 +2311,8 @@ let customFolders = [];
 
 const $ = id => document.getElementById(id);
 
-function showToast(msg) {
-  const toast = $('toast');
-  toast.textContent = msg;
-  toast.classList.add('show');
-  clearTimeout(toast._timer);
-  toast._timer = setTimeout(() => toast.classList.remove('show'), 2500);
-}
+/* Toasts are intentionally disabled per request. */
+function showToast() { /* popups disabled */ }
 
 function showAuth(screen) {
   document.body.classList.add('auth-mode');
@@ -2441,9 +2417,91 @@ function saveCustomFolders() {
   } catch {}
 }
 
+/* ------------------------- spam overrides ------------------------- */
+function getSpamOverrides() {
+  try { return JSON.parse(storage.getItem('spamOverrides') || '{}'); }
+  catch { return {}; }
+}
+function setSpamOverride(emailId, status) {
+  const o = getSpamOverrides();
+  if (status === null) delete o[emailId];
+  else o[emailId] = status;
+  try { storage.setItem('spamOverrides', JSON.stringify(o)); } catch {}
+}
+
+/* ------------------------- spam detection ------------------------- */
+function detectSpam(email) {
+  if (!email) return false;
+  if (email.folder === 'spam') return true;
+  if (email.folder && email.folder !== 'inbox') return false;
+
+  const overrides = getSpamOverrides();
+  if (overrides[email.id] === 'ham') return false;
+  if (overrides[email.id] === 'spam') return true;
+
+  const subject = String(email.subject || '');
+  const bodyText = String(email.body_text || email.text_body || '');
+  const bodyHtml = String(email.body_html || email.html_body || '');
+  const body = bodyText || stripHtml(bodyHtml) || '';
+  const combined = (subject + ' ' + body).toLowerCase();
+  const from = String(email.from_address || '').toLowerCase();
+  const fromName = String(email.from_name || '').toLowerCase();
+
+  let score = 0;
+
+  const strong = [
+    /\b(you('ve| have) won|winner|lottery|jackpot)\b/,
+    /\b(congratulations|you have been selected)\b/,
+    /\b(claim (your|now)|claim (reward|prize|winnings)|redeem (now|your))\b/,
+    /\b(free (money|cash|gift ?card|iphone|ipad|vacation|cruise))\b/,
+    /\b(viagra|cialis|male enhancement|weight loss pill|diet supplement)\b/,
+    /\b(bitcoin|crypto(currency)?|investment opportunity|double your (money|income)|guaranteed returns?)\b/,
+    /\b(wire transfer|western union|money ?gram|nigerian prince|inheritance|unclaimed (funds?|money))\b/,
+    /\b(hot singles?|meet (local|singles)|sexy (women|girls)|dating site)\b/,
+    /\b(cheap (meds|drugs|pills)|online pharmacy|no prescription)\b/,
+  ];
+  for (const re of strong) if (re.test(combined)) score += 2;
+
+  const medium = [
+    /\b(urgent(ly)?|act (now|fast|immediately)|limited[- ]time|expires? (today|soon|in \d+))\b/,
+    /\b(100% (free|guaranteed|safe|satisfaction)|risk[- ]free|no risk|no obligation)\b/,
+    /\b(click (here|below) to (claim|verify|unlock|confirm)|verify (now|today))\b/,
+    /\b(work from home|make \$?\d+ (a|per|every) (day|week|hour)|passive income)\b/,
+    /\b(tax (refund|return)|irs (notice|refund)|government grant)\b/,
+    /\b(dear (customer|user|friend|sir\/?madam|valued customer|account holder))\b/,
+    /\b(buy (now|direct)|order (now|today)|shop now|limited (stock|supply))\b/,
+    /\b(refinance|debt (relief|consolidation)|pre[- ]approved|credit (repair|score))\b/,
+    /\b(account verification required|action required|suspended account)\b/,
+  ];
+  for (const re of medium) if (re.test(combined)) score += 1;
+
+  const domain = from.includes('@') ? from.split('@').pop() : '';
+  if (/\.(top|xyz|click|link|work|loan|download|stream|gq|tk|ml|cf|ga|bid|win|date|racing|review|party|trade|science|men|faith|cricket|kim|country|gdn|icu|buzz|rest|quest)$/i.test(domain)) {
+    score += 5;
+  }
+
+  const letters = subject.replace(/[^a-z]/gi, '');
+  if (letters.length > 10 && letters === letters.toUpperCase()) score += 1;
+  if ((subject.match(/[!$]/g) || []).length >= 2) score += 1;
+  if ((subject.match(/!/g) || []).length >= 3) score += 1;
+
+  const linkCount = (bodyHtml.match(/<a\s[^>]*href/gi) || []).length;
+  if (linkCount >= 10) score += 1;
+
+  if (fromName && /^[a-z]{1,3}\d{2,}$/i.test(fromName)) score += 1;
+
+  return score >= 4;
+}
+
+function isSpam(email) {
+  if (!email) return false;
+  if (email.is_deleted) return false;
+  return detectSpam(email);
+}
+
 /* ------------------------- add account (sign up) ------------------------- */
 function addAccount(){
-  if(accounts.length>=MAX_ACCOUNTS) return showToast(`Maximum of ${MAX_ACCOUNTS} accounts reached`);
+  if(accounts.length>=MAX_ACCOUNTS) return;
   $('account-menu').style.display='none';
   $('add-account-err').textContent='';
   $('add-account-username').value='';
@@ -2488,7 +2546,6 @@ async function doAddAccountSignup(){
     $('add-account-password2').value = '';
     closeAddAccount();
     await enterApp();
-    showToast('Account created and added');
   } catch (e) {
     err.textContent = e.message || 'Could not create this account.';
   } finally {
@@ -2515,7 +2572,6 @@ async function switchAccount(userId){
     renderAccountDock();
     await enterApp();
   }catch(e){
-    showToast(e.message);
     renderAccountDock();
   }finally{
     $('app').classList.remove('account-switching');
@@ -2530,8 +2586,8 @@ async function uploadAvatar(event){
   const file=event.target.files?.[0];
   event.target.value='';
   if(!file) return;
-  if(file.size>3*1024*1024) return showToast('Choose an image under 3 MB');
-  if(!/^image\/(png|jpeg|webp|gif)$/.test(file.type)) return showToast('Use PNG, JPG, WEBP or GIF');
+  if(file.size>3*1024*1024) return;
+  if(!/^image\/(png|jpeg|webp|gif)$/.test(file.type)) return;
   try{
     const ext=({ 'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/gif':'gif'})[file.type]||'png';
     const path=`${currentUser.id}/avatar.${ext}`;
@@ -2562,10 +2618,7 @@ async function uploadAvatar(event){
     a.avatarUrl=url; a.session.user=currentUser;
     persistAccounts(); renderAccountDock();
     if ($('settings-modal').classList.contains('open')) syncSettingsUI();
-    showToast('Profile picture updated');
-  }catch(e){
-    showToast(e.message.includes('Bucket not found')?'Create the avatars storage bucket using the SQL below.':`Avatar upload failed: ${e.message}`);
-  }
+  }catch(e){}
 }
 
 async function refreshSession() {
@@ -2730,6 +2783,8 @@ function buildFolderMap() {
   for (const email of allEmails) {
     if (email.folder === 'sent') continue;
     if (email.is_deleted) continue;
+    if (email.folder === 'spam') continue;
+    if (isSpam(email)) continue;
     if (email.folder && email.folder !== 'inbox' && customFolders.includes(email.folder)) continue;
     const provider = getProvider(email.from_address, email.from_name);
     if (!map.has(provider)) map.set(provider, { name: provider, total: 0, unread: 0 });
@@ -2780,12 +2835,15 @@ function getFilteredEmails() {
     list = list.filter(e => e.is_deleted);
   } else if (currentFolder === 'sent') {
     list = list.filter(e => e.folder === 'sent' && !e.is_deleted);
+  } else if (currentFolder === 'spam') {
+    list = list.filter(e => !e.is_deleted && isSpam(e));
   } else if (currentFolder === 'inbox') {
     list = list.filter(e => {
       if (e.is_deleted) return false;
       if (e.folder === 'sent') return false;
+      if (e.folder === 'spam') return false;
       if (e.folder && e.folder !== 'inbox' && customFolders.includes(e.folder)) return false;
-      // Treat null, undefined, 'inbox', or any non-custom non-sent as inbox
+      if (isSpam(e)) return false;
       return true;
     });
   } else if (isCustom) {
@@ -2794,7 +2852,9 @@ function getFilteredEmails() {
     list = list.filter(e => {
       if (e.is_deleted) return false;
       if (e.folder === 'sent') return false;
+      if (e.folder === 'spam') return false;
       if (e.folder && e.folder !== 'inbox' && customFolders.includes(e.folder)) return false;
+      if (isSpam(e)) return false;
       return getProvider(e.from_address, e.from_name) === currentFolder;
     });
   }
@@ -2813,7 +2873,11 @@ function renderEmailList() {
   const container = $('email-list');
   const filtered = getFilteredEmails();
   if (!filtered.length) {
-    container.innerHTML = `<div class="empty-state">${$('search-input')?.value ? 'no results' : (currentFolder === 'trash' ? 'trash is empty' : 'no messages')}</div>`;
+    let emptyLabel = 'no messages';
+    if ($('search-input')?.value) emptyLabel = 'no results';
+    else if (currentFolder === 'trash') emptyLabel = 'trash is empty';
+    else if (currentFolder === 'spam') emptyLabel = 'spam is empty';
+    container.innerHTML = `<div class="empty-state">${emptyLabel}</div>`;
     return;
   }
   container.innerHTML = filtered.map((email, i) => {
@@ -2862,13 +2926,12 @@ function extractVerificationCode(text) {
 function copyVerificationCode(code, btn) {
   if (!code) return;
   navigator.clipboard.writeText(code).then(() => {
-    showToast('Code copied');
     if (btn) {
       const old = btn.textContent;
       btn.textContent = 'copied!';
       setTimeout(() => { btn.textContent = old; }, 1400);
     }
-  }).catch(() => showToast('Could not copy'));
+  }).catch(() => {});
 }
 
 function createCodeExtract(code) {
@@ -2991,12 +3054,16 @@ function updateUnreadCount() {
   const count = allEmails.filter(e => {
     if (e.is_deleted) return false;
     if (e.folder === 'sent') return false;
+    if (e.folder === 'spam') return false;
     if (e.folder && e.folder !== 'inbox' && customFolders.includes(e.folder)) return false;
+    if (isSpam(e)) return false;
     return !e.is_read;
   }).length;
   $('unread-count').textContent = count > 0 ? count : '';
   const trashed = allEmails.filter(e => e.is_deleted).length;
   $('trash-count').textContent = trashed > 0 ? trashed : '';
+  const spamCount = allEmails.filter(e => !e.is_deleted && isSpam(e)).length;
+  $('spam-count').textContent = spamCount > 0 ? spamCount : '';
 }
 
 function refreshAfterChange() {
@@ -3046,7 +3113,7 @@ function submitFolderModal() {
   if (name.length > 40) return (err.textContent = 'name too long');
   if (/[\\\/]/.test(name)) return (err.textContent = 'no slashes');
   const lower = name.toLowerCase();
-  if (['inbox','sent','trash'].includes(lower)) return (err.textContent = 'reserved name');
+  if (['inbox','sent','trash','spam'].includes(lower)) return (err.textContent = 'reserved name');
 
   if (folderModalMode === 'create') {
     if (customFolders.some(f => f.toLowerCase() === lower)) return (err.textContent = 'folder already exists');
@@ -3055,7 +3122,6 @@ function submitFolderModal() {
     closeFolderModal();
     renderCustomFolders();
     setFolder(name, null);
-    showToast('folder created');
   } else {
     if (name === folderModalOriginal) { closeFolderModal(); return; }
     if (customFolders.some(f => f.toLowerCase() === lower)) return (err.textContent = 'folder already exists');
@@ -3064,18 +3130,16 @@ function submitFolderModal() {
     const oldName = folderModalOriginal;
     customFolders[idx] = name;
     saveCustomFolders();
-    // Update emails in this folder
     allEmails.forEach(e => { if (e.folder === oldName) e.folder = name; });
     if (currentFolder === oldName) currentFolder = name;
     closeFolderModal();
     sbFetch(`/rest/v1/emails?user_id=eq.${currentUser.id}&folder=eq.${encodeURIComponent(oldName)}`, {
       method: 'PATCH',
       body: JSON.stringify({ folder: name })
-    }).catch(e => showToast('Folder rename sync failed: ' + e.message));
+    }).catch(() => {});
     renderCustomFolders();
     $('pane-title').textContent = currentFolder;
     refreshAfterChange();
-    showToast('folder renamed');
   }
 }
 
@@ -3100,42 +3164,29 @@ async function runConfirm() {
   if (typeof action === 'function') await action();
 }
 
+/* Folder deletion - no confirmation popup, deletes immediately. */
 async function deleteFolder(name) {
-  const count = allEmails.filter(e => e.folder === name && !e.is_deleted).length;
-  const msg = count > 0
-    ? `Delete folder <strong>${escapeHtml(name)}</strong>?<br><br>The ${count} message${count === 1 ? '' : 's'} inside will be moved back to the inbox.`
-    : `Delete folder <strong>${escapeHtml(name)}</strong>?<br><br>This folder is empty.`;
-  openConfirm({
-    title: 'delete folder',
-    message: msg,
-    okText: 'delete',
-    danger: true,
-    onConfirm: async () => {
-      const idx = customFolders.indexOf(name);
-      if (idx < 0) return;
-      customFolders.splice(idx, 1);
-      saveCustomFolders();
-      // Move emails back to inbox
-      allEmails.forEach(e => { if (e.folder === name) e.folder = 'inbox'; });
-      try {
-        await sbFetch(`/rest/v1/emails?user_id=eq.${currentUser.id}&folder=eq.${encodeURIComponent(name)}`, {
-          method: 'PATCH',
-          body: JSON.stringify({ folder: 'inbox' })
-        });
-      } catch (e) {
-        showToast('Could not move emails: ' + e.message);
-      }
-      if (currentFolder === name) setFolder('inbox', null);
-      renderCustomFolders();
-      refreshAfterChange();
-      showToast('folder deleted');
-    }
-  });
+  const idx = customFolders.indexOf(name);
+  if (idx < 0) return;
+  customFolders.splice(idx, 1);
+  saveCustomFolders();
+  allEmails.forEach(e => { if (e.folder === name) e.folder = 'inbox'; });
+  try {
+    await sbFetch(`/rest/v1/emails?user_id=eq.${currentUser.id}&folder=eq.${encodeURIComponent(name)}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ folder: 'inbox' })
+    });
+  } catch {}
+  if (currentFolder === name) setFolder('inbox', null);
+  renderCustomFolders();
+  refreshAfterChange();
 }
 
 async function moveEmailTo(id, folder) {
   const email = allEmails.find(e => e.id === id);
   if (!email) return;
+  if (folder === 'inbox') setSpamOverride(id, 'ham');
+  else if (folder === 'spam') setSpamOverride(id, 'spam');
   const patch = { folder: folder === 'inbox' ? 'inbox' : folder };
   const ok = await patchEmail(id, patch);
   if (!ok) return;
@@ -3143,7 +3194,6 @@ async function moveEmailTo(id, folder) {
     const filtered = getFilteredEmails();
     if (!filtered.some(e => e.id === id)) closeDetail();
   }
-  showToast(`Moved to ${folder}`);
 }
 
 /* ------------------------- trash / delete ------------------------- */
@@ -3158,7 +3208,6 @@ async function patchEmail(id, patch) {
   } catch (err) {
     if (email && prev) Object.assign(email, prev);
     refreshAfterChange();
-    showToast('Update failed: ' + err.message);
     return false;
   }
 }
@@ -3173,7 +3222,6 @@ async function trashEmail(id) {
     if (!ok) return;
     if (wasSelected) closeDetail();
     refreshAfterChange();
-    showToast('Moved to trash');
   };
 
   if (settings.confirmDelete) {
@@ -3198,7 +3246,6 @@ async function restoreEmail(id) {
   if (!ok) return;
   if (selectedId === id) closeDetail();
   refreshAfterChange();
-  showToast('Restored');
 }
 
 async function purgeEmail(id) {
@@ -3216,11 +3263,9 @@ async function purgeEmail(id) {
       refreshAfterChange();
       try {
         await sbFetch(`/rest/v1/emails?id=eq.${id}`, { method: 'DELETE' });
-        showToast('Deleted permanently');
       } catch (err) {
         if (email) allEmails.splice(idx, 0, email);
         refreshAfterChange();
-        showToast('Delete failed: ' + err.message);
       }
     }
   });
@@ -3239,37 +3284,39 @@ function getEmailsInFolder(folderName) {
   if (folderName === 'sent') {
     return allEmails.filter(e => e.folder === 'sent' && !e.is_deleted);
   }
+  if (folderName === 'spam') {
+    return allEmails.filter(e => !e.is_deleted && isSpam(e));
+  }
   if (folderName === 'inbox') {
     return allEmails.filter(e => {
       if (e.is_deleted) return false;
       if (e.folder === 'sent') return false;
+      if (e.folder === 'spam') return false;
       if (e.folder && e.folder !== 'inbox' && customFolders.includes(e.folder)) return false;
+      if (isSpam(e)) return false;
       return true;
     });
   }
   if (customFolders.includes(folderName)) {
     return allEmails.filter(e => e.folder === folderName && !e.is_deleted);
   }
-  // provider / sender folder
   return allEmails.filter(e => {
     if (e.is_deleted) return false;
     if (e.folder === 'sent') return false;
+    if (e.folder === 'spam') return false;
     if (e.folder && e.folder !== 'inbox' && customFolders.includes(e.folder)) return false;
+    if (isSpam(e)) return false;
     return getProvider(e.from_address, e.from_name) === folderName;
   });
 }
 
 async function markFolderAsRead(folderName) {
   const emails = getEmailsInFolder(folderName).filter(e => !e.is_read);
-  if (!emails.length) {
-    showToast('already all read');
-    return;
-  }
+  if (!emails.length) return;
   const ids = emails.map(e => e.id);
   emails.forEach(e => { e.is_read = true; });
   refreshAfterChange();
   try {
-    // Batch update in chunks to avoid URL length limits
     const chunkSize = 40;
     for (let i = 0; i < ids.length; i += chunkSize) {
       const chunk = ids.slice(i, i + chunkSize);
@@ -3278,38 +3325,26 @@ async function markFolderAsRead(folderName) {
         body: JSON.stringify({ is_read: true })
       });
     }
-    showToast(`marked ${ids.length} as read`);
   } catch (err) {
-    // revert on failure
     emails.forEach(e => { e.is_read = false; });
     refreshAfterChange();
-    showToast('Could not mark as read: ' + err.message);
   }
 }
 
+/* Empty trash - no confirmation popup, empties immediately. */
 async function emptyTrash() {
   const ids = allEmails.filter(e => e.is_deleted).map(e => e.id);
-  if (!ids.length) return showToast('trash is already empty');
-  openConfirm({
-    title: 'empty trash',
-    message: `Permanently delete <strong>${ids.length}</strong> message${ids.length > 1 ? 's' : ''}?<br><br>This cannot be undone.`,
-    okText: 'empty trash',
-    danger: true,
-    onConfirm: async () => {
-      const backup = allEmails.slice();
-      allEmails = allEmails.filter(e => !e.is_deleted);
-      closeDetail();
-      refreshAfterChange();
-      try {
-        await sbFetch(`/rest/v1/emails?id=in.(${ids.join(',')})`, { method: 'DELETE' });
-        showToast('trash emptied');
-      } catch (err) {
-        allEmails = backup;
-        refreshAfterChange();
-        showToast('Failed: ' + err.message);
-      }
-    }
-  });
+  if (!ids.length) return;
+  const backup = allEmails.slice();
+  allEmails = allEmails.filter(e => !e.is_deleted);
+  closeDetail();
+  refreshAfterChange();
+  try {
+    await sbFetch(`/rest/v1/emails?id=in.(${ids.join(',')})`, { method: 'DELETE' });
+  } catch (err) {
+    allEmails = backup;
+    refreshAfterChange();
+  }
 }
 
 /* ------------------------- context menu ------------------------- */
@@ -3339,10 +3374,15 @@ function showEmailCtx(x, y, id) {
     items.push({ label: email.is_read ? 'Mark as unread' : 'Mark as read', action: 'toggle-read' });
     items.push({ label: 'Open', action: 'open' });
     items.push({ sep: true });
-    // Move to
+
     items.push({ heading: 'MOVE TO' });
-    const currentFolderName = email.folder && customFolders.includes(email.folder) ? email.folder : (email.folder === 'sent' ? 'sent' : 'inbox');
+    const currentFolderName =
+      email.folder === 'sent' ? 'sent'
+      : (email.folder === 'spam' ? 'spam'
+      : (email.folder && customFolders.includes(email.folder) ? email.folder
+      : (isSpam(email) ? 'spam' : 'inbox')));
     items.push({ label: 'Inbox', action: 'move:inbox', sub: true, current: currentFolderName === 'inbox' });
+    items.push({ label: 'Spam', action: 'move:spam', sub: true, current: currentFolderName === 'spam' });
     for (const f of customFolders) {
       items.push({ label: f, action: `move:${f}`, sub: true, current: currentFolderName === f });
     }
@@ -3470,12 +3510,7 @@ $('ctx-menu').addEventListener('click', async e => {
     case 'purge': await purgeEmail(id); break;
     case 'copy-sender': {
       const addr = email.from_address || '';
-      try {
-        await navigator.clipboard.writeText(addr);
-        showToast('Copied ' + addr);
-      } catch {
-        showToast('Could not copy');
-      }
+      try { await navigator.clipboard.writeText(addr); } catch {}
       break;
     }
   }
@@ -3518,12 +3553,10 @@ async function sendCompose() {
   try {
     await sendViaEdge(to, subject, body);
     status.textContent = 'sent!';
-    showToast('message sent');
     setTimeout(closeCompose, 900);
     loadEmails();
   } catch (err) {
     status.textContent = 'failed';
-    showToast('send failed: ' + err.message);
   }
 }
 async function sendReply() {
@@ -3532,16 +3565,13 @@ async function sendReply() {
   const email = allEmails.find(e => e.id === selectedId);
   if (!email) return;
   const replyTo = email.from_address || email.from_name;
-  if (!replyTo) return showToast('cannot determine recipient');
+  if (!replyTo) return;
   const subject = `Re: ${email.subject || '(no subject)'}`;
   try {
     await sendViaEdge(replyTo, subject, body);
     $('reply-text').value = '';
-    showToast('reply sent');
     loadEmails();
-  } catch (err) {
-    showToast('reply failed: ' + err.message);
-  }
+  } catch (err) {}
 }
 
 /* ------------------------- helpers ------------------------- */
@@ -3688,7 +3718,6 @@ async function saveDisplayName() {
     setTimeout(() => { if ($('settings-status').textContent === 'saved') $('settings-status').textContent = ''; }, 1600);
   } catch (err) {
     $('settings-status').textContent = 'failed';
-    showToast(err.message);
   }
 }
 
@@ -3721,31 +3750,23 @@ async function onBgFileChange(event) {
   const file = event.target.files?.[0];
   event.target.value = '';
   if (!file) return;
-  if (!/^image\//.test(file.type)) return showToast('Select an image file');
-  if (file.size > 15 * 1024 * 1024) return showToast('Image too large (max 15 MB)');
+  if (!/^image\//.test(file.type)) return;
+  if (file.size > 15 * 1024 * 1024) return;
   try {
     const dataUrl = await compressImage(file, 1600, 0.78);
-    // Rough localStorage budget check
-    if (dataUrl.length > 3.5 * 1024 * 1024) {
-      showToast('Image too large after compression — try a smaller image');
-      return;
-    }
+    if (dataUrl.length > 3.5 * 1024 * 1024) return;
     settings.wallpaper = dataUrl;
     settings.gradient = '';
     $('set-gradient').value = '';
     saveSettings();
     applySettings();
-    showToast('Background updated');
-  } catch (e) {
-    showToast('Could not process image');
-  }
+  } catch (e) {}
 }
 
 function removeBg() {
   settings.wallpaper = '';
   saveSettings();
   applySettings();
-  showToast('Background removed');
 }
 
 /* ------------------------- settings init ------------------------- */
