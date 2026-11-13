@@ -771,9 +771,117 @@ body.auth-mode .paw-field { opacity:.42; visibility:visible; }
 .email-item.selected { background:#ffffff0d; }
 @media (prefers-reduced-motion:reduce) { body.auth-mode .paw-field span { animation:none; } }
 
+
+/* Refined monochrome interface */
+:root { color-scheme: dark; }
+body { background:#030303; color:#e7e7e7; }
+.auth-screen,.landing-screen { min-height:100vh; padding:24px; }
+.auth-box {
+  width:min(390px,calc(100vw - 36px)); gap:22px; padding:38px 34px;
+  border:1px solid #292929; border-radius:16px;
+  background:linear-gradient(155deg,#151515 0%,#0a0a0a 72%);
+  box-shadow:0 28px 100px #000d, inset 0 1px #ffffff0a;
+}
+.auth-title,.landing-logo { color:#eee; opacity:.8; letter-spacing:4px; }
+.username-wrap,.auth-field input { border-color:#303030; }
+.username-wrap:focus-within,.auth-field input:focus { border-color:#888; }
+.username-wrap input,.auth-field input { text-align:left; }
+.auth-field { width:100%; }
+.auth-field input { text-align:left; padding:12px 2px; }
+.username-wrap input { padding:12px 2px; }
+.username-suffix { color:#777; }
+.btn,.btn-primary {
+  border:1px solid #383838; border-radius:8px; color:#d0d0d0;
+  background:#171717; letter-spacing:1.5px;
+}
+.btn:hover,.btn-primary:hover { color:#fff; border-color:#666; background:#242424; }
+.auth-box > .btn { width:100%; padding:13px 18px; }
+.btn:disabled { opacity:.45; cursor:wait; }
+.auth-links { color:#777; }
+.auth-links a { color:#aaa; }
+#app { background:#050505; color:#e7e7e7; }
+.topbar,.sidebar { background:#090909; border-color:#242424; }
+.topbar { border-bottom-color:#242424; }
+.topbar-brand { color:#ddd; opacity:.65; }
+.email-list-pane { background:#090909; border-color:#242424; }
+.detail-pane { background:#070707; }
+.pane-header,.detail-header,.reply-area { border-color:#242424; }
+.nav-item,.folder-item { color:#999; }
+.nav-item:hover,.folder-item:hover { color:#eee; background:#171717; }
+.nav-item.active,.folder-item.active { color:#fff; background:#1c1c1c; border-left-color:#aaa; }
+.compose-btn { background:#171717; border:1px solid #383838; color:#eee; border-radius:8px; }
+.compose-btn:hover { background:#222; border-color:#666; }
+.search-bar input,.reply-area textarea,.modal-field input,.modal-body textarea {
+  color:#eee; background:#101010; border:1px solid #292929; border-radius:7px;
+}
+.search-bar input:focus,.reply-area textarea:focus { border-color:#777; }
+.email-item { border-color:#1b1b1b; }
+.email-item:hover,.email-item.active { background:#171717; }
+.email-avatar,.email-item.unread .email-avatar { background:#202020; color:#eee; border:1px solid #383838; border-radius:9px; }
+.email-from { color:#aaa; }
+.email-item.unread .email-from,.email-item.unread .email-subject { color:#f4f4f4; }
+.email-dot { background:#ddd; }
+.modal { background:#111; border:1px solid #333; border-radius:12px; }
+.modal-overlay { background:#000d; }
+.toast { color:#eee; background:#171717; border:1px solid #383838; }
+.err { color:#ff9292; }
+.paw-field span { color:#aaa; }
+.detail-body { padding:22px 28px; }
+.email-html-frame {
+  display:block; width:100%; min-height:320px; height:100%;
+  border:0; border-radius:8px; background:#fff;
+}
+.email-text-content {
+  white-space:pre-wrap; overflow-wrap:anywhere; color:#ddd;
+  font:13px/1.75 Inter,ui-sans-serif,system-ui,sans-serif;
+}
+.email-content-label {
+  margin:0 0 12px; color:#777; font:10px/1.4 'SF Mono',monospace;
+  letter-spacing:1.5px; text-transform:uppercase;
+}
+@media(max-width:760px) {
+  .auth-box { padding:30px 24px; }
+  .detail-body { padding:16px; }
+}
+
+
+/* Deep-black interface and compact multi-account dock */
+:root{color-scheme:dark}
+html,body,#app{background:#000!important;color:#ededed}
+#app,.topbar,.sidebar,.email-list-pane,.detail-pane,.pane-header,.detail-header,.reply-area{background:#000!important}
+.auth-screen,.landing-screen{background:#000!important}
+.auth-box{background:#080808!important;border:1px solid #242424!important;box-shadow:0 28px 100px #000!important}
+input,textarea,select,.modal,.modal-overlay,.search-bar{background:#080808!important;color:#eee!important;border-color:#282828!important}
+button,.btn,.btn-icon{background:#090909!important;color:#ddd!important;border-color:#292929!important}
+button:hover,.btn:hover,.btn-icon:hover{background:#171717!important;border-color:#444!important;color:#fff!important}
+.email-item:hover,.email-item.active,.nav-item:hover,.folder-item:hover{background:#111!important}
+.email-item.active{border-color:#555!important}
+.sidebar{position:relative}
+.account-dock{position:relative;margin-top:auto;padding:10px;border-top:1px solid #202020;background:#050505;flex-shrink:0}
+.account-current{display:flex;align-items:center;gap:9px;padding:8px;border:1px solid #242424;border-radius:10px;background:#0b0b0b;cursor:pointer;min-width:0;transition:background .15s,border-color .15s}
+.account-current:hover{background:#141414;border-color:#444}
+.account-avatar{width:32px;height:32px;flex:0 0 32px;border-radius:50%;object-fit:cover;background:#222;border:1px solid #383838}
+.account-current-meta{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}
+.account-current-meta strong{font-size:11px;font-weight:600;color:#eee;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.account-current-meta span{font-size:9px;color:#777;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.account-chevron{color:#777;font-size:12px}
+.account-menu{position:absolute;left:10px;right:10px;bottom:calc(100% + 8px);z-index:50;padding:8px;background:#0b0b0b;border:1px solid #303030;border-radius:12px;box-shadow:0 16px 50px #000e;max-height:55vh;overflow:auto}
+.account-menu-heading{display:flex;justify-content:space-between;padding:8px 8px 10px;color:#777;font-size:9px;letter-spacing:1.4px}
+.account-menu-heading span{letter-spacing:0;color:#aaa}
+.account-option{display:flex;align-items:center;gap:9px;width:100%;padding:8px;border:0!important;border-radius:8px;text-align:left;cursor:pointer;background:transparent!important}
+.account-option:hover,.account-option.active{background:#1a1a1a!important}
+.account-option img{width:28px;height:28px;border-radius:50%;object-fit:cover;background:#252525}
+.account-option span{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;color:#ddd}
+.account-option small{display:block;color:#777;font-size:9px;margin-top:3px}
+.account-menu-action{display:block;width:100%;padding:9px 8px;margin-top:4px;text-align:left;border:0!important;border-top:1px solid #202020!important;border-radius:6px;font-size:10px;cursor:pointer;background:transparent!important;color:#bbb!important}
+.account-menu-action:hover{background:#171717!important;color:#fff!important}
+.account-signout{color:#999!important}
+.email-html-frame{display:block;width:100%;min-height:420px;border:0;border-radius:8px;background:#fff}
+@media(max-width:560px){.account-dock{padding:6px 4px}.account-current{justify-content:center;padding:7px 3px}.account-current-meta,.account-chevron{display:none}.account-menu{left:5px;right:5px}}
+
 </style>
 </head>
-<body>
+<body class="auth-mode">
 <div class="paw-field" aria-hidden="true"><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span></div>
 
 <div id="landing-screen" class="landing-screen">
@@ -849,6 +957,21 @@ body.auth-mode .paw-field { opacity:.42; visibility:visible; }
       <div class="sidebar-scroll">
         <div class="section-label">folders</div>
         <div id="folder-list"></div>
+      </div>
+      <div class="account-dock" id="account-dock">
+        <div class="account-current" onclick="toggleAccountMenu()">
+          <img id="account-avatar" class="account-avatar" alt="" />
+          <div class="account-current-meta"><strong id="account-name">Account</strong><span id="account-email"></span></div>
+          <span class="account-chevron">⌃</span>
+        </div>
+        <div class="account-menu" id="account-menu" style="display:none">
+          <div class="account-menu-heading">ACCOUNTS <span id="account-count">1 / 5</span></div>
+          <div id="account-list"></div>
+          <button class="account-menu-action" onclick="triggerAvatarUpload()">Change profile picture</button>
+          <button class="account-menu-action" id="add-account-btn" onclick="addAccount()">+ Add another account</button>
+          <button class="account-menu-action account-signout" onclick="doLogout()">Sign out this account</button>
+        </div>
+        <input id="avatar-upload" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden onchange="uploadAvatar(event)">
       </div>
     </div>
     <div class="email-list-pane">
@@ -962,6 +1085,9 @@ const storage = (() => {
 
 let currentUser = null;
 let currentSession = null;
+let accounts = [];
+let activeAccountId = null;
+const MAX_ACCOUNTS = 5;
 let allEmails = [];
 let currentFolder = 'inbox';
 let refreshTimer = null;
@@ -980,6 +1106,7 @@ function showToast(msg) {
 
 function showAuth(screen) {
   document.body.classList.add('auth-mode');
+  $('app').style.display = 'none';
   $('landing-screen').style.display = screen === 'landing' ? 'flex' : 'none';
   $('login-screen').style.display = screen === 'login' ? 'flex' : 'none';
   $('register-screen').style.display = screen === 'register' ? 'flex' : 'none';
@@ -1009,7 +1136,67 @@ function saveSession(session, email) {
   currentSession = session;
   currentUser = session.user;
   myEmail = email || session.user.email || '';
-  storage.setItem('session', JSON.stringify({ session, email: myEmail }));
+  const id = session.user.id;
+  const existing = accounts.findIndex(a => a.userId === id);
+  const profile = session.user.user_metadata || {};
+  const record = { userId:id, session, email:myEmail, username:profile.username || myEmail.split('@')[0], avatarUrl:profile.avatar_url || '' };
+  if (existing >= 0) accounts[existing] = record;
+  else {
+    if (accounts.length >= MAX_ACCOUNTS) throw new Error('You can keep up to 5 accounts signed in. Remove one before adding another.');
+    accounts.push(record);
+  }
+  activeAccountId = id;
+  persistAccounts();
+  renderAccountDock();
+}
+
+function persistAccounts(){
+  storage.setItem('accounts', JSON.stringify({accounts,activeAccountId}));
+}
+function accountInitial(a){return (a?.username || a?.email || '?').trim().charAt(0).toUpperCase() || '?';}
+function avatarFallback(){return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect width="80" height="80" rx="40" fill="#242424"/><text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" fill="#eee" font-family="Arial" font-size="32">${accountInitial(accounts.find(a=>a.userId===activeAccountId))}</text></svg>`);}
+function renderAccountDock(){
+  const active=accounts.find(a=>a.userId===activeAccountId);
+  if(!active)return;
+  $('account-name').textContent=active.username || active.email.split('@')[0];
+  $('account-email').textContent=active.email;
+  $('account-avatar').src=active.avatarUrl || avatarFallback();
+  $('topbar-addr').textContent=active.email;
+  $('account-count').textContent=`${accounts.length} / ${MAX_ACCOUNTS}`;
+  $('add-account-btn').style.display=accounts.length>=MAX_ACCOUNTS?'none':'block';
+  $('account-list').innerHTML=accounts.map(a=>`<button class="account-option ${a.userId===activeAccountId?'active':''}" onclick="switchAccount('${a.userId}')"><img src="${escapeHtml(a.avatarUrl || avatarFallbackFor(a))}" alt=""><span>${escapeHtml(a.username || a.email.split('@')[0])}<small>${escapeHtml(a.email)}</small></span></button>`).join('');
+}
+function avatarFallbackFor(a){return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect width="80" height="80" rx="40" fill="#242424"/><text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" fill="#eee" font-family="Arial" font-size="32">${accountInitial(a)}</text></svg>`);}
+function toggleAccountMenu(){const m=$('account-menu');m.style.display=m.style.display==='none'?'block':'none';}
+function addAccount(){if(accounts.length>=MAX_ACCOUNTS)return showToast('Maximum of 5 accounts reached');$('account-menu').style.display='none';showAuth('login');$('login-err').textContent='Sign in to add another account. Your current account stays saved.';}
+async function switchAccount(userId){
+  const a=accounts.find(x=>x.userId===userId);if(!a||userId===activeAccountId)return;
+  if(refreshTimer)clearInterval(refreshTimer);refreshTimer=null;
+  activeAccountId=userId;currentSession=a.session;currentUser=a.session.user;myEmail=a.email;allEmails=[];selectedId=null;
+  $('account-menu').style.display='none';
+  try{
+    const res=await fetch(`${SUPABASE_URL}/auth/v1/user`,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${currentSession.access_token}`}});
+    if(res.status===401&&currentSession.refresh_token)await refreshSession();
+    else if(res.ok){currentUser=await res.json();a.session.user=currentUser;}
+    else throw new Error('This account session expired. Sign in again.');
+    a.session=currentSession;persistAccounts();renderAccountDock();await enterApp();
+  }catch(e){showToast(e.message);}
+}
+async function triggerAvatarUpload(){ $('account-menu').style.display='none';$('avatar-upload').click(); }
+async function uploadAvatar(event){
+  const file=event.target.files?.[0];event.target.value='';if(!file)return;
+  if(file.size>3*1024*1024)return showToast('Choose an image under 3 MB');
+  if(!/^image\/(png|jpeg|webp|gif)$/.test(file.type))return showToast('Use PNG, JPG, WEBP or GIF');
+  try{
+    const ext=({ 'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/gif':'gif'})[file.type]||'png';
+    const path=`${currentUser.id}/avatar.${ext}`;
+    const res=await fetch(`${SUPABASE_URL}/storage/v1/object/avatars/${path}`,{method:'POST',headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${currentSession.access_token}`,'x-upsert':'true','Content-Type':file.type},body:file});
+    if(!res.ok)throw new Error(await res.text());
+    const url=`${SUPABASE_URL}/storage/v1/object/public/avatars/${path}?v=${Date.now()}`;
+    const update=await fetch(`${SUPABASE_URL}/auth/v1/user`,{method:'PUT',headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${currentSession.access_token}`,'Content-Type':'application/json'},body:JSON.stringify({data:{...currentUser.user_metadata,avatar_url:url}})});
+    if(!update.ok)throw new Error(await update.text());
+    currentUser=await update.json();const a=accounts.find(x=>x.userId===activeAccountId);a.avatarUrl=url;a.session.user=currentUser;persistAccounts();renderAccountDock();showToast('Profile picture updated');
+  }catch(e){showToast(e.message.includes('Bucket not found')?'Create the avatars storage bucket using the SQL below.':`Avatar upload failed: ${e.message}`);}
 }
 
 async function refreshSession() {
@@ -1052,7 +1239,9 @@ function clearSession() {
   selectedId = null;
   if (refreshTimer) clearInterval(refreshTimer);
   refreshTimer = null;
-  storage.removeItem('session');
+  accounts = accounts.filter(a => a.userId !== activeAccountId);
+  activeAccountId = accounts[0]?.userId || null;
+  persistAccounts();
 }
 
 async function enterApp() {
@@ -1222,7 +1411,7 @@ function renderEmailList() {
     const isSent = email.folder === 'sent';
     const sender = isSent ? `to: ${email.to_address || '—'}` : (email.from_name || email.from_address || 'unknown');
     const avatar = (sender.replace(/^to:\s*/, '').match(/[a-z0-9]/i) || ['?'])[0].toUpperCase();
-    const preview = (email.body_text || stripHtml(email.body_html) || '').slice(0, 90);
+    const preview = (email.body_text || email.text_body || stripHtml(email.body_html || email.html_body) || '').slice(0, 90);
     const delay = Math.min(i * 18, 180);
     return `
       <div class="email-item ${email.is_read ? '' : 'unread'} ${isActive ? 'active' : ''}"
@@ -1244,6 +1433,38 @@ function renderEmailList() {
   }).join('');
 }
 
+function renderEmailContent(email) {
+  const container = $('detail-body');
+  const html = email.body_html || email.html_body || email.content_html || '';
+  const text = email.body_text || email.text_body || email.content_text || '';
+
+  // Render HTML email layouts (tables, inline styles, images and other email embeds)
+  // inside an isolated iframe. Scripts and top-level navigation remain disabled.
+  if (typeof html === 'string' && html.trim()) {
+    const frame = document.createElement('iframe');
+    frame.className = 'email-html-frame';
+    frame.title = 'Email content';
+    frame.setAttribute('sandbox', 'allow-popups allow-popups-to-escape-sandbox');
+    frame.referrerPolicy = 'no-referrer';
+    const safeDocument = `<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box}html,body{margin:0;padding:0;max-width:100%;overflow-wrap:anywhere}
+body{padding:20px;font:14px/1.6 Arial,Helvetica,sans-serif;color:#202124;background:#fff}
+img{max-width:100%;height:auto}table{max-width:100%}pre{white-space:pre-wrap;overflow-wrap:anywhere}
+a{overflow-wrap:anywhere}iframe,video{max-width:100%}
+</style></head><body>${html}</body></html>`;
+    frame.srcdoc = safeDocument;
+    container.replaceChildren(frame);
+    return;
+  }
+
+  const content = document.createElement('div');
+  content.className = 'email-text-content';
+  content.textContent = text || stripHtml(html) || '(no content)';
+  container.replaceChildren(content);
+}
+
 async function viewEmail(id) {
   const email = allEmails.find(e => e.id === id);
   if (!email) return;
@@ -1254,7 +1475,7 @@ async function viewEmail(id) {
   $('detail-from').textContent = email.from_address || email.from_name;
   $('detail-to').textContent = email.to_address;
   $('detail-date').textContent = formatDateTime(email.received_at);
-  $('detail-body').innerHTML = `<div style="white-space:pre-wrap;">${escapeHtml(email.body_text || stripHtml(email.body_html) || '(no content)')}</div>`;
+  renderEmailContent(email);
   $('reply-text').placeholder = `Reply to ${email.from_address || ''}`;
   document.querySelectorAll('.email-item').forEach(el => {
     el.classList.toggle('active', el.dataset.id === id);
@@ -1291,10 +1512,15 @@ function refreshEmails() {
   loadEmails();
 }
 
-function doLogout() {
+async function doLogout() {
   clearSession();
-  $('app').style.display = 'none';
-  showAuth('landing');
+  if(activeAccountId){
+    const nextId=activeAccountId;
+    activeAccountId=null;
+    await switchAccount(nextId);
+    return;
+  }
+  $('app').style.display='none';showAuth('landing');
 }
 
 function openCompose() {
@@ -1403,37 +1629,19 @@ document.addEventListener('keydown', e => {
 });
 
 async function restoreSession() {
-  const saved = storage.getItem('session');
-  if (!saved) return showAuth('landing');
   try {
-    const { session, email } = JSON.parse(saved);
-    if (!session?.access_token) throw new Error('Saved session has no access token.');
-    currentSession = session;
-    myEmail = email || session.user?.email || '';
-    let res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
-      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` }
-    });
-    if (res.status === 401 && currentSession.refresh_token) {
-      await refreshSession();
-      res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
-        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${currentSession.access_token}` }
-      });
-    }
-    if (!res.ok) {
-      const detail = await res.text();
-      throw new Error(detail || `Could not restore session (${res.status}).`);
-    }
-    currentUser = await res.json();
-    myEmail = currentUser.email || myEmail;
-    storage.setItem('session', JSON.stringify({ session: currentSession, email: myEmail }));
-    await enterApp();
-  } catch (err) {
-    console.warn('Session restore failed:', err);
-    clearSession();
-    showAuth('landing');
-  }
+    const saved=storage.getItem('accounts');
+    if(saved){const parsed=JSON.parse(saved);accounts=Array.isArray(parsed.accounts)?parsed.accounts.slice(0,MAX_ACCOUNTS):[];activeAccountId=parsed.activeAccountId||accounts[0]?.userId||null;}
+    // Migrate the previous single-account storage format.
+    if(!accounts.length){const legacy=storage.getItem('session');if(legacy){const old=JSON.parse(legacy);if(old.session?.user?.id)accounts=[{userId:old.session.user.id,session:old.session,email:old.email||old.session.user.email,username:old.session.user.user_metadata?.username||old.session.user.email?.split('@')[0],avatarUrl:old.session.user.user_metadata?.avatar_url||''}];activeAccountId=accounts[0]?.userId||null;persistAccounts();storage.removeItem('session');}}
+    if(!activeAccountId||!accounts.length)return showAuth('landing');
+    const active=accounts.find(a=>a.userId===activeAccountId)||accounts[0];activeAccountId=active.userId;currentSession=active.session;myEmail=active.email;
+    let res=await fetch(`${SUPABASE_URL}/auth/v1/user`,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${currentSession.access_token}`}});
+    if(res.status===401&&currentSession.refresh_token){await refreshSession();res=await fetch(`${SUPABASE_URL}/auth/v1/user`,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${currentSession.access_token}`}});}
+    if(!res.ok)throw new Error('Could not restore account session');
+    currentUser=await res.json();active.session=currentSession;active.email=currentUser.email||active.email;active.username=currentUser.user_metadata?.username||active.username;active.avatarUrl=currentUser.user_metadata?.avatar_url||active.avatarUrl;persistAccounts();renderAccountDock();await enterApp();
+  }catch(err){console.warn('Session restore failed:',err);showAuth('landing');}
 }
-
 restoreSession();
 
 // Keyboard-friendly authentication forms.
