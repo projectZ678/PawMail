@@ -284,6 +284,9 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 .folder-badge {
   font-size: 9px;
@@ -707,7 +710,6 @@ body{color:#f7f5ff}
 @media(max-width:560px){.sidebar{width:62px}.sidebar .folder-name,.sidebar .section-label,.sidebar .folder-badge{display:none}.compose-btn{font-size:0;padding:12px 4px}.compose-btn:after{content:"+";font-size:18px}.nav-item{justify-content:center;padding:12px 4px;font-size:0}.nav-item:before{content:"✉";font-size:15px}.email-list-pane{width:calc(100vw - 62px)}.detail-pane{display:none}}
 @media(prefers-reduced-motion:reduce){.paw-field span{animation:none;display:none}}
 
-
 /* Monochrome finish + auth-only animated paw atmosphere */
 :root { color-scheme: dark; }
 body { background:#030303; color:#ededed; }
@@ -751,7 +753,6 @@ body.auth-mode .paw-field { opacity:.42; visibility:visible; }
 .email-item:hover { background:#ffffff08; }
 .email-item.selected { background:#ffffff0d; }
 @media (prefers-reduced-motion:reduce) { body.auth-mode .paw-field span { animation:none; } }
-
 
 /* Refined monochrome interface */
 :root { color-scheme: dark; }
@@ -825,7 +826,6 @@ body { background:#030303; color:#e7e7e7; }
   .detail-body { padding:16px; }
 }
 
-
 /* Deep-black interface and compact multi-account dock */
 :root{color-scheme:dark}
 html,body,#app{background:#000!important;color:#ededed}
@@ -860,7 +860,6 @@ button:hover,.btn:hover,.btn-icon:hover{background:#171717!important;border-colo
 .email-html-frame{display:block;width:100%;min-height:420px;border:0;border-radius:8px;background:#fff}
 @media(max-width:560px){.account-dock{padding:6px 4px}.account-current{justify-content:center;padding:7px 3px}.account-current-meta,.account-chevron{display:none}.account-menu{left:5px;right:5px}}
 
-
 /* Compact in-app account adding and smoother account switching */
 .add-account-modal{width:390px;max-width:calc(100vw - 28px);padding-bottom:8px}
 .add-account-copy{padding:14px 20px 4px;color:#858585;font-size:11px;line-height:1.6}
@@ -874,9 +873,8 @@ button:hover,.btn:hover,.btn-icon:hover{background:#171717!important;border-colo
 .account-option{transition:background .14s ease,transform .14s ease}
 .account-option:active{transform:scale(.985)}
 
-
 /* =========================================================================
-   THEME ENGINE / SETTINGS / CONTEXT MENU / TRASH
+   THEME ENGINE
    ========================================================================= */
 :root{
   --bg:#000;
@@ -890,6 +888,7 @@ button:hover,.btn:hover,.btn-icon:hover{background:#171717!important;border-colo
   --text-2:#9a9a9a;
   --text-3:#686868;
   --accent:#d0d0d0;
+  --accent-rgb:208,208,208;
   --accent-ink:#0a0a0a;
   --fs:13px;
   --pad-y:13px;
@@ -940,9 +939,9 @@ body.wall.auth-mode{ background-image:var(--wall)!important; }
 .pane-header,.detail-header,.reply-area,.sidebar-divider,.topbar{ border-color:var(--line)!important; }
 body.wall #app{ background-color:transparent!important; }
 body.wall .topbar,body.wall .sidebar,body.wall .email-list-pane,body.wall .detail-pane{
-  background-color:rgba(var(--panel-rgb),.82)!important;
-  backdrop-filter:blur(18px) saturate(1.25);
-  -webkit-backdrop-filter:blur(18px) saturate(1.25);
+  background-color:rgba(var(--panel-rgb),.92)!important;
+  backdrop-filter:blur(14px) saturate(1.15);
+  -webkit-backdrop-filter:blur(14px) saturate(1.15);
 }
 body.wall .pane-header,body.wall .detail-header,body.wall .reply-area{ background-color:transparent!important; }
 
@@ -951,8 +950,18 @@ body.wall .pane-header,body.wall .detail-header,body.wall .reply-area{ backgroun
 .pane-title{ color:var(--text)!important; }
 .section-label{ color:var(--text-3)!important; }
 .nav-item,.folder-item{ color:var(--text-2)!important; }
-.nav-item:hover,.folder-item:hover{ color:var(--text)!important; background-color:var(--surface-2)!important; }
-.nav-item.active,.folder-item.active{ color:var(--text)!important; background-color:var(--surface-2)!important; border-left-color:var(--accent)!important; }
+
+/* Clean accent-tinted hover / active states - fixes the "darker" mismatch */
+.nav-item:hover,.folder-item:hover{
+  color:var(--text)!important;
+  background:rgba(var(--accent-rgb),.06)!important;
+  border-left-color:rgba(var(--accent-rgb),.35)!important;
+}
+.nav-item.active,.folder-item.active{
+  color:var(--text)!important;
+  background:rgba(var(--accent-rgb),.12)!important;
+  border-left-color:var(--accent)!important;
+}
 .folder-badge{ background:var(--accent)!important; color:var(--accent-ink)!important; }
 
 .compose-btn{ background-color:var(--surface)!important; border-color:var(--line-2)!important; color:var(--text)!important; }
@@ -1020,52 +1029,90 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{
 }
 body.reduce-motion .paw-field{ display:none!important; }
 
+/* folder icon in nav */
+.folder-icon{ width:12px; height:12px; flex-shrink:0; opacity:.85; }
+
+/* section label row with + button */
+.section-label-row{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 16px 4px;
+}
+.section-label-row .section-label{ padding:0; }
+.section-add-btn{
+  width:20px; height:20px;
+  display:flex; align-items:center; justify-content:center;
+  border:1px solid var(--line-2)!important;
+  background:transparent!important; color:var(--text-3)!important;
+  border-radius:6px; font-size:14px; line-height:1; cursor:pointer;
+  transition:all .15s ease; font-family:inherit; padding:0;
+}
+.section-add-btn:hover{
+  background:var(--surface-2)!important;
+  color:var(--text)!important;
+  border-color:var(--accent)!important;
+}
+
 /* ---- context menu ---- */
 .ctx-menu{
-  position:fixed; z-index:350; min-width:186px; padding:5px;
+  position:fixed; z-index:350; min-width:200px; padding:5px;
   background-color:var(--surface); border:1px solid var(--line-2);
   border-radius:9px; box-shadow:0 20px 55px #000b;
   opacity:0; visibility:hidden; transform:scale(.97);
   transform-origin:top left;
   transition:opacity .12s ease,transform .12s ease,visibility .12s ease;
+  max-height:70vh; overflow-y:auto;
 }
 .ctx-menu.open{ opacity:1; visibility:visible; transform:scale(1); }
 .ctx-item{
   display:block; width:100%; text-align:left; padding:8px 11px;
   border:0!important; background:transparent!important; color:var(--text)!important;
   font-family:inherit; font-size:11px; border-radius:5px; cursor:pointer; letter-spacing:.2px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .ctx-item:hover{ background:var(--surface-2)!important; }
 .ctx-item.danger{ color:#ff9a9a!important; }
 .ctx-item.danger:hover{ background:#3a1515!important; color:#ffbcbc!important; }
+.ctx-item.ctx-sub{ padding-left: 22px; color: var(--text-2)!important; font-size:10.5px; }
+.ctx-item.ctx-sub:hover{ color: var(--text)!important; }
+.ctx-item.ctx-sub.current::before{ content:"•"; margin-right:6px; color:var(--accent); }
+.ctx-heading{
+  padding:8px 11px 4px;
+  font-size:9px; letter-spacing:1.5px; text-transform:uppercase;
+  color:var(--text-3); cursor:default;
+}
 .ctx-sep{ height:1px; background:var(--line); margin:5px 8px; }
 
 /* =========================================================================
-   SETTINGS MODAL v2 — tabbed, blurred, profile-pic first
+   SETTINGS — v3: clean, tabbed, minimal blur
    ========================================================================= */
 #settings-modal{
-  background: rgba(0,0,0,.5) !important;
-  backdrop-filter: blur(22px) saturate(1.35) !important;
-  -webkit-backdrop-filter: blur(22px) saturate(1.35) !important;
+  background: rgba(0,0,0,.42) !important;
+  backdrop-filter: blur(7px) !important;
+  -webkit-backdrop-filter: blur(7px) !important;
 }
 .settings-modal{
-  width: 780px;
+  width: 760px;
   max-width: calc(100vw - 32px);
-  height: 590px;
+  height: 580px;
   max-height: 88vh;
   display: flex;
   flex-direction: column;
-  background: rgba(12,12,14,.82) !important;
+  background: #0b0b0d !important;
   border: 1px solid var(--line-2) !important;
-  border-radius: 18px;
-  box-shadow: 0 40px 120px #000e, 0 0 0 1px #ffffff0a inset;
+  border-radius: 16px;
+  box-shadow: 0 32px 90px #000c;
   overflow: hidden;
-  backdrop-filter: blur(42px) saturate(1.4);
-  -webkit-backdrop-filter: blur(42px) saturate(1.4);
 }
 html[data-theme="paper"] .settings-modal{
-  background: rgba(250,250,247,.9) !important;
+  background: #fafaf7 !important;
 }
+html[data-theme="slate"] .settings-modal{
+  background: #0d1118 !important;
+}
+body.wall .settings-modal{
+  background: rgba(var(--panel-rgb), .96) !important;
+}
+
 .settings-header{
   display: flex;
   align-items: center;
@@ -1075,10 +1122,10 @@ html[data-theme="paper"] .settings-modal{
   flex-shrink: 0;
 }
 .settings-title{
-  font-size: 12px;
-  letter-spacing: 3.5px;
+  font-size: 11px;
+  letter-spacing: 3px;
   text-transform: uppercase;
-  color: var(--text);
+  color: var(--text-2);
   font-weight: 500;
 }
 .settings-layout{
@@ -1088,17 +1135,13 @@ html[data-theme="paper"] .settings-modal{
   overflow: hidden;
 }
 .settings-nav{
-  width: 184px;
+  width: 190px;
   flex-shrink: 0;
   padding: 12px 10px;
   border-right: 1px solid var(--line);
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  background: rgba(0,0,0,.18);
-}
-html[data-theme="paper"] .settings-nav{
-  background: rgba(0,0,0,.02);
+  gap: 2px;
 }
 .settings-tab{
   display: flex;
@@ -1107,12 +1150,12 @@ html[data-theme="paper"] .settings-nav{
   padding: 10px 14px;
   font-family: inherit;
   font-size: 11.5px;
-  letter-spacing: .3px;
+  letter-spacing: .2px;
   text-align: left;
   border: 0 !important;
   background: transparent !important;
   color: var(--text-2) !important;
-  border-radius: 9px;
+  border-radius: 8px;
   cursor: pointer;
   transition: background .16s ease, color .16s ease;
 }
@@ -1121,9 +1164,8 @@ html[data-theme="paper"] .settings-nav{
   color: var(--text) !important;
 }
 .settings-tab.active{
-  background: var(--surface-2) !important;
+  background: rgba(var(--accent-rgb), .12) !important;
   color: var(--text) !important;
-  box-shadow: inset 2px 0 0 var(--accent);
 }
 .settings-tab .tab-dot{
   width: 6px; height: 6px; border-radius: 50%;
@@ -1135,33 +1177,34 @@ html[data-theme="paper"] .settings-nav{
 .settings-content{
   flex: 1;
   overflow-y: auto;
-  padding: 6px 0;
+  padding: 4px 0;
   min-width: 0;
 }
 .settings-panel{ display: none; padding: 8px 26px 22px; }
-.settings-panel.active{ display: block; animation: fadeIn .18s ease; }
+.settings-panel.active{ display: block; animation: fadeIn .16s ease; }
 
 .settings-section-label{
   font-size: 9px;
-  letter-spacing: 2px;
+  letter-spacing: 1.6px;
   text-transform: uppercase;
   color: var(--text-3);
-  padding: 18px 0 8px;
+  padding: 20px 0 6px;
+  font-weight: 600;
 }
-.settings-section-label:first-child{ padding-top: 6px; }
+.settings-section-label:first-child{ padding-top: 10px; }
 
 .settings-row{
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 9px 0;
-  min-height: 42px;
+  padding: 10px 0;
+  min-height: 44px;
   border-bottom: 1px solid var(--line);
 }
 .settings-row:last-child{ border-bottom: 0; }
 .settings-row > label{
-  width: 130px;
-  flex: 0 0 130px;
+  width: 138px;
+  flex: 0 0 138px;
   font-size: 11.5px;
   color: var(--text-2);
 }
@@ -1178,24 +1221,63 @@ html[data-theme="paper"] .settings-nav{
   font-family: inherit;
   font-size: 11.5px;
   outline: none;
-  transition: border-color .18s ease, background .18s ease;
+  transition: border-color .18s ease;
 }
 .settings-row input[type="text"]:focus,
 .settings-row input[type="url"]:focus,
 .settings-row select:focus{
   border-color: var(--accent) !important;
 }
-.settings-row input[type="color"]{
-  width: 48px; height: 30px; padding: 2px; cursor: pointer;
-  background-color: var(--surface) !important;
-  border: 1px solid var(--line) !important;
-  border-radius: 8px;
-}
 .settings-row .settings-value{
   flex: 1;
   font-size: 11.5px;
   color: var(--text);
+  word-break: break-all;
 }
+.settings-row .settings-muted{
+  color: var(--text-3);
+  font-size: 10.5px;
+  flex: 0 0 auto;
+}
+
+/* accent color swatch */
+.color-picker-row{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+.color-swatch-wrap{
+  position: relative;
+  width: 46px;
+  height: 28px;
+  flex-shrink: 0;
+}
+.color-swatch{
+  width: 100%;
+  height: 100%;
+  border-radius: 9px;
+  background: var(--accent);
+  border: 1px solid var(--line-2);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+  transition: box-shadow .15s ease;
+  pointer-events: none;
+}
+.color-swatch-wrap:hover .color-swatch{
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.18), 0 0 0 3px rgba(var(--accent-rgb), .22);
+}
+.color-input-hidden{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+}
+
+/* segmented control */
 .seg{
   display: flex;
   gap: 4px;
@@ -1224,6 +1306,8 @@ html[data-theme="paper"] .settings-nav{
   background: var(--accent) !important;
   color: var(--accent-ink) !important;
 }
+
+/* toggle */
 .chk{
   appearance: none;
   -webkit-appearance: none;
@@ -1255,6 +1339,32 @@ html[data-theme="paper"] .settings-nav{
   background: var(--accent-ink);
 }
 
+/* background image row */
+.bg-row{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+.bg-preview{
+  width: 60px; height: 34px;
+  border-radius: 7px;
+  border: 1px solid var(--line-2);
+  background-color: var(--surface-2);
+  background-image: var(--bg-preview-image, none);
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.bg-preview.empty::after{
+  content: "none";
+  display: flex; align-items: center; justify-content: center;
+  height: 100%; font-size: 9px; color: var(--text-3); letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
 /* profile card */
 .profile-card{
   display: flex;
@@ -1263,13 +1373,13 @@ html[data-theme="paper"] .settings-nav{
   padding: 20px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 16px;
-  margin: 8px 0 4px;
+  border-radius: 14px;
+  margin: 10px 0 6px;
 }
 .profile-pic-wrap{
   position: relative;
-  width: 90px;
-  height: 90px;
+  width: 84px;
+  height: 84px;
   border-radius: 50%;
   cursor: pointer;
   flex-shrink: 0;
@@ -1281,11 +1391,10 @@ html[data-theme="paper"] .settings-nav{
 .profile-pic-wrap:hover{
   border-color: var(--accent);
   transform: scale(1.03);
-  box-shadow: 0 8px 28px #0007;
+  box-shadow: 0 8px 24px #0007;
 }
 .profile-pic{
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   object-fit: cover;
   display: block;
 }
@@ -1295,22 +1404,20 @@ html[data-theme="paper"] .settings-nav{
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0,0,0,.42);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
+  background: rgba(0,0,0,.4);
   opacity: 0;
   transition: opacity .2s ease;
   color: #fff;
 }
 .profile-pic-wrap:hover .profile-pic-overlay{ opacity: 1; }
 .profile-pic-overlay svg{
-  width: 30px; height: 30px;
-  filter: drop-shadow(0 2px 8px #0009);
+  width: 28px; height: 28px;
+  filter: drop-shadow(0 2px 6px #0009);
 }
 .profile-meta{
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
   min-width: 0;
 }
 .profile-meta strong{
@@ -1331,21 +1438,21 @@ html[data-theme="paper"] .settings-nav{
 .profile-hint{
   font-size: 9.5px;
   color: var(--text-3);
-  letter-spacing: .2px;
-  margin-top: 2px;
-  opacity: .8;
+  letter-spacing: .3px;
+  margin-top: 4px;
+  opacity: .85;
 }
 
 .settings-about{
-  padding: 4px 0;
-  color: var(--text-2);
+  padding: 6px 0;
   font-size: 11.5px;
   line-height: 1.8;
+  color: var(--text-2);
 }
 .settings-about .about-row{
   display: flex;
   justify-content: space-between;
-  padding: 9px 0;
+  padding: 10px 0;
   border-bottom: 1px solid var(--line);
 }
 .settings-about .about-row:last-child{ border-bottom: 0; }
@@ -1385,7 +1492,7 @@ html[data-theme="paper"] .settings-nav{
   .settings-row{ flex-wrap: wrap; gap: 6px 14px; }
   .settings-row > label{ width: 100%; flex-basis: 100%; font-size: 10.5px; }
   .profile-card{ padding: 16px; gap: 16px; }
-  .profile-pic-wrap{ width: 72px; height: 72px; }
+  .profile-pic-wrap{ width: 68px; height: 68px; }
 }
 
 /* ---- add account (sign up) modal ---- */
@@ -1424,17 +1531,36 @@ html[data-theme="paper"] .settings-nav{
 .add-account-modal .modal-footer{
   padding:14px 22px; border-top:1px solid var(--line); gap:8px;
 }
-.add-account-modal .field-hint{
-  padding:0 22px 10px; color:var(--text-3); font-size:9.5px; letter-spacing:.3px;
-}
 
-@media(max-width:560px){
-  .settings-row{ padding-left:14px; padding-right:14px; }
-  .settings-row > label{ width:86px; flex:0 0 86px; font-size:10px; }
-  .settings-group-title{ padding-left:14px; }
-  .add-account-modal .modal-field{ padding-left:14px; padding-right:14px; }
-  .add-account-modal .modal-field label{ width:64px; flex:0 0 64px; }
-  .add-account-copy,.add-account-modal .err,.add-account-modal .modal-footer{ padding-left:14px; padding-right:14px; }
+/* ---- folder modal ---- */
+.folder-modal{
+  width:360px; max-width:calc(100vw - 24px);
+  display:flex; flex-direction:column;
+}
+.folder-modal .modal-field{ padding:14px 22px; }
+.folder-modal .modal-field label{
+  width:60px; flex:0 0 60px;
+  font-size:9px; letter-spacing:1.2px; text-transform:uppercase;
+  color:var(--text-3);
+}
+.folder-modal .modal-field input{
+  flex:1; min-width:0;
+  background-color: var(--surface)!important;
+  border: 1px solid var(--line)!important;
+  color: var(--text)!important;
+  border-radius: 7px;
+  padding: 8px 11px;
+  font-family: inherit;
+  font-size: 12px;
+  outline: none;
+}
+.folder-modal .modal-field input:focus{ border-color: var(--accent)!important; }
+.folder-modal .err{
+  padding: 0 22px 10px; min-height: 16px;
+  color: #ff9292; font-size: 10px; text-align: left;
+}
+.folder-modal .modal-footer{
+  padding: 14px 22px; border-top: 1px solid var(--line); gap: 8px;
 }
 </style>
 </head>
@@ -1505,19 +1631,35 @@ html[data-theme="paper"] .settings-nav{
     <div class="sidebar">
       <button class="compose-btn" onclick="openCompose()">+ compose</button>
       <div class="nav-item active" data-folder="inbox" onclick="setFolder('inbox', this)">
-        <span class="folder-name">inbox</span>
+        <span class="folder-name">
+          <svg class="folder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+          <span>inbox</span>
+        </span>
         <span id="unread-count"></span>
       </div>
       <div class="nav-item" data-folder="sent" onclick="setFolder('sent', this)">
-        <span class="folder-name">sent</span>
+        <span class="folder-name">
+          <svg class="folder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          <span>sent</span>
+        </span>
       </div>
       <div class="nav-item" data-folder="trash" onclick="setFolder('trash', this)">
-        <span class="folder-name">trash</span>
+        <span class="folder-name">
+          <svg class="folder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+          <span>trash</span>
+        </span>
         <span id="trash-count"></span>
       </div>
       <div class="sidebar-divider"></div>
       <div class="sidebar-scroll">
-        <div class="section-label">folders</div>
+        <div class="section-label-row">
+          <span class="section-label">folders</span>
+          <button class="section-add-btn" onclick="openFolderModal('create')" title="New folder">+</button>
+        </div>
+        <div id="custom-folder-list"></div>
+        <div class="section-label-row" style="padding-top:14px;">
+          <span class="section-label">senders</span>
+        </div>
         <div id="folder-list"></div>
       </div>
       <div class="account-dock" id="account-dock">
@@ -1613,6 +1755,22 @@ html[data-theme="paper"] .settings-nav{
   </div>
 </div>
 
+<!-- ================= FOLDER MODAL ================= -->
+<div id="folder-modal" class="modal-overlay" onclick="if(event.target===this)closeFolderModal()">
+  <div class="modal folder-modal">
+    <div class="modal-header"><span id="folder-modal-title">new folder</span><button class="btn-icon" onclick="closeFolderModal()">✕</button></div>
+    <div class="modal-field">
+      <label>name</label>
+      <input id="folder-name-input" type="text" maxlength="40" placeholder="folder name" onkeydown="if(event.key==='Enter')submitFolderModal()">
+    </div>
+    <div class="err" id="folder-modal-err"></div>
+    <div class="modal-footer">
+      <button class="btn btn-sm btn-primary" id="folder-modal-submit" onclick="submitFolderModal()">create</button>
+      <button class="btn btn-sm" onclick="closeFolderModal()">cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- ================= SETTINGS ================= -->
 <div id="settings-modal" class="modal-overlay" onclick="if(event.target===this)closeSettings()">
   <div class="modal settings-modal">
@@ -1641,8 +1799,13 @@ html[data-theme="paper"] .settings-nav{
           </div>
           <div class="settings-row">
             <label>accent color</label>
-            <input type="color" id="set-accent">
-            <span style="flex:0;color:var(--text-3);font-size:10.5px;">buttons &amp; highlights</span>
+            <div class="color-picker-row">
+              <div class="color-swatch-wrap">
+                <div class="color-swatch" id="accent-swatch"></div>
+                <input type="color" id="set-accent" class="color-input-hidden">
+              </div>
+              <span class="settings-muted">buttons &amp; highlights</span>
+            </div>
           </div>
 
           <div class="settings-section-label">background</div>
@@ -1658,9 +1821,14 @@ html[data-theme="paper"] .settings-nav{
             </select>
           </div>
           <div class="settings-row">
-            <label>wallpaper url</label>
-            <input type="url" id="set-wallpaper" placeholder="https://image-url.jpg" autocomplete="off">
+            <label>background image</label>
+            <div class="bg-row">
+              <div class="bg-preview empty" id="bg-preview"></div>
+              <button class="btn btn-sm" onclick="document.getElementById('set-bg-file').click()">choose image</button>
+              <button class="btn btn-sm" id="remove-bg-btn" onclick="removeBg()">remove</button>
+            </div>
           </div>
+          <input type="file" accept="image/*" id="set-bg-file" hidden onchange="onBgFileChange(event)">
 
           <div class="settings-section-label">typography &amp; layout</div>
           <div class="settings-row">
@@ -1741,13 +1909,14 @@ html[data-theme="paper"] .settings-nav{
         <div class="settings-panel" data-panel="about">
           <div class="settings-about">
             <div class="about-row"><span>app</span><span>mail.pawsocks.lat</span></div>
-            <div class="about-row"><span>version</span><span>2.0</span></div>
+            <div class="about-row"><span>version</span><span>3.0</span></div>
             <div class="about-row"><span>domain</span><span>@pawsocks.lat</span></div>
             <div class="about-row"><span>storage</span><span>Supabase</span></div>
           </div>
-          <p style="color:var(--text-3);font-size:10.5px;line-height:1.7;margin-top:16px;">
-            A monochrome, keyboard-friendly inbox with per-account themes, signatures, and trash.
-            Right-click any message for quick actions.
+          <p style="color:var(--text-3);font-size:10.5px;line-height:1.8;margin-top:18px;">
+            A monochrome inbox with per-account themes, custom folders, and trash.
+            Right-click messages to move, delete, or organize.
+            Right-click a custom folder to rename or delete it.
           </p>
         </div>
 
@@ -1768,42 +1937,15 @@ html[data-theme="paper"] .settings-nav{
 const SUPABASE_URL = 'https://ikjddbndbwnisxtlraru.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlramRkYm5kYnduaXN4dGxyYXJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ1MzI1NDQsImV4cCI6MjExMDEwODU0NH0.OUL3AfrIzWqgkV5TLZ4WO3My3exPJmmDypbOjaPYTTc';
 const PROVIDERS = {
-  'github.com': 'GitHub',
-  'githubusercontent.com': 'GitHub',
-  'gmail.com': 'Google',
-  'google.com': 'Google',
-  'youtube.com': 'YouTube',
-  'twitter.com': 'X',
-  'x.com': 'X',
-  'discord.com': 'Discord',
-  'discordapp.com': 'Discord',
-  'steamcommunity.com': 'Steam',
-  'steampowered.com': 'Steam',
-  'stripe.com': 'Stripe',
-  'paypal.com': 'PayPal',
-  'amazon.com': 'Amazon',
-  'apple.com': 'Apple',
-  'icloud.com': 'Apple',
-  'microsoft.com': 'Microsoft',
-  'outlook.com': 'Microsoft',
-  'live.com': 'Microsoft',
-  'netflix.com': 'Netflix',
-  'spotify.com': 'Spotify',
-  'facebook.com': 'Facebook',
-  'instagram.com': 'Instagram',
-  'linkedin.com': 'LinkedIn',
-  'reddit.com': 'Reddit',
-  'twitch.tv': 'Twitch',
-  'figma.com': 'Figma',
-  'notion.so': 'Notion',
-  'vercel.com': 'Vercel',
-  'openai.com': 'OpenAI',
-  'anthropic.com': 'Anthropic',
-  'cloudflare.com': 'Cloudflare',
-  'supabase.io': 'Supabase',
-  'supabase.com': 'Supabase',
-  'resend.com': 'Resend',
-  'hackclub.com': 'Hack Club'
+  'github.com': 'GitHub','githubusercontent.com': 'GitHub','gmail.com': 'Google','google.com': 'Google',
+  'youtube.com': 'YouTube','twitter.com': 'X','x.com': 'X','discord.com': 'Discord','discordapp.com': 'Discord',
+  'steamcommunity.com': 'Steam','steampowered.com': 'Steam','stripe.com': 'Stripe','paypal.com': 'PayPal',
+  'amazon.com': 'Amazon','apple.com': 'Apple','icloud.com': 'Apple','microsoft.com': 'Microsoft',
+  'outlook.com': 'Microsoft','live.com': 'Microsoft','netflix.com': 'Netflix','spotify.com': 'Spotify',
+  'facebook.com': 'Facebook','instagram.com': 'Instagram','linkedin.com': 'LinkedIn','reddit.com': 'Reddit',
+  'twitch.tv': 'Twitch','figma.com': 'Figma','notion.so': 'Notion','vercel.com': 'Vercel','openai.com': 'OpenAI',
+  'anthropic.com': 'Anthropic','cloudflare.com': 'Cloudflare','supabase.io': 'Supabase','supabase.com': 'Supabase',
+  'resend.com': 'Resend','hackclub.com': 'Hack Club'
 };
 
 const storage = (() => {
@@ -1849,15 +1991,13 @@ function loadSettings() {
   try {
     const raw = storage.getItem('settings');
     if (raw) settings = { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
-  } catch { /* keep defaults */ }
+  } catch {}
   if (settings.size !== 'sm' && settings.size !== 'md' && settings.size !== 'lg') settings.size = 'md';
   if (!/^#[0-9a-f]{6}$/i.test(settings.accent || '')) settings.accent = THEME_ACCENTS[settings.theme] || '#d0d0d0';
 }
-
 function saveSettings() {
   try { storage.setItem('settings', JSON.stringify(settings)); } catch {}
 }
-
 function hexToRgb(hex) {
   const h = (hex || '').replace('#', '');
   if (h.length !== 6) return { r: 208, g: 208, b: 208 };
@@ -1867,7 +2007,6 @@ function isLightColor(hex) {
   const { r, g, b } = hexToRgb(hex);
   return (0.2126*r + 0.7152*g + 0.0722*b) > 150;
 }
-
 function applySettings() {
   const root = document.documentElement;
   const body = document.body;
@@ -1877,18 +2016,18 @@ function applySettings() {
   body.dataset.density = settings.density;
 
   const accent = settings.accent || THEME_ACCENTS[settings.theme] || '#d0d0d0';
+  const rgb = hexToRgb(accent);
   root.style.setProperty('--accent', accent);
+  root.style.setProperty('--accent-rgb', `${rgb.r}, ${rgb.g}, ${rgb.b}`);
   root.style.setProperty('--accent-ink', isLightColor(accent) ? '#0a0a0a' : '#ffffff');
 
   body.classList.toggle('no-preview', !settings.showPreview);
   body.classList.toggle('reduce-motion', !!settings.reduceMotion);
 
   let wall = '';
-  if (settings.wallpaper) {
-    wall = `url("${settings.wallpaper.replace(/"/g, '%22')}")`;
-  } else if (settings.gradient && GRADIENTS[settings.gradient]) {
-    wall = GRADIENTS[settings.gradient];
-  }
+  if (settings.wallpaper) wall = `url("${settings.wallpaper.replace(/"/g, '%22')}")`;
+  else if (settings.gradient && GRADIENTS[settings.gradient]) wall = GRADIENTS[settings.gradient];
+
   if (wall) {
     root.style.setProperty('--wall', wall);
     body.classList.add('wall');
@@ -1897,10 +2036,10 @@ function applySettings() {
     body.classList.remove('wall');
   }
 
+  updateBgPreview();
   applyRefreshTimer();
   saveSettings();
 }
-
 function applyRefreshTimer() {
   if (refreshTimer) clearInterval(refreshTimer);
   refreshTimer = null;
@@ -1919,6 +2058,7 @@ let currentFolder = 'inbox';
 let refreshTimer = null;
 let myEmail = '';
 let selectedId = null;
+let customFolders = [];
 
 const $ = id => document.getElementById(id);
 
@@ -1947,7 +2087,7 @@ async function authRequest(path, body) {
     body: JSON.stringify(body)
   });
   let data = {};
-  try { data = await res.json(); } catch { /* handled below */ }
+  try { data = await res.json(); } catch {}
   if (!res.ok) {
     const message = data.msg || data.message || data.error_description || data.error || `Supabase authentication failed (${res.status})`;
     throw new Error(message);
@@ -2016,6 +2156,23 @@ function toggleAccountMenu(){
   m.style.display = m.style.display==='none' ? 'block' : 'none';
 }
 
+/* ------------------------- custom folders storage ------------------------- */
+function loadCustomFolders() {
+  if (!currentUser) return [];
+  try {
+    const all = JSON.parse(storage.getItem('customFolders') || '{}');
+    return Array.isArray(all[currentUser.id]) ? all[currentUser.id] : [];
+  } catch { return []; }
+}
+function saveCustomFolders() {
+  if (!currentUser) return;
+  try {
+    const all = JSON.parse(storage.getItem('customFolders') || '{}');
+    all[currentUser.id] = customFolders;
+    storage.setItem('customFolders', JSON.stringify(all));
+  } catch {}
+}
+
 /* ------------------------- add account (sign up) ------------------------- */
 function addAccount(){
   if(accounts.length>=MAX_ACCOUNTS) return showToast('Maximum of 5 accounts reached');
@@ -2049,9 +2206,7 @@ async function doAddAccountSignup(){
     const email = `${username}@pawsocks.lat`;
     const meta = { username };
     if (displayName) meta.display_name = displayName;
-
     const data = await authRequest('/auth/v1/signup', { email, password, data: meta });
-
     let session = data;
     if (!session?.access_token) {
       try {
@@ -2060,7 +2215,6 @@ async function doAddAccountSignup(){
         throw new Error('Account created, but Supabase requires email confirmation before login. Turn OFF "Confirm email" in Supabase → Authentication → Sign In / Providers → Email, then try again.');
       }
     }
-
     saveSession(session, email);
     $('add-account-password').value = '';
     $('add-account-password2').value = '';
@@ -2139,7 +2293,6 @@ async function uploadAvatar(event){
     const a=accounts.find(x=>x.userId===activeAccountId);
     a.avatarUrl=url; a.session.user=currentUser;
     persistAccounts(); renderAccountDock();
-    // refresh the settings avatar if the modal is open
     if ($('settings-modal').classList.contains('open')) syncSettingsUI();
     showToast('Profile picture updated');
   }catch(e){
@@ -2188,6 +2341,7 @@ function clearSession() {
   allEmails = [];
   myEmail = '';
   selectedId = null;
+  customFolders = [];
   if (refreshTimer) clearInterval(refreshTimer);
   refreshTimer = null;
   accounts = accounts.filter(a => a.userId !== activeAccountId);
@@ -2208,6 +2362,8 @@ async function enterApp() {
   $('pane-title').textContent = 'inbox';
   $('empty-trash-btn').style.display = 'none';
   document.querySelectorAll('[data-folder]').forEach(n => n.classList.toggle('active', n.dataset.folder === 'inbox'));
+  customFolders = loadCustomFolders();
+  renderCustomFolders();
   await loadEmails();
   applyRefreshTimer();
 }
@@ -2248,12 +2404,11 @@ async function doRegister() {
   try {
     const email = `${username}@pawsocks.lat`;
     const data = await authRequest('/auth/v1/signup', { email, password, data: { username } });
-
     let session = data;
     if (!session?.access_token) {
       try {
         session = await authRequest('/auth/v1/token?grant_type=password', { email, password });
-      } catch (signInError) {
+      } catch {
         throw new Error('Account created, but Supabase is requiring email confirmation before login. To enable instant signup login, turn OFF Confirm email in Supabase → Authentication → Sign In / Providers → Email, then try signing up again.');
       }
     }
@@ -2277,6 +2432,7 @@ async function loadEmails() {
     const data = await sbFetch(query, {});
     allEmails = Array.isArray(data) ? data : [];
     renderFolders();
+    renderCustomFolders();
     renderEmailList();
     updateUnreadCount();
   } catch (err) {
@@ -2306,6 +2462,7 @@ function buildFolderMap() {
   for (const email of allEmails) {
     if (email.folder === 'sent') continue;
     if (email.is_deleted) continue;
+    if (email.folder && customFolders.includes(email.folder)) continue;
     const provider = getProvider(email.from_address, email.from_name);
     if (!map.has(provider)) map.set(provider, { name: provider, total: 0, unread: 0 });
     const f = map.get(provider);
@@ -2319,7 +2476,7 @@ function renderFolders() {
   const folders = buildFolderMap();
   const list = $('folder-list');
   if (!folders.length) {
-    list.innerHTML = '<div class="empty-state" style="padding:20px 16px;font-size:9px;">no folders yet</div>';
+    list.innerHTML = '<div class="empty-state" style="padding:8px 16px;font-size:9px;letter-spacing:1px;opacity:.4;">no senders yet</div>';
     return;
   }
   list.innerHTML = folders.map(f => `
@@ -2330,16 +2487,47 @@ function renderFolders() {
   `).join('');
 }
 
+function renderCustomFolders() {
+  const list = $('custom-folder-list');
+  if (!customFolders.length) {
+    list.innerHTML = '<div class="empty-state" style="padding:6px 16px 10px;font-size:9px;letter-spacing:1px;opacity:.4;">no folders yet</div>';
+    return;
+  }
+  list.innerHTML = customFolders.map(name => {
+    const unread = allEmails.filter(e => e.folder === name && !e.is_deleted && !e.is_read).length;
+    return `<div class="folder-item ${currentFolder === name ? 'active' : ''}" data-folder="${escapeHtml(name)}" data-custom="true" onclick="setFolder(this.dataset.folder, this)">
+      <span class="folder-name">
+        <svg class="folder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        <span>${escapeHtml(name)}</span>
+      </span>
+      ${unread > 0 ? `<span class="folder-badge">${unread}</span>` : ''}
+    </div>`;
+  }).join('');
+}
+
 function getFilteredEmails() {
   let list = allEmails;
+  const isCustom = customFolders.includes(currentFolder);
   if (currentFolder === 'trash') {
     list = list.filter(e => e.is_deleted);
   } else if (currentFolder === 'sent') {
     list = list.filter(e => e.folder === 'sent' && !e.is_deleted);
   } else if (currentFolder === 'inbox') {
-    list = list.filter(e => e.folder !== 'sent' && !e.is_deleted);
+    list = list.filter(e => {
+      if (e.is_deleted) return false;
+      if (e.folder === 'sent') return false;
+      if (e.folder && customFolders.includes(e.folder)) return false;
+      return true;
+    });
+  } else if (isCustom) {
+    list = list.filter(e => e.folder === currentFolder && !e.is_deleted);
   } else {
-    list = list.filter(e => e.folder !== 'sent' && !e.is_deleted && getProvider(e.from_address, e.from_name) === currentFolder);
+    list = list.filter(e => {
+      if (e.is_deleted) return false;
+      if (e.folder === 'sent') return false;
+      if (e.folder && customFolders.includes(e.folder)) return false;
+      return getProvider(e.from_address, e.from_name) === currentFolder;
+    });
   }
   const search = ($('search-input')?.value || '').toLowerCase().trim();
   if (search) {
@@ -2390,7 +2578,6 @@ function renderEmailContent(email) {
   const container = $('detail-body');
   const html = email.body_html || email.html_body || email.content_html || '';
   const text = email.body_text || email.text_body || email.content_text || '';
-
   if (typeof html === 'string' && html.trim()) {
     const frame = document.createElement('iframe');
     frame.className = 'email-html-frame';
@@ -2409,7 +2596,6 @@ a{overflow-wrap:anywhere}iframe,video{max-width:100%}
     container.replaceChildren(frame);
     return;
   }
-
   const content = document.createElement('div');
   content.className = 'email-text-content';
   content.textContent = text || stripHtml(html) || '(no content)';
@@ -2446,6 +2632,7 @@ async function viewEmail(id) {
     email.is_read = true;
     renderEmailList();
     renderFolders();
+    renderCustomFolders();
     updateUnreadCount();
     try {
       await sbFetch(`/rest/v1/emails?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ is_read: true }) });
@@ -2472,7 +2659,12 @@ function setFolder(folder, el) {
 }
 
 function updateUnreadCount() {
-  const count = allEmails.filter(e => e.folder !== 'sent' && !e.is_read && !e.is_deleted).length;
+  const count = allEmails.filter(e => {
+    if (e.is_deleted) return false;
+    if (e.folder === 'sent') return false;
+    if (e.folder && customFolders.includes(e.folder)) return false;
+    return !e.is_read;
+  }).length;
   $('unread-count').textContent = count > 0 ? count : '';
   const trashed = allEmails.filter(e => e.is_deleted).length;
   $('trash-count').textContent = trashed > 0 ? trashed : '';
@@ -2480,6 +2672,7 @@ function updateUnreadCount() {
 
 function refreshAfterChange() {
   renderFolders();
+  renderCustomFolders();
   renderEmailList();
   updateUnreadCount();
 }
@@ -2499,6 +2692,97 @@ async function doLogout() {
   }
   $('app').style.display='none';
   showAuth('landing');
+}
+
+/* ------------------------- custom folder CRUD ------------------------- */
+let folderModalMode = 'create';
+let folderModalOriginal = null;
+
+function openFolderModal(mode, original) {
+  folderModalMode = mode;
+  folderModalOriginal = original || null;
+  $('folder-modal-title').textContent = mode === 'create' ? 'new folder' : 'rename folder';
+  $('folder-name-input').value = mode === 'rename' ? original : '';
+  $('folder-modal-submit').textContent = mode === 'create' ? 'create' : 'rename';
+  $('folder-modal-err').textContent = '';
+  $('folder-modal').classList.add('open');
+  setTimeout(() => { $('folder-name-input').focus(); $('folder-name-input').select(); }, 80);
+}
+function closeFolderModal() { $('folder-modal').classList.remove('open'); }
+
+function submitFolderModal() {
+  const name = $('folder-name-input').value.trim();
+  const err = $('folder-modal-err');
+  if (!name) return (err.textContent = 'enter a name');
+  if (name.length > 40) return (err.textContent = 'name too long');
+  if (/[\\\/]/.test(name)) return (err.textContent = 'no slashes');
+  const lower = name.toLowerCase();
+  if (['inbox','sent','trash'].includes(lower)) return (err.textContent = 'reserved name');
+
+  if (folderModalMode === 'create') {
+    if (customFolders.some(f => f.toLowerCase() === lower)) return (err.textContent = 'folder already exists');
+    customFolders.push(name);
+    saveCustomFolders();
+    closeFolderModal();
+    renderCustomFolders();
+    setFolder(name, null);
+    showToast('folder created');
+  } else {
+    if (name === folderModalOriginal) { closeFolderModal(); return; }
+    if (customFolders.some(f => f.toLowerCase() === lower)) return (err.textContent = 'folder already exists');
+    const idx = customFolders.indexOf(folderModalOriginal);
+    if (idx < 0) { closeFolderModal(); return; }
+    const oldName = folderModalOriginal;
+    customFolders[idx] = name;
+    saveCustomFolders();
+    // Update emails in this folder
+    allEmails.forEach(e => { if (e.folder === oldName) e.folder = name; });
+    if (currentFolder === oldName) currentFolder = name;
+    closeFolderModal();
+    sbFetch(`/rest/v1/emails?user_id=eq.${currentUser.id}&folder=eq.${encodeURIComponent(oldName)}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ folder: name })
+    }).catch(e => showToast('Folder rename sync failed: ' + e.message));
+    renderCustomFolders();
+    $('pane-title').textContent = currentFolder;
+    refreshAfterChange();
+    showToast('folder renamed');
+  }
+}
+
+async function deleteFolder(name) {
+  if (!window.confirm(`Delete folder "${name}"?\n\nAny emails inside will be moved back to the inbox.`)) return;
+  const idx = customFolders.indexOf(name);
+  if (idx < 0) return;
+  customFolders.splice(idx, 1);
+  saveCustomFolders();
+  // Move emails back to inbox
+  allEmails.forEach(e => { if (e.folder === name) e.folder = null; });
+  try {
+    await sbFetch(`/rest/v1/emails?user_id=eq.${currentUser.id}&folder=eq.${encodeURIComponent(name)}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ folder: null })
+    });
+  } catch (e) {
+    showToast('Could not move emails: ' + e.message);
+  }
+  if (currentFolder === name) setFolder('inbox', null);
+  renderCustomFolders();
+  refreshAfterChange();
+  showToast('folder deleted');
+}
+
+async function moveEmailTo(id, folder) {
+  const email = allEmails.find(e => e.id === id);
+  if (!email) return;
+  const patch = { folder: folder === 'inbox' ? null : folder };
+  const ok = await patchEmail(id, patch);
+  if (!ok) return;
+  if (selectedId === id) {
+    const filtered = getFilteredEmails();
+    if (!filtered.some(e => e.id === id)) closeDetail();
+  }
+  showToast(`Moved to ${folder}`);
 }
 
 /* ------------------------- trash / delete ------------------------- */
@@ -2539,7 +2823,7 @@ async function restoreEmail(id) {
   if (!ok) return;
   if (selectedId === id) closeDetail();
   refreshAfterChange();
-  showToast('Restored to inbox');
+  showToast('Restored');
 }
 
 async function purgeEmail(id) {
@@ -2585,16 +2869,19 @@ async function emptyTrash() {
 
 /* ------------------------- context menu ------------------------- */
 let ctxEmailId = null;
+let ctxFolderName = null;
 
 function hideCtx() {
   $('ctx-menu').classList.remove('open');
   ctxEmailId = null;
+  ctxFolderName = null;
 }
 
-function showCtx(x, y, id) {
+function showEmailCtx(x, y, id) {
   const email = allEmails.find(e => e.id === id);
   if (!email) return;
   ctxEmailId = id;
+  ctxFolderName = null;
   const menu = $('ctx-menu');
   const inTrash = !!email.is_deleted;
   const items = [];
@@ -2607,16 +2894,52 @@ function showCtx(x, y, id) {
     items.push({ label: email.is_read ? 'Mark as unread' : 'Mark as read', action: 'toggle-read' });
     items.push({ label: 'Open', action: 'open' });
     items.push({ sep: true });
+    // Move to
+    items.push({ heading: 'MOVE TO' });
+    const currentFolderName = email.folder && customFolders.includes(email.folder) ? email.folder : (email.folder === 'sent' ? 'sent' : 'inbox');
+    items.push({ label: 'Inbox', action: 'move:inbox', sub: true, current: currentFolderName === 'inbox' });
+    for (const f of customFolders) {
+      items.push({ label: f, action: `move:${f}`, sub: true, current: currentFolderName === f });
+    }
+    items.push({ sep: true });
     items.push({ label: 'Move to trash', action: 'trash', danger: true });
   }
   items.push({ sep: true });
   items.push({ label: 'Copy sender address', action: 'copy-sender' });
 
-  menu.innerHTML = items.map(it => it.sep
-    ? '<div class="ctx-sep"></div>'
-    : `<button class="ctx-item ${it.danger ? 'danger' : ''}" data-action="${it.action}">${escapeHtml(it.label)}</button>`
-  ).join('');
+  renderCtxMenu(menu, items);
+  positionCtxMenu(menu, x, y);
+}
 
+function showFolderCtx(x, y, name) {
+  ctxFolderName = name;
+  ctxEmailId = null;
+  const menu = $('ctx-menu');
+  const items = [
+    { label: 'Rename folder', folderAction: 'rename' },
+    { sep: true },
+    { label: 'Delete folder', folderAction: 'delete', danger: true }
+  ];
+  renderCtxMenu(menu, items);
+  positionCtxMenu(menu, x, y);
+}
+
+function renderCtxMenu(menu, items) {
+  menu.innerHTML = items.map(it => {
+    if (it.sep) return '<div class="ctx-sep"></div>';
+    if (it.heading) return `<div class="ctx-heading">${escapeHtml(it.heading)}</div>`;
+    const cls = ['ctx-item'];
+    if (it.danger) cls.push('danger');
+    if (it.sub) cls.push('ctx-sub');
+    if (it.current) cls.push('current');
+    const dataAttr = it.folderAction
+      ? `data-folder-action="${escapeHtml(it.folderAction)}"`
+      : `data-action="${escapeHtml(it.action || '')}"`;
+    return `<button class="${cls.join(' ')}" ${dataAttr}>${escapeHtml(it.label)}</button>`;
+  }).join('');
+}
+
+function positionCtxMenu(menu, x, y) {
   menu.style.left = '0px';
   menu.style.top = '0px';
   menu.classList.add('open');
@@ -2629,9 +2952,11 @@ function showCtx(x, y, id) {
 
 document.addEventListener('contextmenu', e => {
   e.preventDefault();
-  const item = e.target.closest('.email-item');
-  if (!item) { hideCtx(); return; }
-  showCtx(e.clientX, e.clientY, item.dataset.id);
+  const emailItem = e.target.closest('.email-item');
+  if (emailItem) { showEmailCtx(e.clientX, e.clientY, emailItem.dataset.id); return; }
+  const folderItem = e.target.closest('[data-custom="true"]');
+  if (folderItem) { showFolderCtx(e.clientX, e.clientY, folderItem.dataset.folder); return; }
+  hideCtx();
 });
 
 document.addEventListener('click', e => {
@@ -2643,12 +2968,29 @@ window.addEventListener('resize', hideCtx);
 $('ctx-menu').addEventListener('click', async e => {
   const btn = e.target.closest('.ctx-item');
   if (!btn) return;
+
+  if (btn.dataset.folderAction) {
+    const action = btn.dataset.folderAction;
+    const name = ctxFolderName;
+    hideCtx();
+    if (!name) return;
+    if (action === 'rename') openFolderModal('rename', name);
+    else if (action === 'delete') await deleteFolder(name);
+    return;
+  }
+
   const action = btn.dataset.action;
   const id = ctxEmailId;
   hideCtx();
   if (!id) return;
   const email = allEmails.find(x => x.id === id);
   if (!email) return;
+
+  if (action.startsWith('move:')) {
+    const folder = action.slice(5);
+    await moveEmailTo(id, folder);
+    return;
+  }
 
   switch (action) {
     case 'open': viewEmail(id); break;
@@ -2678,11 +3020,9 @@ function openCompose() {
   $('compose-status').textContent = '';
   setTimeout(() => $('compose-to').focus(), 120);
 }
-
 function closeCompose() {
   $('compose-modal').classList.remove('open');
 }
-
 async function sendViaEdge(to, subject, text) {
   const res = await fetch(`${SUPABASE_URL}/functions/v1/mail-send`, {
     method: 'POST',
@@ -2697,7 +3037,6 @@ async function sendViaEdge(to, subject, text) {
   if (!res.ok) throw new Error(data.error || 'Send failed');
   return data;
 }
-
 async function sendCompose() {
   const to = $('compose-to').value.trim();
   const subject = $('compose-subject').value.trim();
@@ -2717,7 +3056,6 @@ async function sendCompose() {
     showToast('send failed: ' + err.message);
   }
 }
-
 async function sendReply() {
   const body = $('reply-text').value.trim();
   if (!body || !selectedId) return;
@@ -2741,14 +3079,12 @@ function escapeHtml(str) {
   if (!str) return '';
   return String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
-
 function stripHtml(html) {
   if (!html) return '';
   const d = document.createElement('div');
   d.innerHTML = html;
   return d.textContent || d.innerText || '';
 }
-
 function formatDate(ts) {
   if (!ts) return '';
   const d = new Date(ts);
@@ -2764,7 +3100,6 @@ function formatDate(ts) {
   }
   return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
 }
-
 function formatDateTime(ts) {
   return ts ? new Date(ts).toLocaleString() : '';
 }
@@ -2775,25 +3110,43 @@ function segSet(id, value) {
   if (!el) return;
   [...el.querySelectorAll('button')].forEach(b => b.classList.toggle('on', b.dataset.value === value));
 }
+function updateAccentSwatch() {
+  const el = $('accent-swatch');
+  if (el) el.style.background = settings.accent || '#d0d0d0';
+}
+function updateBgPreview() {
+  const el = $('bg-preview');
+  if (!el) return;
+  const hasImage = !!settings.wallpaper;
+  const hasGradient = !!settings.gradient;
+  el.classList.toggle('empty', !hasImage && !hasGradient);
+  if (hasImage) {
+    el.style.backgroundImage = `url("${settings.wallpaper.replace(/"/g, '%22')}")`;
+    el.style.backgroundSize = 'cover';
+    el.style.backgroundPosition = 'center';
+  } else if (hasGradient && GRADIENTS[settings.gradient]) {
+    el.style.backgroundImage = GRADIENTS[settings.gradient];
+  } else {
+    el.style.backgroundImage = 'none';
+  }
+  const rm = $('remove-bg-btn');
+  if (rm) rm.style.display = hasImage ? 'inline-block' : 'none';
+}
 
 function syncSettingsUI() {
   if (!settings) return;
 
-  // appearance
   $('set-accent').value = /^#[0-9a-f]{6}$/i.test(settings.accent) ? settings.accent : '#d0d0d0';
-  $('set-wallpaper').value = settings.wallpaper || '';
+  updateAccentSwatch();
   $('set-gradient').value = settings.gradient || '';
   segSet('seg-theme', settings.theme);
   segSet('seg-size', settings.size);
   segSet('seg-density', settings.density);
   $('set-motion').checked = !!settings.reduceMotion;
-
-  // mailbox
   $('set-preview').checked = !!settings.showPreview;
   $('set-confirm').checked = !!settings.confirmDelete;
   $('set-refresh').value = String(settings.refreshMs);
 
-  // account
   const active = accounts.find(a => a.userId === activeAccountId);
   const meta = currentUser?.user_metadata || {};
   $('set-display-name').value = meta.display_name || meta.username || '';
@@ -2804,22 +3157,21 @@ function syncSettingsUI() {
   if (previewName) previewName.textContent = active?.displayName || active?.username || 'Account';
   const previewEmail = $('settings-email');
   if (previewEmail) previewEmail.textContent = myEmail || '—';
+
+  updateBgPreview();
 }
 
 function openSettings() {
   $('account-menu').style.display = 'none';
   syncSettingsUI();
   $('settings-status').textContent = '';
-  // reset to first tab each time it opens
   document.querySelectorAll('.settings-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === 'appearance'));
   document.querySelectorAll('.settings-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === 'appearance'));
   $('settings-modal').classList.add('open');
 }
-
 function closeSettings() {
   $('settings-modal').classList.remove('open');
 }
-
 function resetSettings() {
   settings = { ...DEFAULT_SETTINGS };
   applySettings();
@@ -2864,6 +3216,63 @@ async function saveDisplayName() {
   }
 }
 
+/* ------------------------- background image ------------------------- */
+function compressImage(file, maxWidth, quality) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        try {
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        } catch (e) { reject(e); }
+      };
+      img.onerror = reject;
+      img.src = reader.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function onBgFileChange(event) {
+  const file = event.target.files?.[0];
+  event.target.value = '';
+  if (!file) return;
+  if (!/^image\//.test(file.type)) return showToast('Select an image file');
+  if (file.size > 15 * 1024 * 1024) return showToast('Image too large (max 15 MB)');
+  try {
+    const dataUrl = await compressImage(file, 1600, 0.78);
+    // Rough localStorage budget check
+    if (dataUrl.length > 3.5 * 1024 * 1024) {
+      showToast('Image too large after compression — try a smaller image');
+      return;
+    }
+    settings.wallpaper = dataUrl;
+    settings.gradient = '';
+    $('set-gradient').value = '';
+    saveSettings();
+    applySettings();
+    showToast('Background updated');
+  } catch (e) {
+    showToast('Could not process image');
+  }
+}
+
+function removeBg() {
+  settings.wallpaper = '';
+  saveSettings();
+  applySettings();
+  showToast('Background removed');
+}
+
+/* ------------------------- settings init ------------------------- */
 function initSettingsTabs() {
   document.querySelectorAll('.settings-tab').forEach(tab => {
     tab.addEventListener('click', () => {
@@ -2885,7 +3294,6 @@ function initSettingsUI() {
     applySettings();
     syncSettingsUI();
   });
-
   $('seg-size').addEventListener('click', e => {
     const b = e.target.closest('button');
     if (!b) return;
@@ -2893,7 +3301,6 @@ function initSettingsUI() {
     applySettings();
     syncSettingsUI();
   });
-
   $('seg-density').addEventListener('click', e => {
     const b = e.target.closest('button');
     if (!b) return;
@@ -2901,54 +3308,34 @@ function initSettingsUI() {
     applySettings();
     syncSettingsUI();
   });
-
   $('set-accent').addEventListener('input', e => {
     settings.accent = e.target.value;
     applySettings();
+    updateAccentSwatch();
   });
-
   $('set-gradient').addEventListener('change', e => {
     settings.gradient = e.target.value;
     if (settings.gradient) {
       settings.wallpaper = '';
-      $('set-wallpaper').value = '';
     }
     applySettings();
   });
-
-  let wallTimer = null;
-  $('set-wallpaper').addEventListener('input', e => {
-    clearTimeout(wallTimer);
-    wallTimer = setTimeout(() => {
-      settings.wallpaper = e.target.value.trim();
-      if (settings.wallpaper) {
-        settings.gradient = '';
-        $('set-gradient').value = '';
-      }
-      applySettings();
-    }, 420);
-  });
-
   $('set-motion').addEventListener('change', e => {
     settings.reduceMotion = e.target.checked;
     applySettings();
   });
-
   $('set-preview').addEventListener('change', e => {
     settings.showPreview = e.target.checked;
     applySettings();
   });
-
   $('set-confirm').addEventListener('change', e => {
     settings.confirmDelete = e.target.checked;
     applySettings();
   });
-
   $('set-refresh').addEventListener('change', e => {
     settings.refreshMs = Number(e.target.value) || 0;
     applySettings();
   });
-
   $('set-display-name').addEventListener('change', saveDisplayName);
 }
 
@@ -2958,6 +3345,7 @@ document.addEventListener('keydown', e => {
     if ($('compose-modal').classList.contains('open')) closeCompose();
     if ($('settings-modal').classList.contains('open')) closeSettings();
     if ($('add-account-modal').classList.contains('open')) closeAddAccount();
+    if ($('folder-modal').classList.contains('open')) closeFolderModal();
     hideCtx();
   }
 });
@@ -2967,6 +3355,7 @@ document.addEventListener('keydown', event => {
   if ($('add-account-modal').classList.contains('open')) return;
   if ($('settings-modal').classList.contains('open')) return;
   if ($('compose-modal').classList.contains('open')) return;
+  if ($('folder-modal').classList.contains('open')) return;
   if ($('login-screen').style.display !== 'none') doLogin();
   else if ($('register-screen').style.display !== 'none') doRegister();
 });
