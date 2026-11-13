@@ -879,10 +879,24 @@ button:hover,.btn:hover,.btn-icon:hover{background:#171717!important;border-colo
 .email-html-frame{display:block;width:100%;min-height:420px;border:0;border-radius:8px;background:#fff}
 @media(max-width:560px){.account-dock{padding:6px 4px}.account-current{justify-content:center;padding:7px 3px}.account-current-meta,.account-chevron{display:none}.account-menu{left:5px;right:5px}}
 
+
+/* Compact in-app account adding and smoother account switching */
+.add-account-modal{width:390px;max-width:calc(100vw - 28px);padding-bottom:8px}
+.add-account-copy{padding:14px 20px 4px;color:#858585;font-size:11px;line-height:1.6}
+.add-account-modal .modal-field{padding:10px 20px 0}
+.add-account-modal .username-wrap{width:100%}
+.add-account-modal .username-wrap input{min-width:0;width:100%}
+.add-account-modal .err{padding:8px 20px 0;min-height:18px;color:#f08080;font-size:10px}
+.add-account-modal .modal-footer{padding:12px 20px 8px;border-top:1px solid #202020}
+#app{transition:opacity .16s ease,filter .16s ease}
+#app.account-switching{opacity:.42;filter:blur(1px);pointer-events:none}
+.account-option{transition:background .14s ease,transform .14s ease}
+.account-option:active{transform:scale(.985)}
+
 </style>
 </head>
 <body class="auth-mode">
-<div class="paw-field" aria-hidden="true"><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span></div>
+<div class="paw-field" aria-hidden="true"><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span><span>🐾</span></div>
 
 <div id="landing-screen" class="landing-screen">
   <div class="landing-logo">mail.pawsocks.lat</div>
@@ -1020,6 +1034,17 @@ button:hover,.btn:hover,.btn-icon:hover{background:#171717!important;border-colo
       <button class="btn btn-sm" onclick="closeCompose()">cancel</button>
       <span class="modal-status" id="compose-status"></span>
     </div>
+  </div>
+</div>
+
+<div id="add-account-modal" class="modal-overlay" onclick="if(event.target===this)closeAddAccount()">
+  <div class="modal add-account-modal">
+    <div class="modal-header"><span>add account</span><button class="btn-icon" onclick="closeAddAccount()">✕</button></div>
+    <div class="add-account-copy">Sign in to another Pawsocks account. Your current inbox stays open and saved.</div>
+    <div class="modal-field"><label>username</label><div class="username-wrap"><input id="add-account-username" type="text" placeholder="username" autocomplete="username"><span class="username-suffix">@pawsocks.lat</span></div></div>
+    <div class="modal-field"><label>password</label><input id="add-account-password" type="password" placeholder="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAddAccountLogin()"></div>
+    <div class="err" id="add-account-err"></div>
+    <div class="modal-footer"><button class="btn btn-sm btn-primary" id="add-account-submit" onclick="doAddAccountLogin()">sign in</button><button class="btn btn-sm" onclick="closeAddAccount()">cancel</button></div>
   </div>
 </div>
 
@@ -1168,19 +1193,41 @@ function renderAccountDock(){
 }
 function avatarFallbackFor(a){return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect width="80" height="80" rx="40" fill="#242424"/><text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" fill="#eee" font-family="Arial" font-size="32">${accountInitial(a)}</text></svg>`);}
 function toggleAccountMenu(){const m=$('account-menu');m.style.display=m.style.display==='none'?'block':'none';}
-function addAccount(){if(accounts.length>=MAX_ACCOUNTS)return showToast('Maximum of 5 accounts reached');$('account-menu').style.display='none';showAuth('login');$('login-err').textContent='Sign in to add another account. Your current account stays saved.';}
+function addAccount(){
+  if(accounts.length>=MAX_ACCOUNTS)return showToast('Maximum of 5 accounts reached');
+  $('account-menu').style.display='none';$('add-account-err').textContent='';$('add-account-username').value='';$('add-account-password').value='';
+  $('add-account-modal').classList.add('open');setTimeout(()=>$('add-account-username').focus(),80);
+}
+function closeAddAccount(){$('add-account-modal').classList.remove('open');}
+async function doAddAccountLogin(){
+  const username=$('add-account-username').value.trim().toLowerCase();
+  const password=$('add-account-password').value;
+  const err=$('add-account-err');const btn=$('add-account-submit');err.textContent='';
+  if(!username)return err.textContent='Enter a username';
+  if(!password)return err.textContent='Enter a password';
+  if(accounts.length>=MAX_ACCOUNTS)return err.textContent='You already have 5 accounts signed in.';
+  btn.disabled=true;btn.textContent='signing in...';
+  try{
+    const email=`${username}@pawsocks.lat`;
+    const session=await authRequest('/auth/v1/token?grant_type=password',{email,password});
+    saveSession(session,email);$('add-account-password').value='';closeAddAccount();
+    await enterApp();showToast('Account added');
+  }catch(e){err.textContent=e.message||'Could not sign in to this account.';}
+  finally{btn.disabled=false;btn.textContent='sign in';}
+}
 async function switchAccount(userId){
   const a=accounts.find(x=>x.userId===userId);if(!a||userId===activeAccountId)return;
   if(refreshTimer)clearInterval(refreshTimer);refreshTimer=null;
+  $('app').classList.add('account-switching');$('account-menu').style.display='none';
   activeAccountId=userId;currentSession=a.session;currentUser=a.session.user;myEmail=a.email;allEmails=[];selectedId=null;
-  $('account-menu').style.display='none';
   try{
     const res=await fetch(`${SUPABASE_URL}/auth/v1/user`,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${currentSession.access_token}`}});
     if(res.status===401&&currentSession.refresh_token)await refreshSession();
     else if(res.ok){currentUser=await res.json();a.session.user=currentUser;}
     else throw new Error('This account session expired. Sign in again.');
     a.session=currentSession;persistAccounts();renderAccountDock();await enterApp();
-  }catch(e){showToast(e.message);}
+  }catch(e){showToast(e.message);renderAccountDock();}
+  finally{$('app').classList.remove('account-switching');}
 }
 async function triggerAvatarUpload(){ $('account-menu').style.display='none';$('avatar-upload').click(); }
 async function uploadAvatar(event){
@@ -1191,10 +1238,10 @@ async function uploadAvatar(event){
     const ext=({ 'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/gif':'gif'})[file.type]||'png';
     const path=`${currentUser.id}/avatar.${ext}`;
     const res=await fetch(`${SUPABASE_URL}/storage/v1/object/avatars/${path}`,{method:'POST',headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${currentSession.access_token}`,'x-upsert':'true','Content-Type':file.type},body:file});
-    if(!res.ok)throw new Error(await res.text());
+    if(!res.ok){let detail='';try{const j=await res.json();detail=j.message||j.error||j.msg||'';}catch{detail=await res.text();}if(res.status===403)throw new Error('Storage returned 403. Run the avatars bucket and Storage policies SQL provided with this update, then try again.');throw new Error(detail||`Storage upload failed (${res.status})`);}
     const url=`${SUPABASE_URL}/storage/v1/object/public/avatars/${path}?v=${Date.now()}`;
     const update=await fetch(`${SUPABASE_URL}/auth/v1/user`,{method:'PUT',headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${currentSession.access_token}`,'Content-Type':'application/json'},body:JSON.stringify({data:{...currentUser.user_metadata,avatar_url:url}})});
-    if(!update.ok)throw new Error(await update.text());
+    if(!update.ok){let detail='';try{const j=await update.json();detail=j.message||j.msg||j.error_description||'';}catch{detail=await update.text();}throw new Error(detail||`Could not save profile picture (${update.status})`);}
     currentUser=await update.json();const a=accounts.find(x=>x.userId===activeAccountId);a.avatarUrl=url;a.session.user=currentUser;persistAccounts();renderAccountDock();showToast('Profile picture updated');
   }catch(e){showToast(e.message.includes('Bucket not found')?'Create the avatars storage bucket using the SQL below.':`Avatar upload failed: ${e.message}`);}
 }
@@ -1453,6 +1500,55 @@ function renderEmailContent(email) {
 body{padding:20px;font:14px/1.6 Arial,Helvetica,sans-serif;color:#202124;background:#fff}
 img{max-width:100%;height:auto}table{max-width:100%}pre{white-space:pre-wrap;overflow-wrap:anywhere}
 a{overflow-wrap:anywhere}iframe,video{max-width:100%}
+
+/* Login / signup falling paw-print animation */
+.paw-field{
+  position:fixed!important; inset:0!important; z-index:0!important;
+  overflow:hidden!important; pointer-events:none!important;
+  opacity:0!important; visibility:hidden!important;
+  background:transparent!important;
+}
+body.auth-mode .paw-field{opacity:1!important;visibility:visible!important}
+.paw-field span{
+  position:absolute!important; top:-12vh!important; left:var(--paw-x,50%)!important;
+  display:block!important; width:max-content; height:max-content;
+  color:#a6a6a6!important; font-size:var(--paw-size,25px)!important;
+  line-height:1; opacity:0!important; filter:grayscale(1)!important;
+  text-shadow:0 2px 16px #fff2!important;
+  animation:pawfall var(--paw-duration,19s) linear var(--paw-delay,0s) infinite!important;
+  will-change:transform,opacity;
+}
+.paw-field span:nth-child(1){--paw-x:4%;--paw-size:21px;--paw-duration:19s;--paw-delay:-13s}
+.paw-field span:nth-child(2){--paw-x:10%;--paw-size:30px;--paw-duration:24s;--paw-delay:-4s}
+.paw-field span:nth-child(3){--paw-x:16%;--paw-size:17px;--paw-duration:17s;--paw-delay:-9s}
+.paw-field span:nth-child(4){--paw-x:23%;--paw-size:27px;--paw-duration:22s;--paw-delay:-17s}
+.paw-field span:nth-child(5){--paw-x:29%;--paw-size:19px;--paw-duration:18s;--paw-delay:-2s}
+.paw-field span:nth-child(6){--paw-x:35%;--paw-size:32px;--paw-duration:26s;--paw-delay:-15s}
+.paw-field span:nth-child(7){--paw-x:41%;--paw-size:20px;--paw-duration:20s;--paw-delay:-7s}
+.paw-field span:nth-child(8){--paw-x:47%;--paw-size:25px;--paw-duration:23s;--paw-delay:-19s}
+.paw-field span:nth-child(9){--paw-x:53%;--paw-size:18px;--paw-duration:18s;--paw-delay:-11s}
+.paw-field span:nth-child(10){--paw-x:59%;--paw-size:29px;--paw-duration:25s;--paw-delay:-5s}
+.paw-field span:nth-child(11){--paw-x:65%;--paw-size:20px;--paw-duration:19s;--paw-delay:-16s}
+.paw-field span:nth-child(12){--paw-x:71%;--paw-size:31px;--paw-duration:27s;--paw-delay:-8s}
+.paw-field span:nth-child(13){--paw-x:77%;--paw-size:18px;--paw-duration:18s;--paw-delay:-3s}
+.paw-field span:nth-child(14){--paw-x:83%;--paw-size:26px;--paw-duration:22s;--paw-delay:-14s}
+.paw-field span:nth-child(15){--paw-x:89%;--paw-size:20px;--paw-duration:20s;--paw-delay:-6s}
+.paw-field span:nth-child(16){--paw-x:95%;--paw-size:30px;--paw-duration:25s;--paw-delay:-18s}
+.paw-field span:nth-child(17){--paw-x:7%;--paw-size:16px;--paw-duration:21s;--paw-delay:-20s}
+.paw-field span:nth-child(18){--paw-x:38%;--paw-size:17px;--paw-duration:24s;--paw-delay:-12s}
+.paw-field span:nth-child(19){--paw-x:68%;--paw-size:16px;--paw-duration:20s;--paw-delay:-10s}
+.paw-field span:nth-child(20){--paw-x:92%;--paw-size:18px;--paw-duration:23s;--paw-delay:-22s}
+@keyframes pawfall{
+  0%{transform:translate3d(-12px,-12vh,0) rotate(-28deg);opacity:0}
+  12%{opacity:.20}
+  50%{transform:translate3d(22px,48vh,0) rotate(12deg);opacity:.15}
+  88%{opacity:.12}
+  100%{transform:translate3d(-18px,112vh,0) rotate(42deg);opacity:0}
+}
+.landing-screen,.auth-screen{position:relative!important;z-index:2!important}
+.auth-box{position:relative;z-index:2}
+@media(prefers-reduced-motion:reduce){.paw-field span{animation:none!important;display:none!important}}
+
 </style></head><body>${html}</body></html>`;
     frame.srcdoc = safeDocument;
     container.replaceChildren(frame);
