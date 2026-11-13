@@ -811,7 +811,7 @@ body { background:#030303; color:#e7e7e7; }
 .detail-body { padding:22px 28px; }
 .email-html-frame {
   display:block; width:100%; min-height:320px; height:100%;
-  border:0; border-radius:8px; background:#fff;
+  border:0; border-radius:8px; background:#0a0a0a;
 }
 .email-text-content {
   white-space:pre-wrap; overflow-wrap:anywhere; color:#ddd;
@@ -858,7 +858,7 @@ button:hover,.btn:hover,.btn-icon:hover{background:#171717!important;border-colo
 .account-menu-action{display:block;width:100%;padding:9px 8px;margin-top:4px;text-align:left;border:0!important;border-top:1px solid #202020!important;border-radius:6px;font-size:10px;cursor:pointer;background:transparent!important;color:#bbb!important}
 .account-menu-action:hover{background:#171717!important;color:#fff!important}
 .account-signout{color:#999!important}
-.email-html-frame{display:block;width:100%;min-height:420px;border:0;border-radius:8px;background:#fff}
+.email-html-frame{display:block;width:100%;min-height:420px;border:0;border-radius:8px;background:#0a0a0a}
 @media(max-width:560px){.account-dock{padding:6px 4px}.account-current{justify-content:center;padding:7px 3px}.account-current-meta,.account-chevron{display:none}.account-menu{left:5px;right:5px}}
 
 /* Compact in-app account adding and smoother account switching */
@@ -894,6 +894,7 @@ button:hover,.btn:hover,.btn-icon:hover{background:#171717!important;border-colo
   --fs:13px;
   --pad-y:13px;
   --wall:none;
+  --wall-blur:14px;
 }
 html[data-theme="slate"]{
   --bg:#0a0d12;
@@ -925,14 +926,24 @@ body[data-density="compact"]{ --pad-y:9px; }
 body[data-density="comfortable"]{ --pad-y:18px; }
 
 body{ background-color:var(--bg)!important; color:var(--text)!important; font-size:var(--fs)!important; }
-body.wall{
-  background-image:var(--wall)!important;
-  background-size:cover!important;
-  background-position:center!important;
-  background-attachment:fixed!important;
-  background-repeat:no-repeat!important;
+
+/* Wallpaper is painted on a dedicated fixed layer so it can be blurred
+   independently of the UI (controlled by the background blur slider). */
+body.wall{ background-image:none!important; background-color:var(--bg)!important; }
+body.wall.auth-mode{ background-image:none!important; }
+body.wall::before{
+  content:"";
+  position:fixed;
+  inset:-140px;
+  z-index:0;
+  pointer-events:none;
+  background-image:var(--wall);
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  filter:blur(var(--wall-blur,14px)) saturate(1.05);
+  will-change:filter;
 }
-body.wall.auth-mode{ background-image:var(--wall)!important; }
 
 #app{ background-color:var(--panel)!important; color:var(--text)!important; }
 .topbar,.sidebar,.email-list-pane{ background-color:var(--panel)!important; border-color:var(--line)!important; }
@@ -941,8 +952,8 @@ body.wall.auth-mode{ background-image:var(--wall)!important; }
 body.wall #app{ background-color:transparent!important; }
 body.wall .topbar,body.wall .sidebar,body.wall .email-list-pane,body.wall .detail-pane{
   background-color:rgba(var(--panel-rgb),.92)!important;
-  backdrop-filter:blur(14px) saturate(1.15);
-  -webkit-backdrop-filter:blur(14px) saturate(1.15);
+  backdrop-filter:blur(var(--wall-blur,14px)) saturate(1.15);
+  -webkit-backdrop-filter:blur(var(--wall-blur,14px)) saturate(1.15);
 }
 body.wall .pane-header,body.wall .detail-header,body.wall .reply-area{ background-color:transparent!important; }
 
@@ -1029,6 +1040,7 @@ body.reduce-motion *,body.reduce-motion *::before,body.reduce-motion *::after{
   animation-duration:.001ms!important; transition-duration:.001ms!important;
 }
 body.reduce-motion .paw-field{ display:none!important; }
+body.reduce-motion.wall::before{ filter:none; }
 
 /* folder icon in nav */
 .folder-icon{ width:12px; height:12px; flex-shrink:0; opacity:.85; }
@@ -1239,6 +1251,58 @@ body.wall .settings-modal{
   color: var(--text-3);
   font-size: 10.5px;
   flex: 0 0 auto;
+}
+
+/* ---- range slider (background blur) ---- */
+.range-row{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+.range-row input[type="range"]{
+  flex: 1;
+  min-width: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  height: 4px;
+  padding: 0 !important;
+  margin: 0;
+  border: 0 !important;
+  border-radius: 999px;
+  background: var(--line-2) !important;
+  outline: none;
+  cursor: pointer;
+}
+.range-row input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--panel);
+  box-shadow: 0 1px 4px #0008;
+  cursor: pointer;
+}
+.range-row input[type="range"]::-moz-range-thumb{
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--panel);
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 1px 4px #0008;
+  cursor: pointer;
+}
+.range-row input[type="range"]::-moz-range-track{
+  height: 4px;
+  border-radius: 999px;
+  background: var(--line-2);
+}
+.range-row .settings-muted{
+  min-width: 42px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 /* accent color swatch */
@@ -1590,6 +1654,169 @@ body.wall .settings-modal{
   border-color: #7a3a3a !important;
   color: #ffd0d0 !important;
 }
+
+/* =========================================================================
+   AUTH SCREENS — neatly aligned
+   ========================================================================= */
+.auth-screen{ padding:24px; }
+.auth-box{
+  width:min(380px, 100%);
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:14px;
+  padding:40px 36px 30px;
+  border:1px solid #242424;
+  border-radius:18px;
+  background:#080808;
+  box-shadow:0 30px 90px #000c;
+}
+.auth-title{
+  text-align:center;
+  font-size:11px;
+  letter-spacing:6px;
+  text-transform:uppercase;
+  color:#e8e8e8;
+  opacity:.85;
+  margin:0 0 10px;
+}
+.username-wrap{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  width:100%;
+  height:46px;
+  padding:0;
+  border:0;
+  border-bottom:1px solid #2b2b2b !important;
+  transition:border-color .2s ease;
+}
+.username-wrap:focus-within{ border-bottom-color:#8a8a8a !important; }
+.username-wrap input{
+  flex:1 1 auto;
+  min-width:0;
+  height:100%;
+  padding:0;
+  margin:0;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0;
+  color:#f5f5f5 !important;
+  font-family:inherit;
+  font-size:13px;
+  text-align:left;
+  outline:none;
+}
+.username-suffix{
+  flex:0 0 auto;
+  padding:0;
+  font-size:12.5px;
+  line-height:1;
+  color:#707070;
+  white-space:nowrap;
+  transition:color .2s ease;
+}
+.username-wrap:focus-within .username-suffix{ color:#a5a5a5; }
+.auth-field{
+  width:100%;
+  height:46px;
+  border-bottom:1px solid #2b2b2b !important;
+  transition:border-color .2s ease;
+}
+.auth-field:focus-within{ border-bottom-color:#8a8a8a !important; }
+.auth-field input{
+  width:100%;
+  height:100%;
+  padding:0;
+  margin:0;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0;
+  color:#f5f5f5 !important;
+  font-family:inherit;
+  font-size:13px;
+  text-align:left;
+  outline:none;
+}
+.auth-box .err{
+  min-height:14px;
+  margin:0;
+  font-size:10.5px;
+  line-height:1.4;
+  text-align:center;
+  color:#ff9292;
+}
+.auth-box > .btn{
+  width:100%;
+  padding:13px 18px;
+  margin-top:4px;
+  letter-spacing:2px;
+}
+.auth-links{
+  align-self:center;
+  justify-content:center;
+  margin-top:6px;
+  font-size:10px;
+}
+@media (max-width:420px){
+  .auth-box{ padding:32px 22px 24px; }
+}
+
+/* ---- no text selection ---- */
+html, body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+input, textarea, select, [contenteditable="true"] {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* ---- verification code extract ---- */
+.code-extract{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:10px;
+  margin:0 0 16px;
+  padding:14px 16px;
+  border:1px solid var(--line-2);
+  border-radius:12px;
+  background:var(--surface);
+}
+.code-extract-label{
+  font-size:9px;
+  letter-spacing:1.6px;
+  text-transform:uppercase;
+  color:var(--text-3);
+  font-weight:600;
+}
+.code-digits{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.code-digits span{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-width:34px;
+  height:44px;
+  padding:0 8px;
+  border:1px solid var(--line-2);
+  border-radius:8px;
+  background:var(--surface-2);
+  font:600 22px/1 'SF Mono','Fira Code',monospace;
+  color:var(--text);
+  letter-spacing:1px;
+}
+.code-copy{
+  align-self:flex-start;
+}
 </style>
 </head>
 <body class="auth-mode">
@@ -1650,10 +1877,6 @@ body.wall .settings-modal{
   <div class="topbar">
     <div class="topbar-brand">PawMail</div>
     <div id="topbar-addr" class="topbar-addr"></div>
-    <div class="topbar-right">
-      <button class="btn-icon" onclick="openSettings()" title="Settings">⚙</button>
-      <button class="btn-icon" onclick="doLogout()">sign out</button>
-    </div>
   </div>
   <div class="main">
     <div class="sidebar">
@@ -1697,7 +1920,7 @@ body.wall .settings-modal{
           <span class="account-chevron">⌃</span>
         </div>
         <div class="account-menu" id="account-menu" style="display:none">
-          <div class="account-menu-heading">ACCOUNTS <span id="account-count">1 / 5</span></div>
+          <div class="account-menu-heading">ACCOUNTS <span id="account-count">1 / 15</span></div>
           <div id="account-list"></div>
           <button class="account-menu-action" onclick="openSettings()">Settings</button>
           <button class="account-menu-action" id="add-account-btn" onclick="addAccount()">+ Add another account</button>
@@ -1822,79 +2045,13 @@ body.wall .settings-modal{
     </div>
     <div class="settings-layout">
       <nav class="settings-nav">
-        <button class="settings-tab active" data-tab="appearance"><span class="tab-dot"></span>Appearance</button>
-        <button class="settings-tab" data-tab="account"><span class="tab-dot"></span>Account</button>
+        <button class="settings-tab active" data-tab="account"><span class="tab-dot"></span>Account</button>
         <button class="settings-tab" data-tab="mailbox"><span class="tab-dot"></span>Mailbox</button>
+        <button class="settings-tab" data-tab="appearance"><span class="tab-dot"></span>Appearance</button>
       </nav>
       <div class="settings-content">
 
-        <div class="settings-panel active" data-panel="appearance">
-          <div class="settings-section-label">theme</div>
-          <div class="settings-row">
-            <label>color theme</label>
-            <div class="seg" id="seg-theme">
-              <button data-value="midnight">midnight</button>
-              <button data-value="slate">slate</button>
-              <button data-value="paper">paper</button>
-            </div>
-          </div>
-          <div class="settings-row">
-            <label>accent color</label>
-            <div class="color-picker-row">
-              <div class="color-swatch-wrap">
-                <div class="color-swatch" id="accent-swatch"></div>
-                <input type="color" id="set-accent" class="color-input-hidden">
-              </div>
-              <span class="settings-muted">buttons &amp; highlights</span>
-            </div>
-          </div>
-
-          <div class="settings-section-label">background</div>
-          <div class="settings-row">
-            <label>gradient</label>
-            <select id="set-gradient">
-              <option value="">none</option>
-              <option value="aurora">aurora</option>
-              <option value="sunset">sunset</option>
-              <option value="mono">mono</option>
-              <option value="ocean">ocean</option>
-              <option value="ember">ember</option>
-            </select>
-          </div>
-          <div class="settings-row">
-            <label>background image</label>
-            <div class="bg-row">
-              <div class="bg-preview empty" id="bg-preview"></div>
-              <button class="btn btn-sm" onclick="document.getElementById('set-bg-file').click()">choose image</button>
-              <button class="btn btn-sm" id="remove-bg-btn" onclick="removeBg()">remove</button>
-            </div>
-          </div>
-          <input type="file" accept="image/*" id="set-bg-file" hidden onchange="onBgFileChange(event)">
-
-          <div class="settings-section-label">typography &amp; layout</div>
-          <div class="settings-row">
-            <label>font size</label>
-            <div class="seg" id="seg-size">
-              <button data-value="sm">small</button>
-              <button data-value="md">normal</button>
-              <button data-value="lg">large</button>
-            </div>
-          </div>
-          <div class="settings-row">
-            <label>density</label>
-            <div class="seg" id="seg-density">
-              <button data-value="compact">compact</button>
-              <button data-value="normal">normal</button>
-              <button data-value="comfortable">relaxed</button>
-            </div>
-          </div>
-          <div class="settings-row">
-            <label>reduce motion</label>
-            <input type="checkbox" class="chk" id="set-motion">
-          </div>
-        </div>
-
-        <div class="settings-panel" data-panel="account">
+        <div class="settings-panel active" data-panel="account">
           <div class="profile-card">
             <div class="profile-pic-wrap" onclick="triggerAvatarUpload()" title="Change profile picture">
               <img id="settings-avatar" class="profile-pic" alt="">
@@ -1944,6 +2101,79 @@ body.wall .settings-modal{
           <div class="settings-row">
             <label>confirm delete</label>
             <input type="checkbox" class="chk" id="set-confirm">
+          </div>
+        </div>
+
+        <div class="settings-panel" data-panel="appearance">
+          <div class="settings-section-label">theme</div>
+          <div class="settings-row">
+            <label>color theme</label>
+            <div class="seg" id="seg-theme">
+              <button data-value="midnight">midnight</button>
+              <button data-value="slate">slate</button>
+              <button data-value="paper">paper</button>
+            </div>
+          </div>
+          <div class="settings-row">
+            <label>accent color</label>
+            <div class="color-picker-row">
+              <div class="color-swatch-wrap">
+                <div class="color-swatch" id="accent-swatch"></div>
+                <input type="color" id="set-accent" class="color-input-hidden">
+              </div>
+              <span class="settings-muted">buttons &amp; highlights</span>
+            </div>
+          </div>
+
+          <div class="settings-section-label">background</div>
+          <div class="settings-row">
+            <label>gradient</label>
+            <select id="set-gradient">
+              <option value="">none</option>
+              <option value="aurora">aurora</option>
+              <option value="sunset">sunset</option>
+              <option value="mono">mono</option>
+              <option value="ocean">ocean</option>
+              <option value="ember">ember</option>
+            </select>
+          </div>
+          <div class="settings-row">
+            <label>background image</label>
+            <div class="bg-row">
+              <div class="bg-preview empty" id="bg-preview"></div>
+              <button class="btn btn-sm" onclick="document.getElementById('set-bg-file').click()">choose image</button>
+              <button class="btn btn-sm" id="remove-bg-btn" onclick="removeBg()">remove</button>
+            </div>
+          </div>
+          <div class="settings-row">
+            <label>background blur</label>
+            <div class="range-row">
+              <input type="range" id="set-blur" min="0" max="40" step="1" value="14">
+              <span class="settings-muted" id="set-blur-value">14px</span>
+            </div>
+          </div>
+          <input type="file" accept="image/*" id="set-bg-file" hidden onchange="onBgFileChange(event)">
+
+          <div class="settings-section-label">typography &amp; layout</div>
+          <div class="settings-row">
+            <label>font size</label>
+            <div class="seg" id="seg-size">
+              <button data-value="sm">small</button>
+              <button data-value="md">normal</button>
+              <button data-value="lg">large</button>
+            </div>
+          </div>
+          <div class="settings-row">
+            <label>density</label>
+            <div class="seg" id="seg-density">
+              <button data-value="compact">compact</button>
+              <button data-value="normal">normal</button>
+              <button data-value="comfortable">relaxed</button>
+            </div>
+          </div>
+          <div class="settings-row">
+            <label>reduce motion</label>
+            <input type="checkbox" class="chk" id="set-motion">
           </div>
         </div>
 
@@ -2005,6 +2235,7 @@ const DEFAULT_SETTINGS = {
   accent: '#d0d0d0',
   gradient: '',
   wallpaper: '',
+  blur: 14,
   size: 'md',
   density: 'normal',
   showPreview: true,
@@ -2014,6 +2245,12 @@ const DEFAULT_SETTINGS = {
 };
 let settings = { ...DEFAULT_SETTINGS };
 
+function clampBlur(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return DEFAULT_SETTINGS.blur;
+  return Math.max(0, Math.min(40, Math.round(n)));
+}
+
 function loadSettings() {
   try {
     const raw = storage.getItem('settings');
@@ -2021,6 +2258,7 @@ function loadSettings() {
   } catch {}
   if (settings.size !== 'sm' && settings.size !== 'md' && settings.size !== 'lg') settings.size = 'md';
   if (!/^#[0-9a-f]{6}$/i.test(settings.accent || '')) settings.accent = THEME_ACCENTS[settings.theme] || '#d0d0d0';
+  settings.blur = clampBlur(settings.blur);
 }
 function saveSettings() {
   try { storage.setItem('settings', JSON.stringify(settings)); } catch {}
@@ -2047,6 +2285,9 @@ function applySettings() {
   root.style.setProperty('--accent', accent);
   root.style.setProperty('--accent-rgb', `${rgb.r}, ${rgb.g}, ${rgb.b}`);
   root.style.setProperty('--accent-ink', isLightColor(accent) ? '#0a0a0a' : '#ffffff');
+
+  settings.blur = clampBlur(settings.blur);
+  root.style.setProperty('--wall-blur', settings.blur + 'px');
 
   body.classList.toggle('no-preview', !settings.showPreview);
   body.classList.toggle('reduce-motion', !!settings.reduceMotion);
@@ -2079,7 +2320,7 @@ let currentUser = null;
 let currentSession = null;
 let accounts = [];
 let activeAccountId = null;
-const MAX_ACCOUNTS = 5;
+const MAX_ACCOUNTS = 15;
 let allEmails = [];
 let currentFolder = 'inbox';
 let refreshTimer = null;
@@ -2142,7 +2383,7 @@ function saveSession(session, email) {
   };
   if (existing >= 0) accounts[existing] = record;
   else {
-    if (accounts.length >= MAX_ACCOUNTS) throw new Error('You can keep up to 5 accounts signed in. Remove one before adding another.');
+    if (accounts.length >= MAX_ACCOUNTS) throw new Error('You can keep up to 15 accounts signed in. Remove one before adding another.');
     accounts.push(record);
   }
   activeAccountId = id;
@@ -2202,7 +2443,7 @@ function saveCustomFolders() {
 
 /* ------------------------- add account (sign up) ------------------------- */
 function addAccount(){
-  if(accounts.length>=MAX_ACCOUNTS) return showToast('Maximum of 5 accounts reached');
+  if(accounts.length>=MAX_ACCOUNTS) return showToast(`Maximum of ${MAX_ACCOUNTS} accounts reached`);
   $('account-menu').style.display='none';
   $('add-account-err').textContent='';
   $('add-account-username').value='';
@@ -2226,7 +2467,7 @@ async function doAddAccountSignup(){
   if (!/^[a-z0-9._-]{2,30}$/.test(username)) return (err.textContent = '2–30 letters, numbers, dots, underscores or hyphens');
   if (password.length < 6) return (err.textContent = 'password must be at least 6 characters');
   if (password !== password2) return (err.textContent = 'passwords do not match');
-  if (accounts.length >= MAX_ACCOUNTS) return (err.textContent = 'You already have 5 accounts signed in.');
+  if (accounts.length >= MAX_ACCOUNTS) return (err.textContent = `You already have ${MAX_ACCOUNTS} accounts signed in.`);
 
   btn.disabled = true; btn.textContent = 'creating...';
   try {
@@ -2602,10 +2843,63 @@ function renderEmailList() {
   }).join('');
 }
 
+function extractVerificationCode(text) {
+  if (!text) return null;
+  const t = String(text).replace(/\s+/g, ' ');
+  const keywordRe = /(?:code|verification|verify|otp|passcode|pin|security code|auth(?:entication)? code)\D{0,24}([A-Z0-9]{4,8})/i;
+  const km = t.match(keywordRe);
+  if (km && /\d/.test(km[1])) return km[1].toUpperCase();
+  const spaced = t.match(/\b\d{3}[ -]\d{3}\b/);
+  if (spaced) return spaced[0].replace(/[ -]/g, '');
+  const groups = t.match(/\b\d{4,8}\b/g);
+  if (groups && groups.length) {
+    const six = groups.find(c => c.length === 6);
+    return six || groups[0];
+  }
+  return null;
+}
+
+function copyVerificationCode(code, btn) {
+  if (!code) return;
+  navigator.clipboard.writeText(code).then(() => {
+    showToast('Code copied');
+    if (btn) {
+      const old = btn.textContent;
+      btn.textContent = 'copied!';
+      setTimeout(() => { btn.textContent = old; }, 1400);
+    }
+  }).catch(() => showToast('Could not copy'));
+}
+
+function createCodeExtract(code) {
+  const wrap = document.createElement('div');
+  wrap.className = 'code-extract';
+  const label = document.createElement('div');
+  label.className = 'code-extract-label';
+  label.textContent = 'verification code';
+  const digits = document.createElement('div');
+  digits.className = 'code-digits';
+  String(code).split('').forEach(ch => {
+    const span = document.createElement('span');
+    span.textContent = ch;
+    digits.appendChild(span);
+  });
+  const btn = document.createElement('button');
+  btn.className = 'btn btn-sm code-copy';
+  btn.type = 'button';
+  btn.textContent = 'copy code';
+  btn.addEventListener('click', () => copyVerificationCode(code, btn));
+  wrap.append(label, digits, btn);
+  return wrap;
+}
+
 function renderEmailContent(email) {
   const container = $('detail-body');
   const html = email.body_html || email.html_body || email.content_html || '';
   const text = email.body_text || email.text_body || email.content_text || '';
+  const rawText = `${text || ''} ${stripHtml(html) || ''}`.trim();
+  const code = extractVerificationCode(rawText);
+
   if (typeof html === 'string' && html.trim()) {
     const frame = document.createElement('iframe');
     frame.className = 'email-html-frame';
@@ -2616,18 +2910,25 @@ function renderEmailContent(email) {
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
 *{box-sizing:border-box}html,body{margin:0;padding:0;max-width:100%;overflow-wrap:anywhere}
-body{padding:20px;font:14px/1.6 Arial,Helvetica,sans-serif;color:#202124;background:#fff}
+html,body{user-select:none;-webkit-user-select:none}
+body{padding:20px;font:14px/1.6 Arial,Helvetica,sans-serif;color:#d9d9d9;background:#0a0a0a}
 img{max-width:100%;height:auto}table{max-width:100%}pre{white-space:pre-wrap;overflow-wrap:anywhere}
-a{overflow-wrap:anywhere}iframe,video{max-width:100%}
+a{color:#8ab4ff;overflow-wrap:anywhere}iframe,video{max-width:100%}
 </style></head><body>${html}</body></html>`;
     frame.srcdoc = safeDocument;
-    container.replaceChildren(frame);
+    const frag = document.createDocumentFragment();
+    if (code) frag.appendChild(createCodeExtract(code));
+    frag.appendChild(frame);
+    container.replaceChildren(frag);
     return;
   }
   const content = document.createElement('div');
   content.className = 'email-text-content';
   content.textContent = text || stripHtml(html) || '(no content)';
-  container.replaceChildren(content);
+  const frag = document.createDocumentFragment();
+  if (code) frag.appendChild(createCodeExtract(code));
+  frag.appendChild(content);
+  container.replaceChildren(frag);
 }
 
 async function viewEmail(id) {
@@ -3283,6 +3584,10 @@ function updateAccentSwatch() {
   const el = $('accent-swatch');
   if (el) el.style.background = settings.accent || '#d0d0d0';
 }
+function updateBlurLabel() {
+  const el = $('set-blur-value');
+  if (el) el.textContent = clampBlur(settings.blur) + 'px';
+}
 function updateBgPreview() {
   const el = $('bg-preview');
   if (!el) return;
@@ -3315,6 +3620,8 @@ function syncSettingsUI() {
   $('set-preview').checked = !!settings.showPreview;
   $('set-confirm').checked = !!settings.confirmDelete;
   $('set-refresh').value = String(settings.refreshMs);
+  $('set-blur').value = String(clampBlur(settings.blur));
+  updateBlurLabel();
 
   const active = accounts.find(a => a.userId === activeAccountId);
   const meta = currentUser?.user_metadata || {};
@@ -3334,8 +3641,8 @@ function openSettings() {
   $('account-menu').style.display = 'none';
   syncSettingsUI();
   $('settings-status').textContent = '';
-  document.querySelectorAll('.settings-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === 'appearance'));
-  document.querySelectorAll('.settings-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === 'appearance'));
+  document.querySelectorAll('.settings-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === 'account'));
+  document.querySelectorAll('.settings-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === 'account'));
   $('settings-modal').classList.add('open');
 }
 function closeSettings() {
@@ -3489,6 +3796,11 @@ function initSettingsUI() {
     }
     applySettings();
   });
+  $('set-blur').addEventListener('input', e => {
+    settings.blur = clampBlur(e.target.value);
+    updateBlurLabel();
+    applySettings();
+  });
   $('set-motion').addEventListener('change', e => {
     settings.reduceMotion = e.target.checked;
     applySettings();
@@ -3519,6 +3831,28 @@ document.addEventListener('keydown', e => {
     hideCtx();
   }
 });
+
+/* Block inspect / view-source shortcuts and immediately return to the page */
+document.addEventListener('keydown', e => {
+  const k = (e.key || '').toLowerCase();
+  const blocked =
+    e.key === 'F12' ||
+    (e.ctrlKey && e.shiftKey && (k === 'i' || k === 'j' || k === 'c')) ||
+    (e.ctrlKey && k === 'u') ||
+    (e.metaKey && e.altKey && (k === 'i' || k === 'j' || k === 'c' || k === 'u'));
+  if (!blocked) return;
+  e.preventDefault();
+  e.stopPropagation();
+  try {
+    if (document.body.classList.contains('auth-mode')) {
+      showAuth('landing');
+    } else {
+      $('app').style.display = 'flex';
+      window.focus();
+    }
+  } catch {}
+  return false;
+}, true);
 
 document.addEventListener('keydown', event => {
   if (event.key !== 'Enter') return;
