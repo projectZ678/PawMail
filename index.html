@@ -532,7 +532,7 @@ body {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.82);
+  background: rgba(0,0,0,0.55);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -542,8 +542,8 @@ body {
   transition:
     opacity 0.22s cubic-bezier(0.4, 0, 0.2, 1),
     visibility 0.22s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
 }
 .modal-overlay.open { opacity: 1; visibility: visible; }
 
@@ -746,7 +746,7 @@ body.auth-mode .paw-field { opacity:.42; visibility:visible; }
 .search-bar input,.reply-area textarea,.modal-field input,.modal-body textarea { color:#eee; background:#0b0b0b; border-color:#ffffff1c; }
 .search-bar input:focus,.reply-area textarea:focus,.modal-field input:focus,.modal-body textarea:focus { border-color:#aaa; }
 .modal { color:#eee; background:#111; border:1px solid #ffffff1a; }
-.modal-overlay { background:#000c; }
+.modal-overlay { background:rgba(0,0,0,0.55); }
 .toast { color:#eee; background:#171717; border:1px solid #ffffff20; }
 .pane-header,.detail-header,.reply-area,.sidebar-divider { border-color:#ffffff12; }
 .email-item { border-color:#ffffff0d; }
@@ -804,7 +804,7 @@ body { background:#030303; color:#e7e7e7; }
 .email-item.unread .email-from,.email-item.unread .email-subject { color:#f4f4f4; }
 .email-dot { background:#ddd; }
 .modal { background:#111; border:1px solid #333; border-radius:12px; }
-.modal-overlay { background:#000d; }
+.modal-overlay { background:rgba(0,0,0,0.55); }
 .toast { color:#eee; background:#171717; border:1px solid #383838; }
 .err { color:#ff9292; }
 .paw-field span { color:#aaa; }
@@ -832,7 +832,8 @@ html,body,#app{background:#000!important;color:#ededed}
 #app,.topbar,.sidebar,.email-list-pane,.detail-pane,.pane-header,.detail-header,.reply-area{background:#000!important}
 .auth-screen,.landing-screen{background:#000!important}
 .auth-box{background:#080808!important;border:1px solid #242424!important;box-shadow:0 28px 100px #000!important}
-input,textarea,select,.modal,.modal-overlay,.search-bar{background:#080808!important;color:#eee!important;border-color:#282828!important}
+input,textarea,select,.modal,.search-bar{background:#080808!important;color:#eee!important;border-color:#282828!important}
+.modal-overlay{background:rgba(0,0,0,0.52)!important;backdrop-filter:blur(16px) saturate(1.15)!important;-webkit-backdrop-filter:blur(16px) saturate(1.15)!important}
 button,.btn,.btn-icon{background:#090909!important;color:#ddd!important;border-color:#292929!important}
 button:hover,.btn:hover,.btn-icon:hover{background:#171717!important;border-color:#444!important;color:#fff!important}
 .email-item:hover,.email-item.active,.nav-item:hover,.folder-item:hover{background:#111!important}
@@ -1086,9 +1087,9 @@ body.reduce-motion .paw-field{ display:none!important; }
    SETTINGS — v3: clean, tabbed, minimal blur
    ========================================================================= */
 #settings-modal{
-  background: rgba(0,0,0,.42) !important;
-  backdrop-filter: blur(7px) !important;
-  -webkit-backdrop-filter: blur(7px) !important;
+  background: rgba(0,0,0,.48) !important;
+  backdrop-filter: blur(18px) saturate(1.15) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.15) !important;
 }
 .settings-modal{
   width: 760px;
@@ -1763,7 +1764,6 @@ body.wall .settings-modal{
 <div id="add-account-modal" class="modal-overlay" onclick="if(event.target===this)closeAddAccount()">
   <div class="modal add-account-modal">
     <div class="modal-header"><span>create a new account</span><button class="btn-icon" onclick="closeAddAccount()">✕</button></div>
-    <div class="add-account-copy">Pick a username and password. A brand new @pawsocks.lat address will be created and added to your account switcher — your current inbox stays open.</div>
     <div class="modal-field">
       <label>username</label>
       <div class="username-wrap">
@@ -1825,7 +1825,6 @@ body.wall .settings-modal{
         <button class="settings-tab active" data-tab="appearance"><span class="tab-dot"></span>Appearance</button>
         <button class="settings-tab" data-tab="account"><span class="tab-dot"></span>Account</button>
         <button class="settings-tab" data-tab="mailbox"><span class="tab-dot"></span>Mailbox</button>
-        <button class="settings-tab" data-tab="about"><span class="tab-dot"></span>About</button>
       </nav>
       <div class="settings-content">
 
@@ -1946,20 +1945,6 @@ body.wall .settings-modal{
             <label>confirm delete</label>
             <input type="checkbox" class="chk" id="set-confirm">
           </div>
-        </div>
-
-        <div class="settings-panel" data-panel="about">
-          <div class="settings-about">
-            <div class="about-row"><span>app</span><span>PawMail</span></div>
-            <div class="about-row"><span>version</span><span>3.0</span></div>
-            <div class="about-row"><span>domain</span><span>@pawsocks.lat</span></div>
-            <div class="about-row"><span>storage</span><span>Supabase</span></div>
-          </div>
-          <p style="color:var(--text-3);font-size:10.5px;line-height:1.8;margin-top:18px;">
-            A monochrome inbox with per-account themes, custom folders, and trash.
-            Right-click messages to move, delete, or organize.
-            Right-click a custom folder to rename or delete it.
-          </p>
         </div>
 
       </div>
@@ -2880,13 +2865,27 @@ async function patchEmail(id, patch) {
 async function trashEmail(id) {
   const email = allEmails.find(e => e.id === id);
   if (!email) return;
-  if (settings.confirmDelete && !window.confirm('Move this message to trash?')) return;
-  const wasSelected = selectedId === id;
-  const ok = await patchEmail(id, { is_deleted: true });
-  if (!ok) return;
-  if (wasSelected) closeDetail();
-  refreshAfterChange();
-  showToast('Moved to trash');
+
+  const doTrash = async () => {
+    const wasSelected = selectedId === id;
+    const ok = await patchEmail(id, { is_deleted: true });
+    if (!ok) return;
+    if (wasSelected) closeDetail();
+    refreshAfterChange();
+    showToast('Moved to trash');
+  };
+
+  if (settings.confirmDelete) {
+    openConfirm({
+      title: 'move to trash',
+      message: `Move this message to trash?<br><br><strong>${escapeHtml(email.subject || '(no subject)')}</strong>`,
+      okText: 'move to trash',
+      danger: true,
+      onConfirm: doTrash
+    });
+    return;
+  }
+  await doTrash();
 }
 
 async function trashSelected() {
@@ -2902,20 +2901,28 @@ async function restoreEmail(id) {
 }
 
 async function purgeEmail(id) {
-  if (!window.confirm('Permanently delete this message? This cannot be undone.')) return;
   const email = allEmails.find(e => e.id === id);
-  const idx = allEmails.findIndex(e => e.id === id);
-  if (idx >= 0) allEmails.splice(idx, 1);
-  if (selectedId === id) closeDetail();
-  refreshAfterChange();
-  try {
-    await sbFetch(`/rest/v1/emails?id=eq.${id}`, { method: 'DELETE' });
-    showToast('Deleted permanently');
-  } catch (err) {
-    if (email) allEmails.splice(idx, 0, email);
-    refreshAfterChange();
-    showToast('Delete failed: ' + err.message);
-  }
+  if (!email) return;
+  openConfirm({
+    title: 'delete permanently',
+    message: `Permanently delete this message? This cannot be undone.<br><br><strong>${escapeHtml(email.subject || '(no subject)')}</strong>`,
+    okText: 'delete forever',
+    danger: true,
+    onConfirm: async () => {
+      const idx = allEmails.findIndex(e => e.id === id);
+      if (idx >= 0) allEmails.splice(idx, 1);
+      if (selectedId === id) closeDetail();
+      refreshAfterChange();
+      try {
+        await sbFetch(`/rest/v1/emails?id=eq.${id}`, { method: 'DELETE' });
+        showToast('Deleted permanently');
+      } catch (err) {
+        if (email) allEmails.splice(idx, 0, email);
+        refreshAfterChange();
+        showToast('Delete failed: ' + err.message);
+      }
+    }
+  });
 }
 
 async function toggleRead(id) {
@@ -2924,22 +2931,84 @@ async function toggleRead(id) {
   await patchEmail(id, { is_read: !email.is_read });
 }
 
+function getEmailsInFolder(folderName) {
+  if (folderName === 'trash') {
+    return allEmails.filter(e => e.is_deleted);
+  }
+  if (folderName === 'sent') {
+    return allEmails.filter(e => e.folder === 'sent' && !e.is_deleted);
+  }
+  if (folderName === 'inbox') {
+    return allEmails.filter(e => {
+      if (e.is_deleted) return false;
+      if (e.folder === 'sent') return false;
+      if (e.folder && e.folder !== 'inbox' && customFolders.includes(e.folder)) return false;
+      return true;
+    });
+  }
+  if (customFolders.includes(folderName)) {
+    return allEmails.filter(e => e.folder === folderName && !e.is_deleted);
+  }
+  // provider / sender folder
+  return allEmails.filter(e => {
+    if (e.is_deleted) return false;
+    if (e.folder === 'sent') return false;
+    if (e.folder && e.folder !== 'inbox' && customFolders.includes(e.folder)) return false;
+    return getProvider(e.from_address, e.from_name) === folderName;
+  });
+}
+
+async function markFolderAsRead(folderName) {
+  const emails = getEmailsInFolder(folderName).filter(e => !e.is_read);
+  if (!emails.length) {
+    showToast('already all read');
+    return;
+  }
+  const ids = emails.map(e => e.id);
+  emails.forEach(e => { e.is_read = true; });
+  refreshAfterChange();
+  try {
+    // Batch update in chunks to avoid URL length limits
+    const chunkSize = 40;
+    for (let i = 0; i < ids.length; i += chunkSize) {
+      const chunk = ids.slice(i, i + chunkSize);
+      await sbFetch(`/rest/v1/emails?id=in.(${chunk.join(',')})`, {
+        method: 'PATCH',
+        body: JSON.stringify({ is_read: true })
+      });
+    }
+    showToast(`marked ${ids.length} as read`);
+  } catch (err) {
+    // revert on failure
+    emails.forEach(e => { e.is_read = false; });
+    refreshAfterChange();
+    showToast('Could not mark as read: ' + err.message);
+  }
+}
+
 async function emptyTrash() {
   const ids = allEmails.filter(e => e.is_deleted).map(e => e.id);
   if (!ids.length) return showToast('trash is already empty');
-  if (!window.confirm(`Permanently delete ${ids.length} message${ids.length > 1 ? 's' : ''}?`)) return;
-  const backup = allEmails.slice();
-  allEmails = allEmails.filter(e => !e.is_deleted);
-  closeDetail();
-  refreshAfterChange();
-  try {
-    await sbFetch(`/rest/v1/emails?id=in.(${ids.join(',')})`, { method: 'DELETE' });
-    showToast('trash emptied');
-  } catch (err) {
-    allEmails = backup;
-    refreshAfterChange();
-    showToast('Failed: ' + err.message);
-  }
+  openConfirm({
+    title: 'empty trash',
+    message: `Permanently delete <strong>${ids.length}</strong> message${ids.length > 1 ? 's' : ''}?<br><br>This cannot be undone.`,
+    okText: 'empty trash',
+    danger: true,
+    onConfirm: async () => {
+      const backup = allEmails.slice();
+      allEmails = allEmails.filter(e => !e.is_deleted);
+      closeDetail();
+      refreshAfterChange();
+      try {
+        await sbFetch(`/rest/v1/emails?id=in.(${ids.join(',')})`, { method: 'DELETE' });
+        showToast('trash emptied');
+      } catch (err) {
+        allEmails = backup;
+        refreshAfterChange();
+        showToast('Failed: ' + err.message);
+      }
+    }
+  });
 }
 
 /* ------------------------- context menu ------------------------- */
@@ -2986,15 +3055,34 @@ function showEmailCtx(x, y, id) {
   positionCtxMenu(menu, x, y);
 }
 
-function showFolderCtx(x, y, name) {
+function showFolderCtx(x, y, name, isCustom) {
   ctxFolderName = name;
   ctxEmailId = null;
   const menu = $('ctx-menu');
-  const items = [
-    { label: 'Rename folder', folderAction: 'rename' },
-    { sep: true },
-    { label: 'Delete folder', folderAction: 'delete', danger: true }
-  ];
+  const unread = getEmailsInFolder(name).filter(e => !e.is_read).length;
+  const items = [];
+
+  if (name === 'trash') {
+    const trashed = allEmails.filter(e => e.is_deleted).length;
+    if (trashed > 0) {
+      items.push({ label: `Empty trash (${trashed})`, folderAction: 'empty-trash', danger: true });
+    } else {
+      items.push({ label: 'Trash is empty', folderAction: 'noop' });
+    }
+  } else {
+    items.push({
+      label: unread > 0 ? `Mark all as read (${unread})` : 'Mark all as read',
+      folderAction: 'mark-read'
+    });
+  }
+
+  if (isCustom) {
+    items.push({ sep: true });
+    items.push({ label: 'Rename folder', folderAction: 'rename' });
+    items.push({ sep: true });
+    items.push({ label: 'Delete folder', folderAction: 'delete', danger: true });
+  }
+
   renderCtxMenu(menu, items);
   positionCtxMenu(menu, x, y);
 }
@@ -3029,8 +3117,12 @@ document.addEventListener('contextmenu', e => {
   e.preventDefault();
   const emailItem = e.target.closest('.email-item');
   if (emailItem) { showEmailCtx(e.clientX, e.clientY, emailItem.dataset.id); return; }
-  const folderItem = e.target.closest('[data-custom="true"]');
-  if (folderItem) { showFolderCtx(e.clientX, e.clientY, folderItem.dataset.folder); return; }
+  const folderItem = e.target.closest('[data-folder]');
+  if (folderItem && folderItem.dataset.folder) {
+    const isCustom = folderItem.dataset.custom === 'true' || customFolders.includes(folderItem.dataset.folder);
+    showFolderCtx(e.clientX, e.clientY, folderItem.dataset.folder, isCustom);
+    return;
+  }
   hideCtx();
 });
 
@@ -3048,9 +3140,11 @@ $('ctx-menu').addEventListener('click', async e => {
     const action = btn.dataset.folderAction;
     const name = ctxFolderName;
     hideCtx();
-    if (!name) return;
+    if (!name && action !== 'empty-trash') return;
     if (action === 'rename') openFolderModal('rename', name);
     else if (action === 'delete') await deleteFolder(name);
+    else if (action === 'mark-read') await markFolderAsRead(name);
+    else if (action === 'empty-trash') await emptyTrash();
     return;
   }
 
